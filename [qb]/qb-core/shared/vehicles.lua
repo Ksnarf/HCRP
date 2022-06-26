@@ -4420,15 +4420,15 @@ QBShared.Vehicles = {
 		['shop'] = 'air',
 	},
 -- Addon Vehicles
-['mini3500ram'] = {
-	['name'] = '2021 RAM 3500HD Dually',
-	['brand'] = 'RAM',
-	['model'] = 'mini3500ram',
-	['price'] = 45,500,
-	['category'] = 'suvs',
-	['hash'] = `GetHashKey("mini3500ram")`,
-	['shop'] = 'pdm',
-},
+	['mini3500ram'] = {
+		['name'] = '2021 RAM 3500HD Dually',
+		['brand'] = 'RAM',
+		['model'] = 'mini3500ram',
+		['price'] = 45,500,
+		['category'] = 'suvs',
+		['hash'] = `GetHashKey("mini3500ram")`,
+		['shop'] = 'pdm',
+	}
 }
 
 for _, v in pairs(QBShared.Vehicles) do
