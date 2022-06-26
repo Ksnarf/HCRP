@@ -130,11 +130,8 @@ Config.AuthorizedVehicles = {
 	},
   -- Grade 8 - Chief
   [8] = {
-    ["valor5rb"] = "Crown Victoria",
-    ["valor8rb"] = "Marked Chevy Tahoe Interceptor",
-    ["valor12rb"] = "Marked Ford Explorer Interceptor",
-    ["21yukadmin"] = "Command Car",
     ["centurionlspd"] = "Armored Truck",
+    ["mini3500ram"] = "Chief's Truck"
   }
 }
 
