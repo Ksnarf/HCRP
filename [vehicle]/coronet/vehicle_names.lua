@@ -1,0 +1,15 @@
+function AddTextEntry(key, value)
+	Citizen.InvokeNative(GetHashKey("ADD_TEXT_ENTRY"), key, value)
+end
+
+Citizen.CreateThread(function()
+	AddTextEntry("gstcoronet1", "Dodge Coronet Super Bee")
+	AddTextEntry("YEARGOM2", "1970")
+	AddTextEntry("gstcoronet1_liv1", "Black Super Bee Side Decal")
+	AddTextEntry("gstcoronet1_liv2", "White Super Bee Side Decal")
+	AddTextEntry("gstcoronet1_wing1", "Forza Aero Wing")
+	AddTextEntry("gstcoronet1_splitter1", "Forza Aero Splitter")
+	AddTextEntry("gstcoronet1_cage1", "Race Cage")
+	AddTextEntry("gstcoronet1_hood1", "Forza MK1 Hood")
+	AddTextEntry("gstcoronet1_hood2", "Forza MK2 Hood")
+end)
