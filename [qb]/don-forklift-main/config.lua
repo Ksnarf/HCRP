@@ -22,14 +22,14 @@ Config.Forklift = {
 		Type  = 25,
   },
 	['Forklift'] = { -- the place where the company car appears
-		Pos = {x = 1201.55, y = -3287.51, z = 5.5},
+		Pos = {x = 1190.05, y = -3251.15, z = 6.03},
 		Model  = 'forklift',
 	},
 	['DeliverySpawn'] = { -- the place where the benson spawns
-	Pos = {x = 1113.12, y = -3334.41, z = 5.92},
+	Pos = {x = 1190.05, y = -3251.15, z = 6.03},
 	},
 	['DeliveryLoc'] = { -- the place where the pallets are delivered
-	Pos = {x = 1229.2, y = -3222.6, z = 5.8},
+	Pos = {x = 1218.81, y = -3230.99, z = 5.66},
 	}
 }
 
