@@ -11,7 +11,7 @@ EMS Job and Death/Wound Logic for QB-Core Framework :ambulance:
 - Global DrawTextUi Option
 ```
 setr UseTarget false
-``` 
+```
 
 - Global Target Option
 ```
