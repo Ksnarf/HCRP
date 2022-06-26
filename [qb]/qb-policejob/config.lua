@@ -97,36 +97,35 @@ Config.SecurityCameras = {
 Config.AuthorizedVehicles = {
 	-- Grade 0 - Cadet
 	[0] = {
-		["valor5rb"] = "Crown Victoria",
+		["pol2"] = "Crown Victoria",
 	},
 	-- Grade 1 - PO
 	[1] = {
-		["valor5rb"] = "Crown Victoria",
+		["pol2"] = "Crown Victoria",
 	},
 	-- Grade 2 - SPO
 	[2] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["pol2"] = "Crown Victoria",
 	},
 	-- Grade 3 - Cpl
 	[3] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["pol2"] = "Crown Victoria",
 	},
 	-- Grade 4 - Sgt
 	[4] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["pol2"] = "Crown Victoria",
 	},
   -- Grade 5 - LT
 	[5] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["pol2"] = "Crown Victoria",
 	},
   -- Grade 6 - Captain
 	[6] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["pol2"] = "Crown Victoria",
 	},
   -- Grade 7 - DepChief
 	[7] = {
-    ["valor5rb"] = "Crown Victoria",
-    ["21yukadmin"] = "Command Car",
+    ["pol2"] = "Crown Victoria",
 	},
   -- Grade 8 - Chief
   [8] = {
@@ -366,12 +365,21 @@ Config.Items = {
             type = "item",
             slot = 17,
             authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8}
+        },
+        [18] = {
+            name = "w_ar_assaultrifle",
+            price = 150,
+            amount = 50,
+            info = {},
+            type = "weapon",
+            slot = 18,
+            authorizedJobGrades = {7, 8}
         }
     }
 }
 
 Config.VehicleSettings = {
-    ["valor5rb"] = { --- Model name
+    ["pol2"] = { --- Model name
         ["extras"] = {
             ["1"] = false, -- on/off
             ["2"] = true,
