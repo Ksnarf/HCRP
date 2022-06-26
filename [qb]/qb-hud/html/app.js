@@ -4,8 +4,6 @@ const app = Vue.createApp({
   data: function() {
 		return {
 			isOutMapChecked: this.initIsOutMapChecked(),
-      isOutCompassChecked: this.initIsOutCompassChecked(),
-      isCompassFollowChecked: this.initIsCompassFollowChecked(),
       isOpenMenuSoundsChecked: this.initIsOpenMenuSoundsChecked(),
       isResetSoundsChecked: this.initIsResetSoundsChecked(),
       isListSoundsChecked: this.initIsListSoundsChecked(),
@@ -24,11 +22,8 @@ const app = Vue.createApp({
       isToggleMapBordersChecked: this.initIsToggleMapBordersChecked(),
       isDynamicEngineChecked: this.initIsDynamicEngineChecked(),
       isDynamicNitroChecked: this.initIsDynamicNitroChecked(),
-      isChangeCompassFPSChecked: this.initIsChangeCompassFPSChecked(),
-      isShowCompassChecked: this.initIsShowCompassChecked(),
-      isShowStreetsChecked: this.initIsShowStreetsChecked(),
-      isPointerShowChecked: this.initIsPointerShowChecked(),
-      isDegreesShowChecked: this.initIsDegreesShowChecked(),
+      isHideCompassChecked: this.initIsHideCompassChecked(),
+      isHideStreetsChecked: this.initIsHideStreetsChecked(),
       isCineamticModeChecked: this.initIsCineamticModeChecked(),
 		};
 	},
@@ -76,12 +71,6 @@ const app = Vue.createApp({
   watch: {
     isOutMapChecked: function() {
 			localStorage.setItem("isOutMapChecked", this.isOutMapChecked);
-		},
-    isOutCompassChecked: function() {
-			localStorage.setItem("isOutCompassChecked", this.isOutCompassChecked);
-		},
-    isCompassFollowChecked: function() {
-			localStorage.setItem("isCompassFollowChecked", this.isCompassFollowChecked);
 		},
     isOpenMenuSoundsChecked: function() {
 			localStorage.setItem("isOpenMenuSoundsChecked", this.isOpenMenuSoundsChecked);
@@ -137,20 +126,11 @@ const app = Vue.createApp({
     isDynamicNitroChecked: function() {
 			localStorage.setItem("isDynamicNitroChecked", this.isDynamicNitroChecked);
 		},
-    isChangeCompassFPSChecked: function() {
-			localStorage.setItem("isChangeCompassFPSChecked", this.isChangeCompassFPSChecked);
+    isHideCompassChecked: function() {
+			localStorage.setItem("isHideCompassChecked", this.isHideCompassChecked);
 		},
-    isShowCompassChecked: function() {
-			localStorage.setItem("isShowCompassChecked", this.isShowCompassChecked);
-		},
-    isShowStreetsChecked: function() {
-			localStorage.setItem("isShowStreetsChecked", this.isShowStreetsChecked);
-		},
-    isPointerShowChecked: function() {
-			localStorage.setItem("isPointerShowChecked", this.isPointerShowChecked);
-		},
-    isDegreesShowChecked: function() {
-			localStorage.setItem("isDegreesShowChecked", this.isDegreesShowChecked);
+    isHideStreetsChecked: function() {
+			localStorage.setItem("isHideStreetsChecked", this.isHideStreetsChecked);
 		},
     isCineamticModeChecked: function() {
 			localStorage.setItem("isCineamticModeChecked", this.isCineamticModeChecked);
@@ -159,22 +139,6 @@ const app = Vue.createApp({
   methods: {
     initIsOutMapChecked: function() {
 			const stored = localStorage.getItem("isOutMapChecked");
-			if (stored === null) {
-				return true;
-			} else {
-				return stored == 'true';
-			}
-		},
-    initIsOutCompassChecked: function() {
-			const stored = localStorage.getItem("isOutCompassChecked");
-			if (stored === null) {
-				return true;
-			} else {
-				return stored == 'true';
-			}
-		},
-    initIsCompassFollowChecked: function() {
-			const stored = localStorage.getItem("isCompassFollowChecked");
 			if (stored === null) {
 				return true;
 			} else {
@@ -325,40 +289,16 @@ const app = Vue.createApp({
 				return stored == 'true';
 			}
 		},
-    initIsChangeCompassFPSChecked: function() {
-			const stored = localStorage.getItem("isChangeCompassFPSChecked");
-			if (stored === null) {
-				return 'Optimized';
-			} else {
-				return stored;
-			}
-		}, 
-    initIsShowCompassChecked: function() {
-			const stored = localStorage.getItem("isShowCompassChecked");
+    initIsHideCompassChecked: function() {
+			const stored = localStorage.getItem("isHideCompassChecked");
 			if (stored === null) {
 				return true;
 			} else {
 				return stored == 'true';
 			}
 		},
-    initIsShowStreetsChecked: function() {
-			const stored = localStorage.getItem("isShowStreetsChecked");
-			if (stored === null) {
-				return true;
-			} else {
-				return stored == 'true';
-			}
-		},
-    initIsPointerShowChecked: function() {
-			const stored = localStorage.getItem("isPointerShowChecked");
-			if (stored === null) {
-				return true;
-			} else {
-				return stored == 'true';
-			}
-		},
-    initIsDegreesShowChecked: function() {
-			const stored = localStorage.getItem("isDegreesShowChecked");
+    initIsHideStreetsChecked: function() {
+			const stored = localStorage.getItem("isHideStreetsChecked");
 			if (stored === null) {
 				return true;
 			} else {
@@ -385,14 +325,6 @@ const app = Vue.createApp({
     showOutMap: function(event) {
       targetId = event.currentTarget.id;
       showOutMap()
-    },
-    showOutCompass: function(event) {
-      targetId = event.currentTarget.id;
-      showOutCompass()
-    },
-    showFollowCompass: function(event) {
-      targetId = event.currentTarget.id;
-      showFollowCompass()
     },
     openMenuSounds: function(event) {
       targetId = event.currentTarget.id;
@@ -466,25 +398,13 @@ const app = Vue.createApp({
       targetId = event.currentTarget.id;
       dynamicNitro()
     },
-    changeCompassFPS: function(event) {
+    HideCompass: function(event) {
       targetId = event.currentTarget.id;
-      changeCompassFPS()
+      HideCompass()
     },
-    showCompassBase: function(event) {
+    HideStreets: function(event) {
       targetId = event.currentTarget.id;
-      showCompassBase()
-    },
-    showStreetsNames: function(event) {
-      targetId = event.currentTarget.id;
-      showStreetsNames()
-    },
-    showPointerIndex: function(event) {
-      targetId = event.currentTarget.id;
-      showPointerIndex()
-    },
-    showDegreesNum: function(event) {
-      targetId = event.currentTarget.id;
-      showDegreesNum()
+      HideStreets()
     },
     cinematicMode: function(event) {
       targetId = event.currentTarget.id;
@@ -493,7 +413,11 @@ const app = Vue.createApp({
   },
   mounted() {
     this.listener = window.addEventListener("message", (event) => {
-        if (event.data.event === 'isToggleMapShapeChecked' || event.data.event === 'isChangeFPSChecked') {
+        if (event.data.event === 'isHideCompassChecked'){
+          HideCompass(event.data.toggle)
+        }else if (event.data.event === 'isHideStreetsChecked'){
+          HideStreets(event.data.toggle)
+        }else if (event.data.event === 'isToggleMapShapeChecked' || event.data.event === 'isChangeFPSChecked') {
           eval(`this.${event.data.event} = "${event.data.toggle}"`)
         }
     });
@@ -524,11 +448,8 @@ function resetStorage() {
 function showOutMap() {
   $.post('https://qb-hud/showOutMap');
 }
-function showOutCompass() {
-  $.post('https://qb-hud/showOutCompass');
-}
-function showFollowCompass() {
-  $.post('https://qb-hud/showFollowCompass');
+function showBrand() {
+  $.post('https://lj-brand/showBrand');
 }
 function openMenuSounds() {
   $.post('https://qb-hud/openMenuSounds');
@@ -584,20 +505,11 @@ function ToggleMapBorders() {
 function HideMap() {
   $.post('https://qb-hud/HideMap');
 }
-function changeCompassFPS() {
-  $.post('https://qb-hud/changeCompassFPS');
+function HideCompass() {
+  $.post('https://lj-compass/HideCompass');
 }
-function showCompassBase() {
-  $.post('https://qb-hud/showCompassBase');
-}
-function showStreetsNames() {
-  $.post('https://qb-hud/showStreetsNames');
-}
-function showPointerIndex() {
-  $.post('https://qb-hud/showPointerIndex');
-}
-function showDegreesNum() {
-  $.post('https://qb-hud/showDegreesNum');
+function HideStreets() {
+  $.post('https://lj-compass/HideStreets');
 }
 function cinematicMode() {
   $.post('https://qb-hud/cinematicMode');
@@ -644,7 +556,7 @@ const moneyHud = Vue.createApp({
         case "showconstant":
           this.showConstant(event.data);
           break;
-        case "updatemoney":
+        case "update":
           this.update(event.data);
           break;
         case "show":
@@ -1082,74 +994,3 @@ const vehHud = {
 const app3 = Vue.createApp(vehHud);
 app3.use(Quasar);
 app3.mount("#veh-container");
-
-// COMPASS HUD
-
-const baseplateHud = {
-  data() {
-    return {
-      show: false,
-      street1: "",
-      street2: "",
-      showCompass: true,
-      showStreets: true,
-      showPointer: true,
-      showDegrees: true,
-    };
-  },
-  destroyed() {
-    window.removeEventListener("message", this.listener);
-  },
-  mounted() {
-    this.listener = window.addEventListener("message", (event) => {
-      if (event.data.action == "update") {
-        type = event.data.type
-        value = event.data.value
-          if (value  !== undefined) {
-            $('.degrees').html(value);
-            bar = document.getElementsByTagName("svg")[0];
-            bar.setAttribute("viewBox", ''+ (value - 90) + ' 0 180 5');
-            heading = document.getElementsByTagName("svg")[1];
-            heading.setAttribute("viewBox", ''+ (value - 90) + ' 0 180 1.5');
-          }
-        }
-      if (event.data.action === "baseplate") {
-        this.baseplateHud(event.data);
-      }
-    });
-  },
-  methods: {
-    baseplateHud(data) {
-      this.show = data.show;
-      this.street1 = data.street1;
-      this.street2 = data.street2;
-      this.showCompass = data.showCompass;
-      this.showStreets = data.showStreets;
-      this.showPointer = data.showPointer;
-      this.showDegrees = data.showDegrees;
-      if (data.showCompass == true) {
-        this.showCompass = true;
-      } else {
-        this.showCompass = false;
-      }
-      if (data.showStreets == true) {
-        this.showStreets = true;
-      } else {
-        this.showStreets = false;
-      }
-      if (data.showPointer == true) {
-        this.showPointer = true;
-      } else {
-        this.showPointer = false;
-      }
-      if (data.showDegrees == true) {
-        this.showDegrees = true;
-      } else {
-        this.showDegrees = false;
-      }
-    },
-  },
-};
-const app4 = Vue.createApp(baseplateHud);
-app4.use(Quasar);
-app4.mount("#baseplate-container");
