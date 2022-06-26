@@ -142,6 +142,8 @@ QBShared.Weapons = {
 	[`weapon_heli_crash`]			= {['name'] = 'weapon_heli_crash',			['label'] = 'Heli Crash',				['ammotype'] = nil,						['damagereason'] = 'Helicopter Crash'},
 	[`weapon_fire`]					= {['name'] = 'weapon_fire',				['label'] = 'Fire',						['ammotype'] = nil,						['damagereason'] = 'Torched / Flambeed / Barbecued'},
 
+	--Addon weapons
+	['w_ar_assaultrifle'] = {['name'] = 'HCRP Assault Rifle',['label'] = 'Mk3AR',['ammotype'] = 'AMMO_RIFLE',['damagereason'] = 'Ended / Rifled / Shot down / Floored'},
 	-- Animals
 	[`weapon_animal`]	= {['name'] = 'weapon_animal',	['label'] = 'Animal',	['ammotype'] = nil,	['damagereason'] = 'Mauled'},
     [`weapon_cougar`]	= {['name'] = 'weapon_cougar',	['label'] = 'Cougar',	['ammotype'] = nil,	['damagereason'] = 'Mauled'},
