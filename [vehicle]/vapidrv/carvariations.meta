@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CVehicleModelInfoVariation>
+  <variationData>
+    <Item>
+      <modelName>sandroamer</modelName>
+      <colors>
+        <Item>
+          <indices>
+            <Item value="0" />
+            <Item value="0" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="1" />
+            <Item value="1" />
+            <Item value="18" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="3" />
+            <Item value="2" />
+            <Item value="18" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="103" />
+            <Item value="99" />
+            <Item value="100" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="33" />
+            <Item value="30" />
+            <Item value="36" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="3" />
+            <Item value="9" />
+            <Item value="18" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="52" />
+            <Item value="52" />
+            <Item value="52" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="13" />
+            <Item value="14" />
+            <Item value="17" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="69" />
+            <Item value="69" />
+            <Item value="63" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="40" />
+            <Item value="40" />
+            <Item value="2" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="10" />
+            <Item value="10" />
+            <Item value="18" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="6" />
+            <Item value="4" />
+            <Item value="111" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="4" />
+            <Item value="4" />
+            <Item value="111" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="5" />
+            <Item value="5" />
+            <Item value="111" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+        <Item>
+          <indices>
+            <Item value="111" />
+            <Item value="13" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="0" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>standard white</Name>
+            <Value value="75" />
+          </Item>
+          <Item>
+            <Name>white plate 2</Name>
+            <Value value="25" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1" />
+      <sirenSettings value="5631" />
+    </Item>
+	<Item>
+      <modelName>cararv</modelName>
+      <colors>
+        <Item>
+          <indices content="char_array">
+            0
+            0
+            6
+            0 
+	        0
+	        0
+          </indices>
+          <liveries />
+        </Item>
+        <Item>
+          <indices content="char_array">
+            29
+            29
+            6
+            0 
+	        0
+	        0
+          </indices>
+          <liveries />
+        </Item>
+        <Item>
+          <indices content="char_array">
+            2
+            2
+            6
+            0 
+	        0
+	        0
+		  </indices>
+          <liveries />
+        </Item>
+        <Item>
+          <indices content="char_array">
+            38
+            38
+            6
+            0 
+	        0
+	        0
+          </indices>
+          <liveries />
+        </Item>
+        <Item>
+          <indices content="char_array">
+            64
+            64
+            6
+            0 
+	        0
+	        0
+          </indices>
+          <liveries />
+        </Item>
+        <Item>
+          <indices content="char_array">
+            5
+            5
+            111
+            0 
+	        0
+	        0
+          </indices>
+          <liveries />
+        </Item>
+      </colors>
+      <kits>
+        <Item>3751_cararv_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="100" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1" />
+      <sirenSettings value="5631" />
+    </Item>
+	<Item>
+      <modelName>guardianrv</modelName>
+      <colors>
+        <Item>
+          <indices content="char_array">
+            99 
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+		<Item>
+          <indices content="char_array">
+            1 
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+		<Item>
+          <indices content="char_array">
+            2
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+		<Item>
+          <indices content="char_array">
+            3
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+		<Item>
+          <indices content="char_array">
+            4
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+		<Item>
+          <indices content="char_array">
+            5
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+		<Item>
+          <indices content="char_array">
+            93
+            12 
+            0 
+            0
+			0
+			0
+          </indices>
+          <liveries />
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="50" />
+          </Item>
+          <Item>
+            <Name>Blue Plate</Name>
+            <Value value="20" />
+          </Item>
+          <Item>
+            <Name>White Plate 2</Name>
+            <Value value="30" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="20" />
+      <sirenSettings value="5631" />
+    </Item>
+	<Item>
+      <modelName>sandkingrv</modelName>
+      <colors>
+        <Item>
+          <indices>
+            <Item value="6" />
+            <Item value="5" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="7" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="9" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="33" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="39" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="62" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="64" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="90" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="95" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+		<Item>
+          <indices>
+            <Item value="6" />
+            <Item value="101" />
+            <Item value="0" />
+            <Item value="0" />
+			<Item value="134" />
+			<Item value="0" />
+          </indices>
+          <liveries/>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>standard white</Name>
+            <Value value="75" />
+          </Item>
+          <Item>
+            <Name>white plate 2</Name>
+            <Value value="25" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1" />
+      <sirenSettings value="0" />
+    </Item>
+  </variationData>
+</CVehicleModelInfoVariation>
