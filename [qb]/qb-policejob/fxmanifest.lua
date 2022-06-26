@@ -4,16 +4,9 @@ game 'gta5'
 description 'QB-PoliceJob'
 version '1.0.0'
 
-shared_scripts {
-    'config.lua',
-    '@qb-core/shared/locale.lua',
-    'locales/en.lua' -- Change this to your preferred language
-}
+shared_script 'config.lua'
 
 client_scripts {
-	'@PolyZone/client.lua',
-	'@PolyZone/BoxZone.lua',
-	'@PolyZone/ComboZone.lua',
 	'client/main.lua',
 	'client/camera.lua',
 	'client/interactions.lua',
