@@ -212,13 +212,22 @@ QBShared.Jobs = {
 	['judge'] = {
 		label = 'Honorary',
 		defaultDuty = true,
-		offDutyPay = false,
+		offDutyPay = true,
 		grades = {
             ['0'] = {
                 name = 'Judge',
-                payment = 100
+                payment = 200
             },
-        },
+						['1'] = {
+                name = 'Associate Justice',
+                payment = 300
+        		},
+						['2'] = {
+                name = 'Chief Justice',
+								isboss = true,
+                payment = 500
+						},
+			},
 	},
 	['lawyer'] = {
 		label = 'Law Firm',
@@ -285,6 +294,80 @@ QBShared.Jobs = {
                 payment = 50
             },
         },
+	},
+	['Uber'] = {
+		label = 'Uber',
+		defaultDuty = true,
+		offDutyPay = false,
+		grades = {
+            ['0'] = {
+                name = 'Driver',
+                payment = 50
+            },
+			['1'] = {
+                name = 'Manager',
+								isboss = true,
+                payment = 75
+            },
+        },
+	},
+	['DOT'] = {
+		label = 'DOT Worker',
+		defaultDuty = true,
+		offDutyPay = false,
+		grades = {
+						['0'] = {
+								name = 'Shovel Holder',
+								payment = 50
+						},
+			['1'] = {
+								name = 'Driver',
+								payment = 75
+						},
+			['1'] = {
+								name = 'Sr. Driver',
+								isboss = true,
+								payment = 75
+						},
+			['1'] = {
+								name = ''Supervisor'',
+								payment = 75
+						},
+			['1'] = {
+								name = 'Boss',
+								isboss = true,
+								payment = 75
+						},
+				},
+	},
+	['Tuner'] = {
+		label = 'Tuner',
+		defaultDuty = true,
+		offDutyPay = false,
+		grades = {
+						['0'] = {
+								name = 'Intern',
+								payment = 50
+						},
+			['1'] = {
+								name = 'Wrench Spinner',
+								payment = 75
+						},
+			['1'] = {
+								name = 'Sr. Mechanic',
+								isboss = true,
+								payment = 75
+						},
+			['1'] = {
+								name = 'Specialized Tuner,
+								payment = 75
+						},
+			['1'] = {
+								name = 'ToolPush',
+								isboss = true,
+								payment = 75
+						},
+				},
 	},
 	['hotdog'] = {
 		label = 'Hotdog',
