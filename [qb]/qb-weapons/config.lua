@@ -143,6 +143,11 @@ Config.WeaponRepairPoints = {
         coords = vector3(964.02, -1267.41, 34.97),
         IsRepairing = false,
         RepairingData = {},
+    },
+    [2] = {
+        coords = vector3(487.25, -996.98, 30.69),
+        IsRepairing = true,
+        RepairingData = {},
     }
 }
 
