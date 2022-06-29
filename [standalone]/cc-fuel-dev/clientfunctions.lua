@@ -1,11 +1,51 @@
+
+--Gets the current Weapon data when a player swaps weapon
+local CurrentWeaponData = nil
+AddEventHandler('weapons:client:SetCurrentWeapon', function(data, bool)
+    if data ~= false then
+        CurrentWeaponData = data
+    else
+        CurrentWeaponData = {}
+    end
+end)
+
+--If the player has a gas can equiped it gets the durability of the can
+--nil if no can is equiped
+function GetCurrentGasCanDurability()
+    local Player = QBCore.Functions.GetPlayerData()
+    if CurrentWeaponData then
+	    if CurrentWeaponData.name == "weapon_petrolcan" then
+            return Player.items[CurrentWeaponData.slot].info.quality 
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+end
+
+--Returns true if the vehicle passed in is able to be fueled
+function CanFuelVehicle(Vehicle)
+    if Vehicle then
+        local fuelLevel = GetVehicleFuelLevel(Vehicle)
+        
+        if fuelLevel == 100 then
+            return false
+        end
+        return true
+    end
+    return false
+end
+
 function GetFuel(vehicle)
-	return DecorGetFloat(vehicle, Config.FuelDecor)
+	if vehicle == 0 or vehicle == nil then return 0 end
+	return GetVehicleFuelLevel(vehicle)
 end
 
 function SetFuel(vehicle, fuel)
+	if vehicle == 0 or vehicle == nil then return end
 	if type(fuel) == 'number' and fuel >= 0 and fuel <= 100 then
 		SetVehicleFuelLevel(vehicle, fuel + 0.0)
-		DecorSetFloat(vehicle, Config.FuelDecor, GetVehicleFuelLevel(vehicle))
 	end
 end
 
@@ -14,7 +54,7 @@ function LoadAnimDict(dict)
 		RequestAnimDict(dict)
 
 		while not HasAnimDictLoaded(dict) do
-			Wait(1)
+			Citizen.Wait(1)
 		end
 	end
 end
@@ -39,6 +79,7 @@ function Round(num, numDecimalPlaces)
 
 	return math.floor(num * mult + 0.5) / mult
 end
+
 
 function CreateBlip(coords)
 	local blip = AddBlipForCoord(coords)
