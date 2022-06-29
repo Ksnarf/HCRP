@@ -108,7 +108,7 @@ QBShared.Weapons = {
 	[`weapon_hominglauncher`] 				= {['name'] = 'weapon_hominglauncher', 	 			['label'] = 'Homing Launcher', 				['ammotype'] = 'AMMO_STINGER',					['damagereason'] = 'Killed / Exploded / Obliterated / Destroyed / Erased / Annihilated'},
 	[`weapon_compactlauncher`] 		 		= {['name'] = 'weapon_compactlauncher',  	  	['label'] = 'Compact Launcher', 			['ammotype'] = nil,											['damagereason'] = 'Killed / Exploded / Obliterated / Destroyed / Erased / Annihilated'},
 	[`weapon_rayminigun`]			 				= {['name'] = 'weapon_rayminigun', 		 				['label'] = 'Weapon Rayminigun',			['ammotype'] = 'AMMO_MINIGUN',					['damagereason'] = 'Killed / Exploded / Obliterated / Destroyed / Erased / Annihilated'},
-    [`weapon_emplauncher`] 			 		= {['name'] = 'weapon_emplauncher', 					['label'] = 'EMP Launcher', 					['ammotype'] = 'AMMO_EMPLAUNCHER',			['damagereason'] = 'Died'},
+  [`weapon_emplauncher`] 			 			= {['name'] = 'weapon_emplauncher', 					['label'] = 'EMP Launcher', 					['ammotype'] = 'AMMO_EMPLAUNCHER',			['damagereason'] = 'Died'},
 
     -- Throwables
 	[`weapon_grenade`] 		 	= {['name'] = 'weapon_grenade', 			['label'] = 'Grenade', 					['ammotype'] = nil,						['damagereason'] = 'Bombed / Exploded / Detonated / Blew up'},
