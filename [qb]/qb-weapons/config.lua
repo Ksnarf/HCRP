@@ -37,7 +37,7 @@ Config.DurabilityMultiplier = {
 
 	-- Handguns
 	['weapon_pistol'] 				 = 0.15,
-	['weapon_pistol_mk2'] 			 = 0.15,
+	['weapon_pistol_mk2'] 			 = 0.05,
 	['weapon_combatpistol'] 		 = 0.15,
 	['weapon_appistol'] 			 = 0.15,
 	-- ['weapon_stungun'] 				 = 0.15,
@@ -144,7 +144,7 @@ Config.WeaponRepairPoints = {
         IsRepairing = false,
         RepairingData = {},
     },
-    [2] = {
+    [2] = {  -- MRPD Armory Weapon Table
         coords = vector3(487.25, -996.98, 30.69),
         IsRepairing = false,
         RepairingData = {},
