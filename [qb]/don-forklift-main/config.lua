@@ -16,7 +16,7 @@ Config.MinPayout = 18
 
 Config.Forklift = {
 	['Jobstart'] = { -- the place where you start and finish your work
-		Pos = {x = 1197.17, y = -3253.47, z = 7.1},
+		Pos = {x = 1196.17, y = -3253.47, z = 7.1},
 		Size  = {x = 1.2, y = 1.2, z = 1.0},
 		Color = {r = 78, g = 2453, b = 175},
 		Type  = 25,
