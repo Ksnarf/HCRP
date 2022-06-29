@@ -1,4 +1,4 @@
-QBCore = nil
+-- QBCore = nil
 --New QBCore way of getting the Object comment out if your using old QB
 QBCore = exports['qb-core']:GetCoreObject()
 
@@ -13,10 +13,10 @@ local isFueling = false
 
 exports['qb-target']:AddVehicle({
     options = {
-      { 
+      {
         type = "client",
         event = 'cc-fuel:client:petrolcanrefuel',
-        label = 'Refuel Car', 
+        label = 'Refuel Car',
         icon = 'fas fa-gas-pump',
         item = 'weapon_petrolcan',
 	    canInteract = function(entity)
@@ -42,7 +42,7 @@ exports['qb-target']:AddVehicle({
             local curGasCanDurability = GetCurrentGasCanDurability()
             if curGasCanDurability == nil then return false end
             if curGasCanDurability >= 100 then return false end
-            
+
             return Config.AllowFuelSiphoning
         end
       }
@@ -83,7 +83,7 @@ exports['qb-target']:AddTargetModel(Config.GasPumpModels, {
 
 --Fuel siphon event
 RegisterNetEvent("cc-fuel:client:siphonfuel")
-AddEventHandler("cc-fuel:client:siphonfuel",function() 
+AddEventHandler("cc-fuel:client:siphonfuel",function()
     local petrolCanDurability = GetCurrentGasCanDurability()
 
     local PlayerPed = PlayerPedId()
@@ -93,10 +93,10 @@ AddEventHandler("cc-fuel:client:siphonfuel",function()
     local vehicleCoords = GetEntityCoords(Vehicle)
 
     local distanceToVehicle =  #(PlayerCoords - vehicleCoords)
-    
+
     local petrolCanDurability = GetCurrentGasCanDurability()
 
-    
+
     if distanceToVehicle > 2.5 then
         QBCore.Functions.Notify("You are too far away from the vehicle","error")
         return
@@ -116,13 +116,13 @@ AddEventHandler("cc-fuel:client:siphonfuel",function()
         --Start taking the fuel
         TaskTurnPedToFaceEntity(PlayerPed, Vehicle, 1000)
 	    Citizen.Wait(1000)
-	
+
 	    LoadAnimDict("timetable@gardener@filling_can")
 	    TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
 
         isFueling = true
 
-        Citizen.CreateThread(function() 
+        Citizen.CreateThread(function()
             local fuelToTake = Config.SiphonRate
             while isFueling do
                 Citizen.Wait(500)
@@ -136,7 +136,7 @@ AddEventHandler("cc-fuel:client:siphonfuel",function()
                 end
 
                 SetFuel(Vehicle, currentFuel)
-                
+
                 if petrolCanDurability >= 100 then
                     isFueling = false
                 end
@@ -182,7 +182,7 @@ AddEventHandler("cc-fuel:client:refillpetrolcan", function()
         else
             local refillCost = math.floor(100 - petrolCanDurability)
             if refillCost > 0 then
-                local currentCash = QBCore.Functions.GetPlayerData().money['cash']  
+                local currentCash = QBCore.Functions.GetPlayerData().money['cash']
 			    if currentCash >= refillCost then
 					TriggerServerEvent('cc-fuel:server:pay', refillCost, GetPlayerServerId(PlayerId()))
 					TriggerEvent("weapons:client:SetWeaponQuality",100)
@@ -211,7 +211,7 @@ AddEventHandler("cc-fuel:client:buypetrolcan", function()
 end)
 
 RegisterNetEvent("cc-fuel:client:pumprefuel")
-AddEventHandler("cc-fuel:client:pumprefuel", function(pump) 
+AddEventHandler("cc-fuel:client:pumprefuel", function(pump)
     local PlayerPed = PlayerPedId()
     local Vehicle = QBCore.Functions.GetClosestVehicle()
 
@@ -223,20 +223,20 @@ AddEventHandler("cc-fuel:client:pumprefuel", function(pump)
     local distanceToPump =  #(PlayerCoords - pumpCoords)
     local distanceToVehicle =  #(PlayerCoords - vehicleCoords)
 
-    
+
     if distanceToVehicle > 2.5 then
         QBCore.Functions.Notify("You are too far away from the vehicle","error")
         return
     end
 
     --Check car is able to be fueled
-    
+
 
     if CanFuelVehicle(Vehicle) then
         --Start the fueling
         TaskTurnPedToFaceEntity(PlayerPed, Vehicle, 1000)
 	    Citizen.Wait(1000)
-	
+
 	    LoadAnimDict("timetable@gardener@filling_can")
 	    TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
 
@@ -254,13 +254,13 @@ AddEventHandler("cc-fuel:client:pumprefuel", function(pump)
         local currentFuel = GetVehicleFuelLevel(Vehicle)
         local currentCash = QBCore.Functions.GetPlayerData().money['cash']
 
-        Citizen.CreateThread(function() 
+        Citizen.CreateThread(function()
             local fuelToAdd = Config.PetrolPumpRefuelRate
             while isFueling do
                 Citizen.Wait(500)
-		        
+
 		        local extraCost = fuelToAdd / 1.5 * Config.CostMultiplier
-                
+
                 currentFuel = currentFuel + fuelToAdd
 
                 if currentFuel > 100.0 then
@@ -310,7 +310,7 @@ AddEventHandler("cc-fuel:client:pumprefuel", function(pump)
 end)
 
 RegisterNetEvent("cc-fuel:client:petrolcanrefuel")
-AddEventHandler("cc-fuel:client:petrolcanrefuel", function() 
+AddEventHandler("cc-fuel:client:petrolcanrefuel", function()
     local PlayerPed = PlayerPedId()
     local Vehicle = QBCore.Functions.GetClosestVehicle()
 
@@ -318,10 +318,10 @@ AddEventHandler("cc-fuel:client:petrolcanrefuel", function()
     local vehicleCoords = GetEntityCoords(Vehicle)
 
     local distanceToVehicle =  #(PlayerCoords - vehicleCoords)
-    
+
     local petrolCanDurability = GetCurrentGasCanDurability()
 
-    
+
     if distanceToVehicle > 2.5 then
         QBCore.Functions.Notify("You are too far away from the vehicle","error")
         return
@@ -341,7 +341,7 @@ AddEventHandler("cc-fuel:client:petrolcanrefuel", function()
         --Start the fueling
         TaskTurnPedToFaceEntity(PlayerPed, Vehicle, 1000)
 	    Citizen.Wait(1000)
-	
+
 	    LoadAnimDict("timetable@gardener@filling_can")
 	    TaskPlayAnim(ped, "timetable@gardener@filling_can", "gar_ig_5_filling_can", 2.0, 8.0, -1, 50, 0, 0, 0, 0)
 
@@ -359,10 +359,10 @@ AddEventHandler("cc-fuel:client:petrolcanrefuel", function()
         local currentCash = QBCore.Functions.GetPlayerData().money['cash']
 
         Citizen.CreateThread(function()
-            local fuelToAdd = Config.PetrolCanRefuelRate 
+            local fuelToAdd = Config.PetrolCanRefuelRate
             while isFueling do
                 Citizen.Wait(500)
-		        
+
                 currentFuel = currentFuel + fuelToAdd
                 petrolCanDurability = (petrolCanDurability - fuelToAdd)
 
@@ -372,7 +372,7 @@ AddEventHandler("cc-fuel:client:petrolcanrefuel", function()
                 end
 
                 SetFuel(Vehicle, currentFuel)
-                
+
                 if petrolCanDurability <= 0 then
                     isFueling = false
                 end
@@ -458,4 +458,3 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
