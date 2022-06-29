@@ -1,4 +1,4 @@
-QBCore = nil
+--QBCore = nil
 --New QBCore way of getting the Object comment out if your using old QB
 QBCore = exports['qb-core']:GetCoreObject()
 
@@ -10,7 +10,7 @@ QBCore = exports['qb-core']:GetCoreObject()
 --end
 
 RegisterNetEvent("cc-fuel:server:pay")
-AddEventHandler("cc-fuel:server:pay", function(price,source) 
+AddEventHandler("cc-fuel:server:pay", function(price,source)
     local xPlayer = QBCore.Functions.GetPlayer(source)
 	local amount = math.floor(price)
 

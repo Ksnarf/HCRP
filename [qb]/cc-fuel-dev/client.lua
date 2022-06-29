@@ -1,4 +1,4 @@
--- QBCore = nil
+--QBCore = nil
 --New QBCore way of getting the Object comment out if your using old QB
 QBCore = exports['qb-core']:GetCoreObject()
 
