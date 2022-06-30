@@ -95,46 +95,6 @@ Config.Locations = {
         }
     },
 
-    ['Power'] = {
-        settings = {
-            label = 'Bennys Motorworks',
-            welcomeLabel = "Welcome to Benny's Motorworks!",
-            enabled = true,
-        },
-        blip = {
-            label = 'Bennys Motorworks',
-            coords = vector3(-41.8942, -1044.1943, 28.6297),
-            sprite = 72,
-            scale = 0.65,
-            color = 0,
-            display = 4,
-            enabled = true,
-        },
-        categories = {
-            mods = true,
-            turbo = true,
-            repair = true,
-            respray = true,
-            liveries = true,
-            wheels = true,
-            tint = true,
-            plate = true,
-            extras = true,
-            neons = true,
-            xenons = true,
-            horn = true,
-            cosmetics = true,
-        },
-        drawtextui = {
-            text = "Bennys Motorworks"
-        },
-        restrictions = { deniedClasses = { 18 } },
-        zones = {
-            { coords = vector3(-32.48, -1065.38, 28.4), length = 6.0, width = 4.0, heading = 340.0, minZ = 27.0, maxZ = 31.0 },
-            { coords = vector3(-38.12, -1052.85, 28.4), length = 6.0, width = 4.0, heading = 340.0, minZ = 27.0, maxZ = 31.0 },
-        }
-    },
-
     ['Popular'] = {
         settings = {
             label = 'Customs Motorworks',
