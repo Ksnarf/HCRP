@@ -269,15 +269,6 @@ QBCore.Commands.Add("sc", Lang:t("commands.softcuff"), {}, false, function(sourc
     end
 end)
 
-QBCore.Commands.Add("cam", Lang:t("commands.camera"), {{name = "camid", help = Lang:t('info.camera_id')}}, false, function(source, args)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        TriggerClientEvent("police:client:ActiveCamera", src, tonumber(args[1]))
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only"), 'error')
-    end
-end)
 
 QBCore.Commands.Add("flagplate", Lang:t("commands.flagplate"), {{name = "plate", help = Lang:t('info.plate_number')}, {name = "reason", help = Lang:t('info.flag_reason')}}, true, function(source, args)
     local src = source
