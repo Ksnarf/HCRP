@@ -11,7 +11,7 @@ compatible '3.2.2'
 
 ------------------------------
 
-experimental 'false'	-- Mute unstable version warning in server console.
+experimental 'true'	-- Mute unstable version warning in server console.
 debug_mode 'false' 		-- More verbose printing on client console.
 
 ------------------------------
