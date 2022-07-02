@@ -4,9 +4,9 @@
   <residentAnims />
   <InitDatas>
       	  <Item>
-      <modelName>stockGMC6500h</modelName>
-      <txdName>stockGMC6500h</txdName>
-      <handlingId>stockGMC6500h</handlingId>
+      <modelName>stockF650</modelName>
+      <txdName>stockF650</txdName>
+      <handlingId>stockF650</handlingId>
       <gameName>stockGMC6500h</gameName>
       <vehicleMakeName>HVY</vehicleMakeName>
       <expressionDictName>null</expressionDictName>
