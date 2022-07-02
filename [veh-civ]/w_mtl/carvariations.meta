@@ -1,0 +1,1056 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleModelInfoVariation>
+	<variationData>
+		<Item>
+			<modelName>packer</modelName>
+			<colors>
+				<Item>
+					<indices content="char_array"> <!-- Util Off-White -->
+            122
+            122
+            2
+            156
+            3
+            3
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="true"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="false"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="true"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Util Black -->
+            15
+            15
+            2
+            156
+            3
+            3
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="true"/> <!-- The Packer -->
+						<Item value="false"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="true"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Util Dark Blue -->
+            75
+            75
+            5
+            156
+            99
+            99
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="true"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="true"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="true"/> <!-- Gradient -->
+						<Item value="true"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Silver -->
+            4
+            4
+            6
+            156
+            3
+            3
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="false"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="false"/> <!-- White Top -->
+						<Item value="true"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Sea Green -->
+            51
+            51
+            5
+            156
+            3
+            3
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="true"/> <!-- The Packer -->
+						<Item value="false"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="true"/> <!-- Wave -->
+						<Item value="true"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            5
+            156
+			4
+			4
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="true"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="true"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Frost White -->
+            112
+            112
+            112
+            156
+            99
+            99
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="true"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="false"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            5
+            156
+            3
+            3
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="true"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="true"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Metallic Straw Brown -->
+            99
+            99
+            2
+            156
+            99
+            99
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="false"/> <!-- Red Stripe -->
+						<Item value="true"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="false"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Schafter Purple -->
+            71
+            12
+            5
+            156
+            3
+            3
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/> <!-- The Packer -->
+						<Item value="false"/> <!-- Red Stripe -->
+						<Item value="true"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="false"/> <!-- White Top -->
+						<Item value="false"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Schafter Purple -->
+            89
+            89
+            88
+            156
+            97
+            97
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="true"/> <!-- The Packer -->
+						<Item value="false"/> <!-- Red Stripe -->
+						<Item value="false"/> <!-- JEW -->
+						<Item value="false"/> <!-- Wave -->
+						<Item value="false"/> <!-- White Top -->
+						<Item value="true"/> <!-- Black Two-tone -->
+						<Item value="false"/> <!-- Gradient -->
+						<Item value="false"/> <!-- Worn -->
+						<Item value="false"/> <!-- Star Stripes -->
+					</liveries>
+				</Item>
+			</colors>
+			<kits>
+				<Item>591_packer_modkit</Item>
+			</kits>
+			<windowsWithExposedEdges/>
+			<plateProbabilities>
+				<Probabilities>
+					<Item>
+						<Name>Standard White</Name>
+						<Value value="70"/>
+					</Item>
+					<Item>
+						<Name>White Plate 2</Name>
+						<Value value="30"/>
+					</Item>
+				</Probabilities>
+			</plateProbabilities>
+			<lightSettings value="14"/>
+			<sirenSettings value="0"/>
+		</Item>
+		<Item>
+			<modelName>flatbed</modelName>
+			<colors>
+				<!-- Casey's Colors -->
+				<Item>
+					<indices content="char_array">
+            46
+            46
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            122
+            12
+            112
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            47
+            47
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            121
+            121
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<!-- LSC Colors -->
+				<Item>
+					<indices content="char_array">
+            145
+            120
+            145
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            38
+            38
+            5
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<!-- Beeker's Colors -->
+				<Item>
+					<indices content="char_array">
+            28
+            28
+            5
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            50
+            12
+            50
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<!-- Generic Colors -->
+				<Item>
+					<indices content="char_array"> <!-- Util Black -->
+            15
+            15
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Util Dark Blue -->
+            75
+            75
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Silver -->
+            4
+            4
+            6
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Sea Green -->
+            51
+            51
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Frost White -->
+            112
+            112
+            112
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+			</colors>
+			<kits>
+				<Item>593_flatbed_modkit</Item>
+			</kits>
+			<windowsWithExposedEdges/>
+			<plateProbabilities>
+				<Probabilities>
+					<Item>
+						<Name>Standard White</Name>
+						<Value value="70"/>
+					</Item>
+					<Item>
+						<Name>White Plate 2</Name>
+						<Value value="30"/>
+					</Item>
+				</Probabilities>
+			</plateProbabilities>
+			<lightSettings value="14"/>
+			<sirenSettings value="180"/>
+		</Item>
+		<Item>
+			<modelName>towtruck3</modelName>
+			<colors>
+				<!-- Casey's Colors -->
+				<Item>
+					<indices content="char_array">
+            46
+            46
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/> <!-- no livery -->
+						<Item value="false"/> <!-- birb -->
+						<Item value="false"/> <!-- caseys -->
+						<Item value="true"/> <!-- worn caseys -->
+						<Item value="false"/> <!-- alt caseys -->
+						<Item value="false"/> <!-- autocare -->
+						<Item value="false"/> <!-- al's -->
+						<Item value="false"/> <!-- auto exotic -->
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            134
+            12
+            112
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            47
+            47
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            121
+            121
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<!-- LSC Colors -->
+				<Item>
+					<indices content="char_array">
+            145
+            145
+            145
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            38
+            38
+            5
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<!-- Generic Colors -->
+				<Item>
+					<indices content="char_array"> <!-- Util Black -->
+            15
+            15
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Util Dark Blue -->
+            75
+            75
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Silver -->
+            4
+            4
+            6
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Sea Green -->
+            51
+            51
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Frost White -->
+            112
+            112
+            12
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+			</colors>
+			<kits>
+				<Item>594_towtruck3_modkit</Item>
+			</kits>
+			<windowsWithExposedEdges/>
+			<plateProbabilities>
+				<Probabilities>
+					<Item>
+						<Name>Standard White</Name>
+						<Value value="70"/>
+					</Item>
+					<Item>
+						<Name>White Plate 2</Name>
+						<Value value="30"/>
+					</Item>
+				</Probabilities>
+			</plateProbabilities>
+			<lightSettings value="451"/>
+			<sirenSettings value="181"/>
+		</Item>
+		<Item>
+			<modelName>pounder</modelName>
+			<colors>
+				<Item>
+					<indices content="char_array"> <!-- Util Black -->
+            15
+            0
+            2
+            5
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Util Dark Blue -->
+            75
+            0
+            2
+            5
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Silver -->
+            4
+            4
+            6
+            3
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Sea Green -->
+            51
+            0
+            2
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            62
+            2
+            3
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Frost White -->
+            132
+            3
+            132
+            3
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array"> <!-- Classic Dark Blue -->
+            62
+            0
+            0
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="true"/>
+						<Item value="false"/>
+						<Item value="false"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            132
+            132
+            132
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            47
+            47
+            105
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            86
+            86
+            4
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+				<Item>
+					<indices content="char_array">
+            59
+            59
+            5
+            156
+            0
+            0
+					</indices>
+					<liveries>
+						<Item value="false"/>
+						<Item value="true"/>
+						<Item value="true"/>
+					</liveries>
+				</Item>
+			</colors>
+			<kits>
+				<Item>0_default_modkit</Item>
+			</kits>
+			<windowsWithExposedEdges/>
+			<plateProbabilities>
+				<Probabilities>
+					<Item>
+						<Name>Standard White</Name>
+						<Value value="70"/>
+					</Item>
+					<Item>
+						<Name>White Plate 2</Name>
+						<Value value="30"/>
+					</Item>
+				</Probabilities>
+			</plateProbabilities>
+			<lightSettings value="14"/>
+			<sirenSettings value="0"/>
+		</Item>
+	</variationData>
+</CVehicleModelInfoVariation>
