@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    
+<CVehicleModelInfoVarGlobal>
+  <Kits>
+	<Item>
+      <kitName>985_do228_modkit</kitName>
+      <id value="985" />
+      <kitType>MKT_SPECIAL</kitType>
+      <visibleMods>
+		 <Item>
+          <modelName>winaset_r</modelName>
+          <modShopLabel>WINASET_R</modShopLabel>
+          <linkedModels />
+          <turnOffBones>
+		    <Item>mod_a</Item>
+          </turnOffBones>
+          <type>VMT_BUMPER_F</type>
+          <bone>mod_p</bone>
+          <collisionBone>mod_p</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.00000000"/>
+          <weight value="0"/>
+          <turnOffExtra value="false"/>
+          <disableBonnetCamera value="false"/>
+          <allowBonnetSlide value="true"/>
+          <weaponSlot value="-1"/>
+          <weaponSlotSecondary value="-1"/>
+          <disableProjectileDriveby value="false"/>
+          <disableDriveby value="false"/>
+          <disableDrivebySeat value="-1"/>
+          <disableDrivebySeatSecondary value="-1"/>
+	    </Item>
+	   <Item>
+          <modelName>s340_parked</modelName>
+          <modShopLabel>S340_PARKED</modShopLabel>
+          <linkedModels />
+          <turnOffBones>
+		    <Item>mod_o</Item>
+          </turnOffBones>
+          <type>VMT_SPOILER</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.00000000"/>
+          <weight value="0"/>
+          <turnOffExtra value="false"/>
+          <disableBonnetCamera value="false"/>
+          <allowBonnetSlide value="true"/>
+          <weaponSlot value="-1"/>
+          <weaponSlotSecondary value="-1"/>
+          <disableProjectileDriveby value="false"/>
+          <disableDriveby value="false"/>
+          <disableDrivebySeat value="-1"/>
+          <disableDrivebySeatSecondary value="-1"/>
+		</Item>
+	   <Item>
+          <modelName>s340_stairs</modelName>
+          <modShopLabel>S340_STAIRS</modShopLabel>
+          <linkedModels>
+            <Item>iae_faan_l</Item>
+          </linkedModels>
+          <turnOffBones>
+            <Item>mod_n</Item>
+          </turnOffBones>
+          <type>VMT_SKIRT</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.00000000"/>
+          <weight value="0"/>
+          <turnOffExtra value="false"/>
+          <disableBonnetCamera value="false"/>
+          <allowBonnetSlide value="true"/>
+          <weaponSlot value="-1"/>
+          <weaponSlotSecondary value="-1"/>
+          <disableProjectileDriveby value="false"/>
+          <disableDriveby value="false"/>
+          <disableDrivebySeat value="-1"/>
+          <disableDrivebySeatSecondary value="-1"/>
+		 </Item>
+      </visibleMods>
+	  <linkMods>
+        <Item>
+          <modelName>winaset_r</modelName>
+          <bone>mod_a</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>s340_parked</modelName>
+          <bone>chassis</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+		  <modelName>s340_stairs</modelName>
+          <bone>chassis</bone>
+          <turnOffExtra value="false" />
+		     </Item>
+				<Item>
+          <modelName>iae_fan_r</modelName>
+          <bone>mod_s</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+		  <modelName>iae_fan_l</modelName>
+          <bone>mod_r</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>iae_r</modelName>
+          <bone>mod_m</bone>
+          <turnOffExtra value="false" />
+        </Item>
+	  </linkMods>
+      <slotNames>      
+        <Item>
+          <slot>VMT_BUMPER_F</slot>
+          <name>WT_UPGRADE</name>
+        </Item>
+				<Item>
+          <slot>VMT_BUMPER_R</slot>
+          <name>WT_UPGRADE3</name>
+        </Item>
+				<Item>
+          <slot>VMT_SKIRT</slot>
+          <name>WT_UPGRADE4</name>
+        </Item>
+				<Item>
+          <slot>VMT_SPOILER</slot>
+          <name>WT_UPGRADE2</name>
+        </Item>
+      </slotNames>
+      <statMods>
+        <Item>
+          <identifier />
+          <modifier value="25" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="50" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="75" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="25" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="65" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="20" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="40" />
+          <audioApply value="1.000000" />
+          <weight value="10" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="60" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="80" />
+          <audioApply value="1.000000" />
+          <weight value="30" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="40" />
+          <type>VMT_ARMOUR</type>
+        </Item>  
+      </statMods>
+      <slotNames>      
+        <Item>
+          <slot>VMT_BUMPER_F</slot>
+          <name>WT_UPGRADE</name>
+        </Item>
+				<Item>
+          <slot>VMT_BUMPER_R</slot>
+          <name>WT_UPGRADE3</name>
+        </Item>
+				<Item>
+          <slot>VMT_SKIRT</slot>
+          <name>WT_UPGRADE4</name>
+        </Item>
+				<Item>
+          <slot>VMT_SPOILER</slot>
+          <name>WT_UPGRADE2</name>
+        </Item>
+      </slotNames>
+      <liveryNames />
+    </Item>
+  </Kits> 
+    <Lights />
+</CVehicleModelInfoVarGlobal>

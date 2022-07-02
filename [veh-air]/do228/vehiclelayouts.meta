@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CVehicleMetadataMgr>
+  <AnimRateSets />
+  
+  <ClipSetMaps />
+  
+  <VehicleCoverBoundOffsetInfos />
+  
+  <BicycleInfos />
+  
+  <POVTuningInfos />
+  
+  <EntryAnimVariations />
+  
+  <VehicleExtraPointsInfos />
+  
+  <DrivebyWeaponGroups />
+  
+  <VehicleDriveByAnimInfos />
+  
+  <VehicleDriveByInfos />
+  
+  <VehicleSeatInfos />
+  
+  <VehicleEntryPointInfos>
+    <Item type="CVehicleEntryPointInfo">
+      <Name>ENTRY_POINT_PLANE_DO228_WARP_LEFT</Name>
+      <DoorBoneName />
+      <SecondDoorBoneName />
+      <DoorHandleBoneName />
+      <WindowId>INVALID</WindowId>
+      <VehicleSide>SIDE_LEFT</VehicleSide>
+      <AccessableSeats>
+        <Item ref="SEAT_STANDARD_FRONT_LEFT" />
+		<Item ref="SEAT_STANDARD_NO_SHUFFLE_REAR_LEFT" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_1" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_2" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_3" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_4" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_5" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_6" />
+				<Item ref="SEAT_STANDARD_FRONT_RIGHT" />
+		<Item ref="SEAT_STANDARD_NO_SHUFFLE_REAR_RIGHT" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_1" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_2" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_3" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_4" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_5" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_6" />
+      </AccessableSeats>
+      <VehicleExtraPointsInfo ref="NULL" />
+      <Flags>MPWarpInOut SPEntryAllowedAlso IgnoreSmashWindowCheck</Flags>
+      <BlockJackReactionSides />
+    </Item>
+    <Item type="CVehicleEntryPointInfo">
+      <Name>ENTRY_POINT_PLANE_DO228_WARP_RIGHT</Name>
+      <DoorBoneName />
+      <SecondDoorBoneName />
+      <DoorHandleBoneName />
+      <WindowId>INVALID</WindowId>
+      <VehicleSide>SIDE_RIGHT</VehicleSide>
+      <AccessableSeats>
+        <Item ref="SEAT_STANDARD_FRONT_RIGHT" />
+		<Item ref="SEAT_STANDARD_NO_SHUFFLE_REAR_RIGHT" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_1" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_2" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_3" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_4" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_5" />
+        <Item ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_6" />
+      </AccessableSeats>
+      <VehicleExtraPointsInfo ref="NULL" />
+      <Flags>MPWarpInOut SPEntryAllowedAlso IgnoreSmashWindowCheck</Flags>
+      <BlockJackReactionSides />
+    </Item>
+  </VehicleEntryPointInfos>
+  
+  <VehicleEntryPointAnimInfos>
+		<Item type="CVehicleEntryPointAnimInfo">
+      <Name>ENTRY_POINT_ANIM_PLANE_DO228_WARP</Name>
+      <CommonClipSetMap ref="COMMON_CLIPSET_MAP_PLANE_JET" />
+      <EntryClipSetMap ref="ENTRY_CLIPSET_MAP_PLANE_JET_FRONT_LEFT" />
+      <ExitClipSetMap ref="EXIT_CLIPSET_MAP_PLANE_JET_FRONT_LEFT" />
+      <AlternateTryLockedDoorClipId />
+      <AlternateForcedEntryClipId />
+      <AlternateJackFromOutSideClipId />
+      <AlternateBeJackedFromOutSideClipId />
+      <AlternateEntryPointClipSetId />
+      <EnterVehicleMoveNetwork>ENTER_VEHICLE_STD</EnterVehicleMoveNetwork>
+      <EntryTranslation x="0.000000" y="1.300000" z="-1.000000" />
+      <OpenDoorTranslation x="0.000000" y="0.000000" />
+      <OpenDoorHeadingChange value="0.000000" />
+      <EntryHeadingChange value="-1.570000" />
+      <ExtraZForWaterEntry value="0.000000" />
+      <EntryPointFlags>UseVehicleRelativeEntryPosition WarpOut DontCloseDoorInside DontCloseDoorOutside NavigateToWarpEntryPoint</EntryPointFlags>
+      <EntryAnimVariations ref="NULL" />
+    </Item>
+  </VehicleEntryPointAnimInfos>
+	
+	
+  <VehicleExplosionInfos />
+  
+  <VehicleLayoutInfos>
+    <Item type="CVehicleLayoutInfo">
+      <Name>LAYOUT_PLANE_DO228</Name>
+      <Seats>
+        <Item>
+          <SeatInfo ref="SEAT_STANDARD_FRONT_LEFT" />
+          <SeatAnimInfo ref="SEAT_ANIM_PLANE_JET_FRONT_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_STANDARD_FRONT_RIGHT" />
+          <SeatAnimInfo ref="SEAT_ANIM_PLANE_JET_FRONT_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_STANDARD_NO_SHUFFLE_REAR_LEFT" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_STANDARD_NO_SHUFFLE_REAR_RIGHT" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_1" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_1" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_2" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_2" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_3" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_3" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_4" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_4" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_5" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_5" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_6" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_LEFT" />
+        </Item>
+        <Item>
+          <SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_6" />
+          <SeatAnimInfo ref="SEAT_ANIM_BUS_REAR_RIGHT" />
+        </Item>
+      </Seats>
+      <EntryPoints>
+        <Item>
+          <EntryPointInfo ref="ENTRY_POINT_PLANE_DO228_WARP_LEFT" />
+          <EntryPointAnimInfo ref="ENTRY_POINT_ANIM_PLANE_DO228_WARP" />
+        </Item>
+      </EntryPoints>
+      <LayoutFlags>StreamAnims WarpIntoAndOut DisableJackingAndBusting Use2DBodyBlend</LayoutFlags>
+      <BicycleInfo ref="NULL" />
+      <HandsUpClipSetId>busted_vehicle_std</HandsUpClipSetId>
+      <SteeringWheelOffset x="0.000000" y="0.350000" z="0.320000" />
+    </Item>
+  </VehicleLayoutInfos>
+  <VehicleScenarioLayoutInfos />
+  <SeatOverrideAnimInfos />
+  <InVehicleOverrideInfos />
+  <FirstPersonDriveByLookAroundData />
+</CVehicleMetadataMgr>
