@@ -4429,6 +4429,15 @@ QBShared.Vehicles = {
 		['hash'] = `GetHashKey("demon")`,
 		['shop'] = 'pdm',
   },
+	['gmcs'] = {
+		['name'] = '2020 GMC Sierra Crew Cab ',
+		['brand'] = 'GMC',
+		['model'] = 'gmcs',
+		['price'] = 64999,
+		['category'] = 'suvs',
+		['hash'] = `GetHashKey("gmcs")`,
+		['shop'] = 'pdm',
+  },
 }
 
 for _, v in pairs(QBShared.Vehicles) do
