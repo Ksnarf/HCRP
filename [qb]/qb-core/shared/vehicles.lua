@@ -4421,7 +4421,7 @@ QBShared.Vehicles = {
 	},
 	--Addons
 	['demon'] = {
-		['name'] = '2019 Dodge Demon ',
+		['name'] = '2019 Dodge Demon',
 		['brand'] = 'Dodge',
 		['model'] = 'demon',
 		['price'] = 71999,
@@ -4430,12 +4430,21 @@ QBShared.Vehicles = {
 		['shop'] = 'pdm',
   },
 	['gmcs'] = {
-		['name'] = '2020 GMC Sierra Crew Cab ',
+		['name'] = '2020 GMC Sierra Crew Cab',
 		['brand'] = 'GMC',
 		['model'] = 'gmcs',
 		['price'] = 64999,
 		['category'] = 'suvs',
 		['hash'] = `GetHashKey("gmcs")`,
+		['shop'] = 'pdm',
+  },
+	['dragqueen'] = {
+		['name'] = '2004 Custom Drag Car',
+		['brand'] = 'HomeBuilt',
+		['model'] = 'dragqueen',
+		['price'] = 295999,
+		['category'] = 'sport',
+		['hash'] = `GetHashKey("dragqueen")`,
 		['shop'] = 'pdm',
   },
 }
