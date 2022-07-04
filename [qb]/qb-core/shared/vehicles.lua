@@ -4447,6 +4447,15 @@ QBShared.Vehicles = {
 		['hash'] = `GetHashKey("dragqueen")`,
 		['shop'] = 'pdm',
   },
+	['remower'] = {
+		['name'] = '1994 John Deere Custom v12',
+		['brand'] = 'HomeBuilt',
+		['model'] = 'remower',
+		['price'] = 17599,
+		['category'] = 'sport',
+		['hash'] = `GetHashKey("remower")`,
+		['shop'] = 'pdm',
+  },
 }
 
 for _, v in pairs(QBShared.Vehicles) do
