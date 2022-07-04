@@ -4419,6 +4419,16 @@ QBShared.Vehicles = {
 		['hash'] = `nimbus`,
 		['shop'] = 'air',
 	},
+	--Addons
+	['demon'] = {
+		['name'] = '2019 Dodge Demon ',
+		['brand'] = 'Dodge',
+		['model'] = 'demon',
+		['price'] = 71999,
+		['category'] = 'sport',
+		['hash'] = `GetHashKey("demon")`,
+		['shop'] = 'pdm',
+  },
 }
 
 for _, v in pairs(QBShared.Vehicles) do
