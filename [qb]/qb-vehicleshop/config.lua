@@ -85,8 +85,8 @@ Config.Shops = {
             },
             [8] = {
                 coords = vector4(-44.28, -1102.47, 25.44, 298.5),
-                defaultVehicle = 'bati',
-                chosenVehicle = 'bati'
+                defaultVehicle = 'gmcs',
+                chosenVehicle = 'gmcs'
             }
         },
     },
@@ -154,6 +154,57 @@ Config.Shops = {
             },
         }
     }, -- Add your next table under this comma
+    ['larryrv'] = {
+        ['Type'] = 'free-use', -- no player interaction is required to purchase a car
+        ['Zone'] = {
+            ['Shape'] = {--polygon that surrounds the shop
+                  vector2(1258.6357421875, 2692.3654785156),
+                  vector2(1204.4752197266, 2691.1123046875),
+                  vector2(1206.8559570312, 2727.3664550782),
+                  vector2(1211.2174072266, 2731.9594726562),
+                  vector2(1210.7199707032, 2747.0239257812),
+                  vector2(1237.4190673828, 2747.0297851562),
+                  vector2(1237.7188720704, 2727.1096191406),
+                  vector2(1251.2814941406, 2720.6645507812),
+                  vector2(1253.0946044922, 2705.8898925782)
+            },
+            ['minZ'] = 37.571598052978, -- min height of the shop zone
+            ['maxZ'] = 38.595851898194, -- max height of the shop zone
+            ['size'] = 2.75 -- size of the vehicles zones
+        },
+        ['Job'] = 'none', -- Name of job or none
+        ['ShopLabel'] = 'Larry's Discount Cars', -- Blip name
+        ['showBlip'] = true, -- true or false
+        ['blipSprite'] = 326, -- Blip sprite
+        ['blipColor'] = 5, -- Blip color
+        ['Categories'] = {-- Categories available to browse
+            ['sportsclassics'] = 'Sports Classics',
+            ['sedans'] = 'Sedans',
+            ['coupes'] = 'Coupes',
+            ['suvs'] = 'SUVs',
+            ['offroad'] = 'Offroad',
+            ['muscle'] = 'Muscle',
+            ['compacts'] = 'Compacts',
+        },
+        ['TestDriveTimeLimit'] = 0.5, -- Time in minutes until the vehicle gets deleted
+        ['Location'] = vector3(1224.99, 2725.36, 38.0), -- Blip Location
+        ['ReturnLocation'] = vector3(-44.74, -1082.58, 26.68), -- Location to return vehicle, only enables if the vehicleshop has a job owned
+        ['VehicleSpawn'] = vector4(1208.62, 2701.95, 38.01, 182.96), -- Spawn location when vehicle is bought
+        ['TestDriveSpawn'] = vector4(1208.62, 2701.95, 38.01, 182.96), -- Spawn location for test drive
+        ['ShowroomVehicles'] = {
+            [1] = {
+                coords = vector4(1217.19, 2700.21, 37.52, 179.72), -- where the vehicle will spawn on display
+                defaultVehicle = 'premier', -- Default display vehicle
+                chosenVehicle = 'premier', -- Same as default but is dynamically changed when swapping vehicles
+            },
+            [2] = {
+                coords = vector4(1220.13, 2700.33, 37.52, 181.69),
+                defaultVehicle = 'premier',
+                chosenVehicle = 'premier'
+            },
+        },
+    },
+    
     ['boats'] = {
         ['Type'] = 'free-use', -- no player interaction is required to purchase a vehicle
         ['Zone'] = {
