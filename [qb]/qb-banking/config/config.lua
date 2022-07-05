@@ -50,7 +50,7 @@ Config.Blip = {
     blipName = Lang:t('info.bank_blip'),
     blipType = 108,
     blipColor = 2,
-    blipScale = 0.55
+    blipScale = 0.50
 }
 
 Config.ATMModels = {
