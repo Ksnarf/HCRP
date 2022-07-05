@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CWeaponModelInfo__InitDataList>
+	<InitDatas>
+		<!-- ### launcher ### -->
+		
+		<Item>
+			<modelName>W_LR_FW190BOMB</modelName>
+			<txdName>W_LR_FW190BOMB</txdName>
+			<ptfxAssetName>null</ptfxAssetName>
+			<lodDist value="500"/>
+		</Item>
+
+	</InitDatas>
+</CWeaponModelInfo__InitDataList>

@@ -1,0 +1,15 @@
+lawmaster
+
+
+Install instructions
+First, go to gta5 / mods / update / x64 / dlcpacks
+Make a new folder, name it "lawmaster", and drag dlc.rpf into the folder.
+Then, go to gta5 / mods / update / update.rpf / common / data
+Edit dlclist.xml, add "dlcpacks:/lawmaster/"
+
+spawn name lawmaster
+
+
+
+converted by kjb33
+

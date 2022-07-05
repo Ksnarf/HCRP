@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    
+<CVehicleModelInfoVarGlobal>
+  <Kits>
+	<Item>
+      <kitName>402_agds_modkit</kitName>
+      <id value="402" />
+      <kitType>MKT_SPECIAL</kitType>
+      <visibleMods>
+        <Item>
+          <modelName>reaper_body</modelName>
+          <modShopLabel>WT_REAPER</modShopLabel>
+          <linkedModels>
+            <Item>reaper_turret</Item>
+						<Item>reaper_panel4</Item>
+						<Item>reaper_paner4</Item>
+						<Item>reaper_panel3</Item>
+						<Item>reaper_paner3</Item>
+						<Item>reaper_panel2</Item>
+						<Item>reaper_paner2</Item>	
+          </linkedModels>
+          <turnOffBones />
+          <type>VMT_BUMPER_R</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.000000" />
+          <weight value="10" />
+          <turnOffExtra value="false" />
+          <disableBonnetCamera value="false" />
+          <allowBonnetSlide value="true" />
+		  <weaponSlot />
+		 </Item>
+		 <Item>
+          <modelName>phoenix_body</modelName>
+          <modShopLabel>WT_PHOENIX</modShopLabel>
+          <linkedModels>
+            <Item>phoenix_turret</Item>
+						<Item>phoenix_panel4</Item>
+						<Item>phoenix_paner4</Item>
+						<Item>phoenix_panel3</Item>
+						<Item>phoenix_paner3</Item>
+						<Item>phoenix_panel2</Item>
+						<Item>phoenix_paner2</Item>	
+          </linkedModels>
+          <turnOffBones />
+          <type>VMT_BUMPER_R</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.000000" />
+          <weight value="10" />
+          <turnOffExtra value="false" />
+          <disableBonnetCamera value="false" />
+          <allowBonnetSlide value="true" />
+		  <weaponSlot />
+		 </Item>
+		 <Item>
+          <modelName>usa_body</modelName>
+          <modShopLabel>WT_USA</modShopLabel>
+          <linkedModels>
+            <Item>usa_panel2</Item>
+						<Item>usa_paner2</Item>	
+          </linkedModels>
+          <turnOffBones />
+          <type>VMT_BUMPER_R</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.000000" />
+          <weight value="10" />
+          <turnOffExtra value="false" />
+          <disableBonnetCamera value="false" />
+          <allowBonnetSlide value="true" />
+		  <weaponSlot />
+		 </Item>
+		 <Item>
+          <modelName>agds_era</modelName>
+          <modShopLabel>WT_ERA</modShopLabel>
+          <linkedModels />
+          <turnOffBones />
+          <type>VMT_BUMPER_F</type>
+          <bone>chassis</bone>
+          <collisionBone>mod_col_1</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <turnOffExtra value="false" />
+          <disableBonnetCamera value="false" />
+          <allowBonnetSlide value="true" />
+		  <weaponSlot />
+		 </Item>
+      </visibleMods>
+	  <linkMods>
+		<Item>
+          <modelName>reaper_turret</modelName>
+          <bone>mod_a</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>reaper_panel4</modelName>
+          <bone>mod_b</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>reaper_panel3</modelName>
+          <bone>mod_d</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>reaper_panel2</modelName>
+          <bone>mod_f</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>reaper_paner4</modelName>
+          <bone>mod_c</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>reaper_paner3</modelName>
+          <bone>mod_e</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>reaper_paner2</modelName>
+          <bone>mod_g</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_turret</modelName>
+          <bone>mod_a</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_panel4</modelName>
+          <bone>mod_b</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_panel3</modelName>
+          <bone>mod_d</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_panel2</modelName>
+          <bone>mod_f</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_paner4</modelName>
+          <bone>mod_c</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_paner3</modelName>
+          <bone>mod_e</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>phoenix_paner2</modelName>
+          <bone>mod_g</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>usa_turret</modelName>
+          <bone>mod_a</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>usa_panel2</modelName>
+          <bone>mod_f</bone>
+          <turnOffExtra value="false" />
+        </Item>
+				<Item>
+          <modelName>usa_paner2</modelName>
+          <bone>mod_g</bone>
+          <turnOffExtra value="false" />
+        </Item>
+	  </linkMods>
+      <slotNames>      
+        <Item>
+          <slot>VMT_BUMPER_R</slot>
+          <name>AGDS_DESIGN</name>
+        </Item>
+				<Item>
+          <slot>VMT_BUMPER_F</slot>
+          <name>AGDS_ARMOR</name>
+        </Item>
+      </slotNames>
+      <statMods>
+        <Item>
+          <identifier />
+          <modifier value="25" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="50" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="75" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ENGINE</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="25" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="65" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="5" />
+          <type>VMT_BRAKES</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="20" />
+          <audioApply value="1.000000" />
+          <weight value="0" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="40" />
+          <audioApply value="1.000000" />
+          <weight value="10" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="60" />
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="80" />
+          <audioApply value="1.000000" />
+          <weight value="30" />
+          <type>VMT_ARMOUR</type>
+        </Item>
+        <Item>
+          <identifier />
+          <modifier value="100" />
+          <audioApply value="1.000000" />
+          <weight value="40" />
+          <type>VMT_ARMOUR</type>
+        </Item>  
+      </statMods>
+      <slotNames>      
+        <Item>
+          <slot>VMT_BUMPER_R</slot>
+          <name>AGDS_DESIGN</name>
+        </Item>
+				<Item>
+          <slot>VMT_BUMPER_F</slot>
+          <name>AGDS_ARMOR</name>
+        </Item>   
+      </slotNames>
+      <liveryNames />
+    </Item>
+  </Kits> 
+    <Lights />
+</CVehicleModelInfoVarGlobal>
