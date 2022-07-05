@@ -1,0 +1,50 @@
+1. Go to: (mods)update/update.rpf/common/data/ai
+
+2. Right click and edit the WEAPONS.META file.
+
+3. Comment out (<!-- -->) the <WeaponGroupDamageForArmouredVehicleGlass> tag so it looks like below
+	> or just delete its entry and replace it with the following:
+
+<!--<WeaponGroupDamageForArmouredVehicleGlass>
+    <Item>
+      <GroupHash>GROUP_PISTOL</GroupHash>
+      <Damage value="6.250000" />
+    </Item> 
+    <Item>
+      <GroupHash>GROUP_SMG</GroupHash>
+      <Damage value="6.250000" />
+    </Item> 
+    <Item>
+      <GroupHash>GROUP_RIFLE</GroupHash>
+      <Damage value="6.250000" />
+    </Item> 	
+    <Item>
+      <GroupHash>GROUP_MG</GroupHash>
+      <Damage value="6.250000" />
+    </Item> 
+    <Item>
+      <GroupHash>GROUP_SHOTGUN</GroupHash>
+      <Damage value="17.000000" />
+    </Item>	
+	<Item>
+      <GroupHash>GROUP_SNIPER</GroupHash>
+      <Damage value="20.000000" />
+    </Item>	
+	<Item>
+      <GroupHash>GROUP_HEAVY</GroupHash>
+      <Damage value="100.000000" />
+    </Item>		
+    <Item>
+      <GroupHash>GROUP_UNDEFINED</GroupHash>
+      <Damage value="6.250000" />
+    </Item> 	
+  </WeaponGroupDamageForArmouredVehicleGlass>-->
+
+4. Save the file.
+
+
+
+// // // // // // // // // // PLEASE NOTE // // // // // // // // // //
+
+This is a global file edit, meaning that *all* armoured vehicles w/ bullet resistant windows will now be bulletproof
+(w/ thanks to u/TacticalDonutMods on Reddit for finding this)
