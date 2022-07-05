@@ -173,7 +173,7 @@ Config.Shops = {
             ['size'] = 2.75 -- size of the vehicles zones
         },
         ['Job'] = 'none', -- Name of job or none
-        ['ShopLabel'] = 'Larry's Discount Cars', -- Blip name
+        ['ShopLabel'] = 'Larrys Discount Cars', -- Blip name
         ['showBlip'] = true, -- true or false
         ['blipSprite'] = 326, -- Blip sprite
         ['blipColor'] = 5, -- Blip color
@@ -204,7 +204,7 @@ Config.Shops = {
             },
         },
     },
-    
+
     ['boats'] = {
         ['Type'] = 'free-use', -- no player interaction is required to purchase a vehicle
         ['Zone'] = {
