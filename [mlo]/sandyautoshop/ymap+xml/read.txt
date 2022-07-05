@@ -1,0 +1,3 @@
+ymap- (map editor/builder) mods\update\x64\dlcpacks\custom_maps\dlc.rpf\x64\levels\gta5\_citye\maps\custom_maps.rpf\
+or
+xml- (menyoo) menyooStuff/Spooner/
