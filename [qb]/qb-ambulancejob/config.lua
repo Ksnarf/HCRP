@@ -48,6 +48,8 @@ Config.Locations = { -- Edit the various interaction points for players or creat
     ["helicopter"] = {
         [1] = vector4(351.58, -587.45, 74.16, 160.5),
         [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
+        [3] = vector4(-447.39, -312.59, 78.17, 23.68), --Mount Zorah Rooftop Pad 2
+        [4] = vector4(-456.44, -291.25, 78.17, 22.68) --Mount Zorah Rooftop Pad 1
     },
     ["armory"] = {
         [1] = vector3(309.93, -602.94, 43.29),
