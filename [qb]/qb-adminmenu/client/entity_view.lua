@@ -10,7 +10,7 @@ local FreeAimEntity         = nil
 -- Configurable values
 local FreeAimInfoBoxX       = 0.60      -- X-axis (0.0 being left, 1.0 being right position of the screen)
 local FreeAimInfoBoxY       = 0.02      -- Y-axis (0.0 being up, 1.0 being down position of the screen)
-local useKph                = true      -- True to display KPH or false to display MPH
+local useKph                = false      -- True to display KPH or false to display MPH
 
 local CanEntityBeUsed = function(ped)
     if ped == PlayerPedId() then
