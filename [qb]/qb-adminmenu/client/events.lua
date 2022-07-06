@@ -130,23 +130,6 @@ RegisterNetEvent('qb-admin:client:SetSpeed', function(speed)
     end
 end)
 
-RegisterNetEvent('qb-weapons:client:SetWeaponAmmoManual', function(weapon, ammo)
-    local ped = PlayerPedId()
-    if weapon ~= "current" then
-        weapon = weapon:upper()
-        SetPedAmmo(ped, GetHashKey(weapon), ammo)
-        QBCore.Functions.Notify(Lang:t("info.ammoforthe", {value = ammo, weapon = QBCore.Shared.Weapons[weapon]["label"]}), 'success')
-    else
-        weapon = GetSelectedPedWeapon(ped)
-        if weapon ~= nil then
-            SetPedAmmo(ped, weapon, ammo)
-            QBCore.Functions.Notify(Lang:t("info.ammoforthe", {value = ammo, weapon = QBCore.Shared.Weapons[weapon]["label"]}), 'success')
-        else
-            QBCore.Functions.Notify(Lang:t("error.no_weapon"), 'error')
-        end
-    end
-end)
-
 RegisterNetEvent('qb-admin:client:GiveNuiFocus', function(focus, mouse)
     SetNuiFocus(focus, mouse)
 end)
