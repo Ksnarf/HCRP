@@ -289,4 +289,16 @@ QBShared.Jobs = {
             },
         },
 	},
+	-- HCRP Jobs
+	['Uber'] = {
+		label = 'Uber',
+		defaultDuty = false,
+		offDutyPay = false,
+		grades = {
+            ['0'] = {
+                 name = 'Driver',
+                 payment = 50
+            },
+        },
+	},
 }
