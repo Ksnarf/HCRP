@@ -85,8 +85,8 @@ Config.Shops = {
             },
             [8] = {
                 coords = vector4(-44.28, -1102.47, 25.44, 298.5),
-                defaultVehicle = 'gmcs',
-                chosenVehicle = 'gmcs'
+                defaultVehicle = 'remower',
+                chosenVehicle = 'remower'
             }
         },
     },
