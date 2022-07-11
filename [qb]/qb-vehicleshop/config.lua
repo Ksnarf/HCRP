@@ -204,7 +204,7 @@ Config.Shops = {
             },
         },
     },
-
+    -- add new one here
     ['boats'] = {
         ['Type'] = 'free-use', -- no player interaction is required to purchase a vehicle
         ['Zone'] = {
