@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleMetadataMgr>
+	<VehicleLayoutInfos>
+
+		<Item type="CVehicleLayoutInfo">
+			<Name>LAYOUT_BOAT_WHALE</Name>
+			<Seats>
+				<!-- pilot seat (front right) -->
+				<Item>
+					<SeatInfo ref="SEAT_BOAT_FRONT_LEFT" />
+					<SeatAnimInfo ref="SEAT_ANIM_BOAT_PREDATOR_FRONT_LEFT" />
+				</Item>
+				<!-- copilot seat (front left) -->
+				<Item>
+					<SeatInfo ref="SEAT_BOAT_FRONT_RIGHT" />
+					<SeatAnimInfo ref="SEAT_ANIM_BOAT_PREDATOR_FRONT_LEFT" />
+				</Item>
+				<!-- cabin rear left -->
+				<Item>
+					<SeatInfo ref="SEAT_BOAT_NO_SHUFFLE_REAR_LEFT" />
+					<SeatAnimInfo ref="SEAT_ANIM_BOAT_PREDATOR_FRONT_LEFT" />
+				</Item>
+				<!-- cabin rear right -->
+				<Item>
+					<SeatInfo ref="SEAT_BOAT_NO_SHUFFLE_REAR_RIGHT" />
+					<SeatAnimInfo ref="SEAT_ANIM_BOAT_PREDATOR_FRONT_LEFT" />
+				</Item>
+				<!-- back deck rear left -->
+				<Item>
+					<SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_1" />
+					<SeatAnimInfo ref="SEAT_ANIM_BOAT_PREDATOR_FRONT_LEFT" />
+				</Item>
+				<!-- back deck rear right` -->
+				<Item>
+					<SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_1" />
+					<SeatAnimInfo ref="SEAT_ANIM_BOAT_PREDATOR_FRONT_LEFT" />
+				</Item>
+				<!-- All above this line already exist and work -->
+				<!-- All below this line need to be created -->
+				<!-- port bow -->
+				<Item>
+					<SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_2" />
+					<SeatAnimInfo ref="SEAT_ANIM_BODHI_REAR_RIGHT" />
+				</Item>
+				<!-- starboard bow -->
+				<Item>
+					<SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_2" />
+					<SeatAnimInfo ref="SEAT_ANIM_BODHI_REAR_LEFT" />
+				</Item>
+				<!-- port side door -->
+				<Item>
+					<SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_LEFT_3" />
+					<SeatAnimInfo ref="SEAT_ANIM_SWAT_RANGER_SIDE_LEFT" />
+				</Item>
+				<!-- starboard rear deck -->
+				<Item>
+					<SeatInfo ref="SEAT_EXTRA_NO_SHUFFLE_RIGHT_3" />
+					<SeatAnimInfo ref="SEAT_ANIM_SWAT_RANGER_SIDE_RIGHT" />
+				</Item>
+			</Seats>
+			<EntryPoints>
+				<!--<Item><EntryPointInfo ref="ENTRY_POINT_BOAT_TROPIC_FRONT_RIGHT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_TROPIC_FRONT_RIGHT" /></Item><Item><EntryPointInfo ref="ENTRY_POINT_BOAT_TROPIC_FRONT_LEFT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_TROPIC_FRONT_LEFT" /></Item><Item><EntryPointInfo ref="ENTRY_POINT_BOAT_PREDATOR_FRONTCLIMB_LEFT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_PREDATOR_FRONTCLIMB_LEFT" /></Item><Item><EntryPointInfo ref="ENTRY_POINT_BOAT_PREDATOR_FRONTCLIMB_RIGHT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_PREDATOR_FRONTCLIMB_RIGHT" /></Item>-->
+				<Item>
+					<!-- <EntryPointInfo ref="ENTRY_POINT_BOAT_DINGHY_FRONT_LEFT" /> -->
+					<EntryPointInfo ref="ENTRY_POINT_BOAT_WHALE_FRONT_DRIVER" />
+					<EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_DINGHY_FRONT_RIGHT" />
+				</Item>
+				<!--         <Item><EntryPointInfo ref="ENTRY_POINT_BOAT_DINGHY_FRONT_RIGHT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_DINGHY_FRONT_RIGHT" /></Item><Item><EntryPointInfo ref="ENTRY_POINT_BOAT_DINGHY_REARCLIMB_LEFT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_DINGHY_REARCLIMB_LEFT" /></Item><Item><EntryPointInfo ref="ENTRY_POINT_BOAT_DINGHY_REARCLIMB_RIGHT" /><EntryPointAnimInfo ref="ENTRY_POINT_ANIM_BOAT_DINGHY_REARCLIMB_RIGHT" /></Item> -->
+			</EntryPoints>
+			<LayoutFlags>StreamAnims UseLeanSteerAnims DisableJackingAndBusting WarpInWhenStoodOnTop WarpIntoAndOut</LayoutFlags>
+			<LayoutFlags>StreamAnims UseLeanSteerAnims DisableJackingAndBusting WarpInWhenStoodOnTop WarpIntoAndOut</LayoutFlags>
+			<BicycleInfo ref="NULL" />
+			<AnimRateSet ref="BOAT_ANIM_RATE_SET" />
+			<HandsUpClipSetId>busted_vehicle_std</HandsUpClipSetId>
+			<SteeringWheelOffset x="10.000000" y="10.350000" z="10.320000" />
+		</Item>
+	</VehicleLayoutInfos>
+	<VehicleEntryPointInfos>
+		<Item>
+			<Name>ENTRY_POINT_BOAT_WHALE_FRONT_DRIVER</Name>
+			<DoorBoneName />
+			<SecondDoorBoneName />
+			<DoorHandleBoneName />
+			<WindowId>INVALID</WindowId>
+			<VehicleSide>SIDE_RIGHT</VehicleSide>
+			<AccessableSeats>
+				<Item ref="SEAT_BOAT_FRONT_LEFT" />
+			</AccessableSeats>
+			<VehicleExtraPointsInfo ref="EXTRA_VEHICLE_POINTS_WHALE_DRIVER" />
+			<Flags />
+			<BlockJackReactionSides />
+		</Item>
+	</VehicleEntryPointInfos>
+	<VehicleExtraPointsInfos>
+		<Item type="CVehicleExtraPointsInfo">
+			<Name>EXTRA_VEHICLE_POINTS_WHALE_DRIVER</Name>
+			<ExtraVehiclePoints>
+				<Item>
+					<LocationType>SEAT_RELATIVE</LocationType>
+					<PointType>GET_IN</PointType>
+					<Position x="1.80000" y="0.50000" z="-0.075000" />
+					<Heading value="1.570000" />
+					<BoneName />
+				</Item>
+				<!--         <Item><LocationType>SEAT_RELATIVE</LocationType><PointType>GET_IN_2</PointType><Position x="-0.600000" y="-0.600000" z="0.75000" /><Heading value="0.000000" /><BoneName /></Item> -->
+				<Item>
+					<LocationType>SEAT_RELATIVE</LocationType>
+					<PointType>GET_OUT</PointType>
+					<Position x="0.600000" y="0.600000" z="0.5000" />
+					<Heading value="0.000000" />
+					<BoneName />
+				</Item>
+			</ExtraVehiclePoints>
+		</Item>
+	</VehicleExtraPointsInfos>
+	<VehicleEntryPointAnimInfos>
+		<Item type="CVehicleSeatAnimInfo">
+			<Name>SEAT_ANIM_BOAT_WHALE_FRONT_LEFT</Name>
+			<DriveByInfo ref="DRIVEBY_BOAT_SPEED_FRONT_RIGHT" />
+			<InsideClipSetMap ref="INSIDE_CLIPSET_MAP_BOAT_TROPIC_FRONT_RIGHT" />
+			<PanicClipSet>clipset@veh@boat@tropic@ps@idle_panic</PanicClipSet>
+			<AgitatedClipSet />
+			<DuckedClipSet>clipset@veh@boat@speed@ps@idle_duck</DuckedClipSet>
+			<FemaleClipSet />
+			<LowLODIdleAnim>BOAT_PASSENGER</LowLODIdleAnim>
+			<SeatAmbientContext />
+			<InVehicleMoveNetwork>VEHICLE_DEFAULT</InVehicleMoveNetwork>
+			<SeatAnimFlags>WeaponAttachedToLeftHand HasPanicAnims PreventShuffleJack UseBoatInVehicleAnims</SeatAnimFlags>
+			<SteeringSmoothing value="0.050000" />
+			<ExitToAimInfoName />
+			<MaleGestureClipSetId />
+			<FemaleGestureClipSetId />
+		</Item>
+		<Item type="CVehicleSeatAnimInfo">
+			<Name>SEAT_ANIM_BOAT_WHALE_FRONT_RIGHT</Name>
+			<DriveByInfo ref="DRIVEBY_BOAT_SPEED_FRONT_LEFT" />
+			<InsideClipSetMap ref="INSIDE_CLIPSET_MAP_BOAT_TROPIC_FRONT_LEFT" />
+			<PanicClipSet />
+			<AgitatedClipSet />
+			<DuckedClipSet>clipset@veh@boat@speed@ds@idle_duck</DuckedClipSet>
+			<FemaleClipSet />
+			<LowLODIdleAnim>BOAT_DRIVER</LowLODIdleAnim>
+			<SeatAmbientContext />
+			<InVehicleMoveNetwork>VEHICLE_DEFAULT</InVehicleMoveNetwork>
+			<SeatAnimFlags>UseBoatInVehicleAnims PreventShuffleJack</SeatAnimFlags>
+			<SteeringSmoothing value="0.050000" />
+			<ExitToAimInfoName />
+			<MaleGestureClipSetId />
+			<FemaleGestureClipSetId />
+		</Item>
+	</VehicleEntryPointAnimInfos>
+	<VehicleSeatInfos>
+		<Item type="CVehicleSeatInfo">
+			<Name>SEAT_EXTRA_NO_SHUFFLE_LEFT_7</Name>
+			<SeatBoneName>seat_dside_r7</SeatBoneName>
+			<ShuffleLink />
+			<RearSeatLink />
+			<DefaultCarTask>TASK_DRIVE_WANDER</DefaultCarTask>
+			<SeatFlags />
+			<HairScale value="0.000000" />
+		</Item>
+		<Item type="CVehicleSeatInfo">
+			<Name>SEAT_EXTRA_NO_SHUFFLE_RIGHT_6</Name>
+			<SeatBoneName>seat_pside_r6</SeatBoneName>
+			<ShuffleLink />
+			<RearSeatLink />
+			<DefaultCarTask>TASK_DRIVE_WANDER</DefaultCarTask>
+			<SeatFlags />
+			<HairScale value="0.000000" />
+		</Item>
+	</VehicleSeatInfos>
+
+</CVehicleMetadataMgr>

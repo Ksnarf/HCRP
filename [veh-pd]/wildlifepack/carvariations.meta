@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleModelInfoVariation>
+  <variationData>
+     <Item>
+      <modelName>WILDLIFEBOAT1</modelName> <!--Boston Whaler made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            1
+          </indices>
+          <liveries>
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="25" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="6" />
+      <sirenSettings value="12351" />
+    </Item>
+     <Item>
+      <modelName>WILDLIFEBOAT2</modelName> <!--Boat made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            1
+          </indices>
+          <liveries>
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="25" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="6" />
+      <sirenSettings value="12351" />
+    </Item>
+     <Item>
+      <modelName>WILDLIFETRAILER1</modelName> <!--Wildlife Trailer made by Zeakor Designs / Drexdor-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            1
+          </indices>
+          <liveries>
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="25" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1" />
+      <sirenSettings value="1" />
+    </Item>
+     <Item>
+      <modelName>WILDLIFETRAILER2</modelName> <!--Wildlife Trailer made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            1
+          </indices>
+          <liveries>
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="25" />
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1" />
+      <sirenSettings value="1" />
+    </Item>
+	<Item>
+      <modelName>WILDLIFE20TAHOE</modelName> <!--2020 Chevrolet Tahoe made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            134
+            131
+            0
+            27
+            0
+            0
+          </indices>
+        </Item>
+      </colors>
+      <windowsWithExposedEdges/>
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Police guv plate</Name>
+            <Value value="100"/>
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="689"/>
+      <sirenSettings value="12323"/>
+    </Item>
+    <Item>
+      <modelName>WILDLIFESILV</modelName> <!--2017 Chevrolet Silverado made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            147
+          </indices>
+          <liveries>
+            <Item value="false"/>
+            <Item value="false"/>
+            <Item value="false"/>
+          </liveries>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges/>
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Police guv plate</Name>
+            <Value value="100"/>
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1"/>
+      <sirenSettings value="12323"/>
+    </Item>
+    <Item>
+      <modelName>WILDLIFERAM</modelName> <!--2016 Dodge Ram 2500 made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            147
+          </indices>
+          <liveries>
+            <Item value="false"/>
+            <Item value="false"/>
+            <Item value="false"/>
+          </liveries>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges/>
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Police guv plate</Name>
+            <Value value="100"/>
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1"/>
+      <sirenSettings value="12323"/>
+    </Item>
+    <Item>
+      <modelName>WILDLIFE14TAHOE</modelName> <!--2014 Chevrolet Tahoe PPV made by Zeakor Designs-->
+      <colors>
+        <Item>
+          <indices content="char_array">
+            147
+          </indices>
+          <liveries>
+            <Item value="false"/>
+            <Item value="false"/>
+            <Item value="false"/>
+          </liveries>
+        </Item>
+      </colors>
+      <kits>
+        <Item>0_default_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges/>
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Police guv plate</Name>
+            <Value value="100"/>
+          </Item>
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="1"/>
+      <sirenSettings value="12323"/>
+    </Item>
+  </variationData>
+</CVehicleModelInfoVariation>
