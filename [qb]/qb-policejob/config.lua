@@ -97,43 +97,40 @@ Config.SecurityCameras = {
 Config.AuthorizedVehicles = {
 	-- Grade 0 - Cadet
 	[0] = {
-		["valor5rb"] = "Crown Victoria",
+		["16fpiuw"] = "2016 FPIUW",
 	},
 	-- Grade 1 - PO
 	[1] = {
-		["valor5rb"] = "Crown Victoria",
+		["16fpiuw"] = "2016 FPIUW",
 	},
 	-- Grade 2 - SPO
 	[2] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["16fpiuw"] = "2016 FPIUW",
 	},
 	-- Grade 3 - Cpl
 	[3] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["16fpiuw"] = "2016 FPIUW",
 	},
 	-- Grade 4 - Sgt
 	[4] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["16fpiuw"] = "2016 FPIUW",
 	},
   -- Grade 5 - LT
 	[5] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["16fpiuw"] = "2016 FPIUW",
 	},
   -- Grade 6 - Captain
 	[6] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["16fpiuw"] = "2016 FPIUW",
 	},
   -- Grade 7 - DepChief
 	[7] = {
-    ["valor5rb"] = "Crown Victoria",
+    ["16fpiuw"] = "2016 FPIUW",
     ["21yukadmin"] = "Command Car",
 	},
   -- Grade 8 - Chief
   [8] = {
-    ["valor5rb"] = "Crown Victoria",
-    ["valor8rb"] = "Marked Chevy Tahoe Interceptor",
-    ["valor12rb"] = "Marked Ford Explorer Interceptor",
-    ["21yukadmin"] = "Command Car",
+    ["16fpiuw"] = "2016 FPIUW",
     ["centurionlspd"] = "Armored Truck",
   }
 }
