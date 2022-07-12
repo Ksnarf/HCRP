@@ -28,9 +28,6 @@ Config.Locations = {
        [1] = vector4(449.168, -981.325, 43.691, 87.234),
        [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
    },
-   ["helifib"] = {
-       [1] = vector4(482.51, -982.45, 41.01, 92.31), -- MRPD lower heli
-   }
    ["armory"] = {
        [1] = vector3(462.23, -981.12, 30.68),
    },
@@ -55,9 +52,10 @@ Config.Locations = {
 Config.ArmoryWhitelist = {} -- Citizen ID Based Armory Whitelist (With Export for Other Scripts)
 
 
-Config.Helicopter = "POLMAV" -- Model of the Helicopter for Helicopter Spawner
-Config.HeliFIB = "MH6"
-
+Config.Helicopter = {
+    "POLMAV", -- Model of the Helicopter for Helicopter Spawner
+    "MH6"
+  }
 
 Config.SecurityCameras = {
     hideradar = false,
