@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleModelInfoVariation>
+	<variationData>
+		<Item>
+			<modelName>cara</modelName>
+			<colors>
+				<Item> <!-- Shelby Super Snake -->
+					<indices content="char_array">
+						73
+						0
+						70
+						5
+					</indices>
+          <liveries/>
+				</Item>
+				<Item> <!-- WMC Edition -->
+					<indices content="char_array">
+						11
+						0
+						18
+						5
+					</indices>
+          <liveries/>
+				</Item>
+				<Item> <!-- Lariat Sport -->
+					<indices content="char_array">
+						75
+						0
+						18
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item> <!-- White Liveries -->
+					<indices content="char_array">
+						11
+						0
+						15
+						11
+					</indices>
+          <liveries/>
+				</Item>
+				<Item> <!-- Black Liveries -->
+					<indices content="char_array">
+						132
+						0
+						24
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item> <!-- Standart Colors -->
+					<indices content="char_array">
+						14
+						0
+						6
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						134
+						0
+						111
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						42
+						0
+						5
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						38
+						0
+						5
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						62
+						0
+						5
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						103
+						0
+						107
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						43
+						0
+						131
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						29
+						0
+						27
+						156
+					</indices>
+          <liveries/>
+				</Item>
+				<Item>
+					<indices content="char_array">
+						11
+						0
+						18
+						156
+					</indices>
+          <liveries/>
+				</Item>
+			</colors>
+			<kits>
+				<Item>690_cara_modkit</Item>
+			</kits>
+			<windowsWithExposedEdges />
+			<plateProbabilities>
+			<Probabilities>
+          <Item>
+            <Name>standard white</Name>
+            <Value value="80" />
+          </Item>
+          <Item>
+            <Name>white plate 2</Name>
+            <Value value="20" />
+          </Item>
+			</Probabilities>
+			</plateProbabilities>
+			<lightSettings value="450" />
+			<sirenSettings value="0" />
+		</Item>
+	</variationData>
+</CVehicleModelInfoVariation>
