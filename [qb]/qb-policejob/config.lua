@@ -132,11 +132,16 @@ Config.AuthorizedVehicles = {
   [8] = {
     ["16fpiuw"] = "2016 FPIUW",
     ["centurionlspd"] = "Armored Truck",
+    ["policebikebb"] = "Offroad Bike",
+    ["wildlife20tahoe"] = "2020 Tahoe LEO",
   }
 }
 
 Config.WhitelistedVehicles = {
- ["centurionlspd"] = "Armored Truck"
+ ["centurionlspd"] = "Armored Truck",
+ ["21yukadmin"] = "Command Car",
+ ["bmw1200gs"] = "PD Bike",
+ ["policebikebb"] = "Offroad Bike"
 }
 
 Config.AmmoLabels = { -- Labels for Weapon Ammo
