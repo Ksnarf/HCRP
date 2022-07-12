@@ -4,10 +4,10 @@
   <residentAnims />
   <InitDatas>
 		<Item>
-			<modelName>muler</modelName>
-			<txdName>muler</txdName>
-			<handlingId>MULE</handlingId>
-			<gameName>MULER</gameName>
+			<modelName>mulef</modelName>
+			<txdName>mulef</txdName>
+			<handlingId>mulef</handlingId>
+			<gameName>mulef</gameName>
 			<vehicleMakeName>MAIBATSU</vehicleMakeName>
 			<expressionDictName>null</expressionDictName>
 			<expressionName>null</expressionName>
