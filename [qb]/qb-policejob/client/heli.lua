@@ -12,6 +12,7 @@ local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. 
 -- Script starts here
 local helicam = false
 local polmav_hash = `polmav`
+local mh6_hash = 'mh6'
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
 
@@ -28,6 +29,12 @@ local function IsPlayerInPolmav()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
 	return IsVehicleModel(vehicle, polmav_hash)
+end
+
+local function IsPlayerInMH6()
+	local lPed = PlayerPedId()
+	local vehicle = GetVehiclePedIsIn(lPed)
+	return IsVehicleModel(vehicle, mh6_hash)
 end
 
 local function IsHeliHighEnough(heli)
