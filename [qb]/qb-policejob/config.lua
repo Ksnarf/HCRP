@@ -56,7 +56,7 @@ Config.Helicopter = {
     "POLMAV", -- Model of the Helicopter for Helicopter Spawner
     "MH6"
   }
-  
+
 Config.SecurityCameras = {
     hideradar = false,
     cameras = {
