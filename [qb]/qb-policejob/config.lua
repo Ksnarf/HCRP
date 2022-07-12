@@ -52,8 +52,11 @@ Config.Locations = {
 Config.ArmoryWhitelist = {} -- Citizen ID Based Armory Whitelist (With Export for Other Scripts)
 
 
-Config.Helicopter = "POLMAV" -- Model of the Helicopter for Helicopter Spawner
-
+Config.Helicopter = {
+    "POLMAV", -- Model of the Helicopter for Helicopter Spawner
+    "MH6"
+  }
+  
 Config.SecurityCameras = {
     hideradar = false,
     cameras = {
