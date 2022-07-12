@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleModelInfoVariation>
+	<variationData>
+	  <Item>
+		 <modelName>06tahoew</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>900_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="2" />
+		 <sirenSettings value="1947156455111" />
+	  </Item>
+	  <Item>
+		 <modelName>11cvpiw</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>969_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="2" />
+		 <sirenSettings value="214093634789" />
+	  </Item>
+	  <Item>
+		 <modelName>13capricew</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>555_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="999181818278" />
+	  </Item>
+	  <Item>
+		 <modelName>14chargerw</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>478_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="999181818278" />
+	  </Item>
+	  <Item>
+		 <modelName>16fpiuw</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>921_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="555101019334" />
+	  </Item>
+	  <Item>
+		 <modelName>18chargerw</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>937_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="999181818278" />
+	  </Item>
+	  <Item>
+		 <modelName>18f150w</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  0
+				  70
+				  0
+				  0
+				  0
+				  0
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>901_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="2" />
+		 <sirenSettings value="1119998882323" />
+	  </Item>
+	  <Item>
+		 <modelName>18taurusw</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>369_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="999181818278" />
+	  </Item>
+	  <Item>
+		 <modelName>18burbanw</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>911_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="555101019334" />
+	  </Item>
+	  <Item>
+		 <modelName>18tahoew</modelName>
+		 <colors>
+			<Item>
+			   <indices content="char_array">
+				  134
+				  134
+				  134
+				  29
+				  53
+				  54
+			   </indices>
+			   <liveries />
+			</Item>
+		 </colors>
+		 <kits>
+			<Item>949_whelen1_modkit</Item>
+		 </kits>
+		 <windowsWithExposedEdges />
+		 <plateProbabilities>
+			<Probabilities>
+			   <Item>
+				  <Name>Police guv plate</Name>
+				  <Value value="100" />
+			   </Item>
+			</Probabilities>
+		 </plateProbabilities>
+		 <lightSettings value="1" />
+		 <sirenSettings value="555101019334" />
+	  </Item>
+	</variationData>
+</CVehicleModelInfoVariation>
