@@ -4,11 +4,11 @@
   <residentAnims />
   <InitDatas>
 	    <Item>
-      <modelName>21sierra</modelName>
-      <handlingId>21SIERRA</handlingId>
-      <txdName>21sierra</txdName>
-      <gameName>GMC</gameName>
-      <vehicleMakeName>SIERRA21</vehicleMakeName>
+      <modelName>16explorer</modelName>
+      <handlingId>16explorer</handlingId>
+      <txdName>16explorer</txdName>
+      <gameName>16explorer</gameName>
+      <vehicleMakeName>Ford</vehicleMakeName>
       <expressionDictName>null</expressionDictName>
       <expressionName>null</expressionName>
       <animConvRoofDictName>null</animConvRoofDictName>
