@@ -76,6 +76,7 @@ Config.Classes = {
 	[19] = 1.0, -- Military
 	[20] = 1.0, -- Commercial
 	[21] = 1.0, -- Trains
+	[22] = 4.0, -- Drag
 }
 
 -- The left part is at percentage RPM, and the right is how much fuel (divided by 10) you want to remove from the tank every second

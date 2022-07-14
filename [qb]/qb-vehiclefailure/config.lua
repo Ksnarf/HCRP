@@ -34,6 +34,7 @@ BackEngineVehicles = {
     [`surfer`] = true,
     [`surfer2`] = true,
     [`comet3`] = true,
+    ['dragqueen'] = true,
 }
 
 -- Configuration:
@@ -104,7 +105,8 @@ cfg = {
 				0.3,		--	18: Emergency
 				0.3,		--	19: Military
 				0.3,		--	20: Commercial
-				0.3			--	21: Trains
+				0.3,		--	21: Trains
+        0.7     -- 22: Drag
 	}
 }
 
@@ -169,6 +171,7 @@ cfg = {
 				0.67,		--	19: Military
 				0.43,		--	20: Commercial
 				1.0			--	21: Trains
+        1.2     --  22: Drag
 	}
 }
 

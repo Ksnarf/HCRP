@@ -4443,7 +4443,7 @@ QBShared.Vehicles = {
 		['brand'] = 'HomeBuilt',
 		['model'] = 'dragqueen',
 		['price'] = 295999,
-		['category'] = 'sport',
+		['category'] = 'Drag',
 		['hash'] = `GetHashKey("dragqueen")`,
 		['shop'] = 'pdm',
   },
