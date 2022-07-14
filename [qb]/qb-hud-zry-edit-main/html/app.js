@@ -948,9 +948,9 @@ const playerHud = {
       if (data.talking && data.radio) {
         this.talkingColor = "#D64763";
       } else if (data.talking) {
-        this.talkingColor = '#FFFF3E';
+        this.talkingColor = '#ffab3e';
       } else {
-        this.talkingColor = "#FFFFFF";
+        this.talkingColor = "#8c8b8b";
       }
       if (data.radio != 0 && data.radio != undefined) {
         this.voiceIcon = 'fas fa-headset';
@@ -1061,7 +1061,7 @@ const vehHud = {
       } else if (data.fuel <= 30) {
         this.fuelColor = "#dd6e14";
       } else {
-        this.fuelColor = "#FFFFFF";
+        this.fuelColor = "#afff54";
       }
       if (data.showSquareB === true) {
         this.showSquare = true;
