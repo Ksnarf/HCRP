@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CMapParentTxds>
+ <txdRelationships>
+  <Item>
+   <parent>park_1</parent>
+   <child>park</child>
+  </Item>
+  <Item>
+   <parent>park_2</parent>
+   <child>park_1</child>
+  </Item>
+  <Item>
+   <parent>park_3</parent>
+   <child>park_2</child>
+  </Item>
+ </txdRelationships>
+</CMapParentTxds>
