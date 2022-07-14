@@ -15,7 +15,7 @@ Config.ShowNearestGasStationOnly = true
 Config.ShowAllGasStations = false
 
 -- Modify the fuel-cost here, using a multiplier value. Setting the value to 2.0 would cause a doubled increase.
-Config.CostMultiplier = 1.0
+Config.CostMultiplier = 1.7
 
 -- Configure the strings as you wish here.
 Config.Strings = {
@@ -76,7 +76,7 @@ Config.Classes = {
 	[19] = 1.0, -- Military
 	[20] = 1.0, -- Commercial
 	[21] = 1.0, -- Trains
-	[22] = 4.0, -- Drag
+	[22] = 4.5, -- Drag
 }
 
 -- The left part is at percentage RPM, and the right is how much fuel (divided by 10) you want to remove from the tank every second
