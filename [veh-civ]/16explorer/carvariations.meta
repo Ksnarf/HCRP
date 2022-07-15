@@ -22,14 +22,17 @@
 		 <windowsWithExposedEdges />
 		 <plateProbabilities>
 			<Probabilities>
-			   <Item>
-				  <Name>Police guv plate</Name>
-				  <Value value="100" />
-			   </Item>
+				<Item>
+					<Name>standard white</Name>
+					<Value value="60" />
+				</Item>
+				<Item>
+					<Name>white plate 2</Name>
+					<Value value="40" />
 			</Probabilities>
 		 </plateProbabilities>
-		 <lightSettings value="1" />
-		 <sirenSettings value="555101019334" />
+		 <lightSettings value="1010" />
+		 <sirenSettings value="0" />
 	  </Item>
 	</variationData>
 </CVehicleModelInfoVariation>

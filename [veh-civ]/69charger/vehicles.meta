@@ -7,7 +7,7 @@
       <modelName>69charger</modelName>
       <txdName>69charger</txdName>
       <handlingId>69CHARGER</handlingId>
-      <gameName>69CHARGER</gameName>
+      <gameName>1969 Do</gameName>
       <vehicleMakeName>DODGE</vehicleMakeName>
       <expressionDictName>null</expressionDictName>
       <expressionName>null</expressionName>
@@ -65,9 +65,9 @@
       <lodDistances content="float_array">
         15.000000
         30.000000
-        70.000000	
-        140.000000	
-        500.000000	
+        70.000000
+        140.000000
+        500.000000
         500.000000
       </lodDistances>
       <identicalModelSpawnDistance value="20" />

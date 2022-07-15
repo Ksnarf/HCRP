@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <CVehicleModelInfoVariation>
-  <variationData> 
-
-
-
-
-
-
-
-
-
-
+  <variationData>
     <Item>
       <modelName>gmcs</modelName>
       <colors>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -35,9 +25,9 @@
         </Item>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -53,9 +43,9 @@
         </Item>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -71,9 +61,9 @@
         </Item>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -89,9 +79,9 @@
         </Item>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -106,9 +96,9 @@
           </liveries>
         </Item>        <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -124,9 +114,9 @@
         </Item>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
+            134
+            134
+            0
             0
           </indices>
           <liveries>
@@ -142,8 +132,8 @@
         </Item>
         <Item>
           <indices content="char_array">
-            134 
-            134 
+            134
+            134
             0 
             0
           </indices>
@@ -169,15 +159,5 @@
       <lightSettings value="1" />
       <sirenSettings value="0" />
     </Item>
-
-
-
-
-
-
-
-
-
-
   </variationData>
 </CVehicleModelInfoVariation>
