@@ -4,7 +4,7 @@
   <residentAnims />
   <InitDatas>
     <Item>
-      <modelName>policebikebb</modelName> <!--2015 Suzuki DR650SE made by TrooperCorentin-->
+      <modelName>policebikebb</modelName>
       <txdName>policebikebb</txdName>
       <handlingId>POLICEBIKEBB</handlingId>
       <gameName>policebikebb</gameName>
