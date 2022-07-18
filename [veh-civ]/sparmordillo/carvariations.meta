@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CVehicleModelInfoVariation>
+  <variationData>
+    <Item>
+      <modelName>armordillo</modelName>
+      <colors>
+        <Item>
+          <indices content="char_array">
+            13 
+            13 
+            18
+            13 
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            2
+            4
+            0
+            2
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            33
+            7
+            7
+            33
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            42
+            3
+            0
+            42
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            68
+            0
+            0
+            0
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            68
+            0
+            0
+            68
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            90
+            7
+            2
+            90
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            125
+            0
+            0
+            125
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            111
+            111
+            0
+            111
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            111
+            0
+            0
+            111
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            127
+            0
+            0
+            0
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            107
+            97
+            97
+            97
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            153
+            153 
+            18
+            153
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+        <Item>
+          <indices content="char_array">
+            133
+            133 
+            18
+            133
+          </indices>
+          <liveries>
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+            <Item value="false" />
+          </liveries>
+        </Item>
+      </colors>
+      <kits>
+        <Item>599_dillo_modkit</Item>
+      </kits>
+      <windowsWithExposedEdges />
+      <plateProbabilities>
+        <Probabilities>
+          <Item>
+            <Name>Standard White</Name>
+            <Value value="85" />
+          </Item>
+<!--          <Item>
+            <Name>SA Lake</Name>
+            <Value value="35" />
+          </Item>
+          <Item>
+            <Name>Liberty City Plate 3</Name>
+            <Value value="5" />
+          </Item>
+          <Item>
+            <Name>Robada Plate</Name>
+            <Value value="4" />
+          </Item>
+          <Item>
+            <Name>North Birds</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>Alderney Plate</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>Vice City Plate</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>Shrimps Plate</Name>
+            <Value value="10" />
+          </Item>
+          <Item>
+            <Name>Lincoln Plate</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>Good Desert</Name>
+            <Value value="3" />
+          </Item>
+          <Item>
+            <Name>South Birds</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>North Yankton Plate</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>South Yankton Plate</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>Alamo Plate 3</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>Cataldo Plate</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>Swampland Plate</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>Cascadia Plate</Name>
+            <Value value="10" />
+          </Item>
+          <Item>
+            <Name>LC Crosswalk</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>SA Crosswalk</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>SA Arts</Name>
+            <Value value="15" />
+          </Item>
+          <Item>
+            <Name>Colina Plate</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>Coloverdo Plate</Name>
+            <Value value="2" />
+          </Item>
+          <Item>
+            <Name>Jefferson Plate</Name>
+            <Value value="4" />
+          </Item>
+          <Item>
+            <Name>Capital Plate</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>Meskousin Plate</Name>
+            <Value value="1" />
+          </Item>
+          <Item>
+            <Name>SA Yellow</Name>
+            <Value value="8" />
+          </Item>-->
+        </Probabilities>
+      </plateProbabilities>
+      <lightSettings value="18" />
+      <sirenSettings value="0" />
+    </Item>
+  </variationData>
+</CVehicleModelInfoVariation>
