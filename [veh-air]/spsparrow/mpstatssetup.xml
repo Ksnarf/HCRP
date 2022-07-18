@@ -1,0 +1,8 @@
+﻿<StatsSetup version="1">
+    <stats>	
+	<stat Name="MP_LC_VISITS"     			Type="int"    SaveCategory="0"   online="true"  profile="false" Owner="script" characterStat="false"  Comment="track visits to Liberty City. Player stat"/>
+	<stat Name="MP_LC_DEATHS"     			Type="int"    SaveCategory="0"   online="true"  profile="false" Owner="script" characterStat="false"  Comment="track deaths in Liberty City. Player stat"/>
+	<stat Name="MP_LC_CASH_SPENT"     			Type="int"    SaveCategory="0"   online="true"  profile="false" Owner="script" characterStat="false"  Comment="track expenses in Liberty City. Player stat"/>
+	<stat Name="MP_LC_FAVORITE_STATION"     			Type="int"    SaveCategory="0"   online="true"  profile="false" Owner="script" characterStat="false"  Comment="track favorite station in Liberty City. Player stat"/>
+	</stats>
+</StatsSetup>
