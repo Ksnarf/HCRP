@@ -42,7 +42,7 @@ RegisterNetEvent('phone:assistPayJ')
 AddEventHandler('phone:assistPayJ', function(name)
 
     if name == 'taxi' then
-      
+
       local ped = PlayerPedId()
       local currentVehicle = GetVehiclePedIsIn(ped, false)
       local driverPed = GetPedInVehicleSeat(currentVehicle, -1)
@@ -52,7 +52,7 @@ AddEventHandler('phone:assistPayJ', function(name)
           TriggerServerEvent("server:givepayJob", "Taxi Service", math.random(1,300))
         else
           TriggerEvent("DoLongHudText","Please use a taxi or sign off duty.",2)
-        end   
+        end
       end
 
     elseif name == 'towtruck' then
@@ -144,15 +144,15 @@ Citizen.CreateThread(function()
 
     Citizen.Wait(60000)
 
-    if nearEntertainment() and exports["np-base"]:getModule("LocalPlayer"):getVar("job") == "entertainer" then
+    if nearEntertainment() and exports["qb-core"]:getModule("LocalPlayer"):getVar("job") == "entertainer" then
 
       playerCount = GetClosestPlayers()
       local payment = math.ceil(8 * playerCount)
       if payment > 50 then
         payment = 50
       end
-      TriggerServerEvent("server:givepayJob", "Entertainer Payment - Near Players = " .. playerCount, payment) 
-    elseif exports["np-base"]:getModule("LocalPlayer"):getVar("job") == "news" then
+      TriggerServerEvent("server:givepayJob", "Entertainer Payment - Near Players = " .. playerCount, payment)
+    elseif exports["qb-core"]:getModule("LocalPlayer"):getVar("job") == "news" then
       local dist = 0
       if lastBlip.x then
         dist = #(GetEntityCoords(PlayerPedId()) - vector3(lastBlip.x,lastBlip.y,lastBlip.z))
@@ -160,19 +160,19 @@ Citizen.CreateThread(function()
       if holding and dist < 130 and dist ~= 0 and blipcount >= 1 then
         playerCount = GetClosestPlayers()
         local pay = newsPayment + (25 * playerCount)
-        TriggerServerEvent("server:givepayJob", "News Reporter",pay) 
+        TriggerServerEvent("server:givepayJob", "News Reporter",pay)
         newsPayment = 0
-        blipcount = 0 
+        blipcount = 0
         TriggerEvent("DoLongHudText","You have been paid a bonus for your dedication.",2)
       else
         if newsPayment ~= 0 then
-          TriggerServerEvent("server:givepayJob", "News Reporter",newsPayment) 
+          TriggerServerEvent("server:givepayJob", "News Reporter",newsPayment)
           newsPayment = 0
         end
       end
       Citizen.Wait(2400000)
     else
-      if exports["np-base"]:getModule("LocalPlayer"):getVar("job") == "entertainer" then
+      if exports["qb-core"]:getModule("LocalPlayer"):getVar("job") == "entertainer" then
         Citizen.Wait(300000)
       end
     end
@@ -191,7 +191,7 @@ Citizen.CreateThread(function()
     local ped = PlayerPedId()
     local pos = GetEntityCoords(ped)
     local curTime = GetGameTimer()
-    if timer >= 300 then canPay = true end -- Time limit ,300 = 5 min ,1000 ms * 300 = 5 min 
+    if timer >= 300 then canPay = true end -- Time limit ,300 = 5 min ,1000 ms * 300 = 5 min
     timer = timer +1
 
     for key, item in pairs(myBlips) do
@@ -199,7 +199,7 @@ Citizen.CreateThread(function()
         -- If we are within 10 units of a blip that is not our own, clear the blip and message the server to clear for everyone
         if #(vector2(pos.x, pos.y) - vector2(item.pos.x, item.pos.y)) < 50.0 then
           if item.jobType == "ems" then
-            if exports["np-base"]:getModule("LocalPlayer"):getVar("job") == "ems" then
+            if exports["qb-core"]:getModule("LocalPlayer"):getVar("job") == "ems" then
               TriggerServerEvent('phone:assistRemove', item.id, item.jobType) -- Send message of clear to others
               clearBlip(item)
               if GetTimeDifference(curTime, item.timestamp) > 2000 then
@@ -210,8 +210,8 @@ Citizen.CreateThread(function()
                 end
               end
             end
-          elseif item.jobType == "news" then 
-            if exports["np-base"]:getModule("LocalPlayer"):getVar("job") == "news" then
+          elseif item.jobType == "news" then
+            if exports["qb-core"]:getModule("LocalPlayer"):getVar("job") == "news" then
               TriggerServerEvent('phone:assistRemove', item.id, item.jobType) -- Send message of clear to others
               clearBlip(item)
               if GetTimeDifference(curTime, item.timestamp) > 2000 then
@@ -302,7 +302,7 @@ function clearBlip(item)
   local pedb = item.blip
 
   if item.onRoute then
-    SetBlipRoute(pedb, false) 
+    SetBlipRoute(pedb, false)
   end
 
   if pedb ~= nil and DoesBlipExist(pedb) then
