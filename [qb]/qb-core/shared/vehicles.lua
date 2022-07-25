@@ -4457,10 +4457,10 @@ QBShared.Vehicles = {
 		['shop'] = 'pdm',
   },
 	['issio'] = {
-		['name'] = '2005 Zombie V8 Motorcycle',
-		['brand'] = 'HomeBuilt',
+		['name'] = '1978 Isso 4x4',
+		['brand'] = 'WEENIE',
 		['model'] = 'issio',
-		['price'] = 31299,
+		['price'] = 9250,
 		['category'] = 'Offroad',
 		['hash'] = `GetHashKey("issio")`,
 		['shop'] = 'larryrv',
@@ -4474,6 +4474,18 @@ QBShared.Vehicles = {
 		['hash'] = `GetHashKey("zombiev8")`,
 		['shop'] = 'pdm',
   },
+	['69charger'] = {
+		['name'] = '1969 Dodge Charger R/T',
+		['brand'] = 'Dodge',
+		['model'] = '69charger',
+		['price'] = 100995,
+		['category'] = 'muscle',
+		['hash'] = `GetHashKey("69charger")`,
+		['shop'] = 'larryrv',
+  },
+
+
+
 }
 
 for _, v in pairs(QBShared.Vehicles) do
