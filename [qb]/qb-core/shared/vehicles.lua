@@ -4456,14 +4456,14 @@ QBShared.Vehicles = {
 		['hash'] = `GetHashKey("remower")`,
 		['shop'] = 'pdm',
   },
-	['zombiev8'] = {
+	['issio'] = {
 		['name'] = '2005 Zombie V8 Motorcycle',
 		['brand'] = 'HomeBuilt',
-		['model'] = 'zombiev8',
+		['model'] = 'issio',
 		['price'] = 31299,
-		['category'] = 'motorcycles',
-		['hash'] = `GetHashKey("zombiev8")`,
-		['shop'] = 'pdm',
+		['category'] = 'Offroad',
+		['hash'] = `GetHashKey("issio")`,
+		['shop'] = 'larryrv',
   },
 	['zombiev8'] = {
 		['name'] = '2005 Zombie V8 Motorcycle',
