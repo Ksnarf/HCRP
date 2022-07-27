@@ -251,7 +251,7 @@ Config.Shops = {
             [2] = {
                 coords = vector4(-2140.00, 3279.0, 31.50, 240.00), -- where the vehicle will spawn on display
                 defaultVehicle = 'mh65c', -- Default display vehicle
-                chosenVehicle = 'mh65c', 'mh6', -- Same as default but is dynamically changed when swapping vehicles
+                chosenVehicle = 'mh65c', -- Same as default but is dynamically changed when swapping vehicles
             },
         },
     },
