@@ -4421,8 +4421,8 @@ QBShared.Vehicles = {
 	},
 	--Addons
 	['mh6'] = {
-		['name'] = '1988 McDonald Douglas MH6',
-		['brand'] = 'McDonald Dougas',
+		['name'] = '1982 MH6-H',
+		['brand'] = 'Boeing',
 		['model'] = 'mh6',
 		['price'] = 150000,
 		['category'] = 'helicopters',
@@ -4430,12 +4430,12 @@ QBShared.Vehicles = {
 		['shop'] = 'milheli',
   },
 	['mh65c'] = {
-		['name'] = '1988 McDonald Douglas MH6',
-		['brand'] = 'McDonald Dougas',
-		['model'] = 'mh6',
+		['name'] = '1992 HH-65A Dolphin',
+		['brand'] = 'Eurocopter',
+		['model'] = 'mh65c',
 		['price'] = 150000,
 		['category'] = 'helicopters',
-		['hash'] = `GetHashKey("mh6")`,
+		['hash'] = `GetHashKey("mh65c")`,
 		['shop'] = 'milheli',
   },
 	['demon'] = {
