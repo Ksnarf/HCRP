@@ -7,7 +7,7 @@ Config.PaymentWarning = 10 -- time in minutes that player has to make payment be
 Config.PaymentInterval = 24 -- time in hours between payment being due
 Config.MinimumDown = 10 -- minimum percentage allowed down
 Config.MaximumPayments = 24 -- maximum payments allowed
--- blips url: https://docs.fivem.net/docs/game-references/blips/ 
+-- blips url: https://docs.fivem.net/docs/game-references/blips/
 Config.Shops = {
     ['pdm'] = {
         ['Type'] = 'free-use', -- no player interaction is required to purchase a car
@@ -233,7 +233,7 @@ Config.Shops = {
         ['ShopLabel'] = 'Military Discount Helicopters', -- Blip name
         ['showBlip'] = true, -- true or false
         ['blipSprite'] = 576, -- Blip sprite
-        ['blipColor'] = 5, -- Blip color
+        ['blipColor'] = 223, -- Blip color
         ['Categories'] = {-- Categories available to browse
             ['helicopters'] = 'Helicopters'
         },
