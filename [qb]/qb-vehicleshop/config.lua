@@ -209,7 +209,46 @@ Config.Shops = {
             },
         },
     },
-    -- add new one here
+    ['milheli'] = {
+        ['Type'] = 'free-use', -- no player interaction is required to purchase a car
+        ['Zone'] = {
+            ['Shape'] = {--polygon that surrounds the shop
+              vector2(-2162.1123046875, 3241.2163085938),
+              vector2(-2161.3481445312, 3260.6694335938),
+              vector2(-2145.6833496094, 3287.9533691406),
+              vector2(-2127.5151367188, 3281.453125),
+              vector2(-2119.3435058594, 3294.5109863282),
+              vector2(-2108.4523925782, 3288.1870117188),
+              vector2(-2115.9516601562, 3275.1257324218),
+              vector2(-2101.8933105468, 3262.7290039062),
+              vector2(-2117.5739746094, 3235.548828125),
+              vector2(-2137.9541015625, 3227.6826171875)
+            },
+            ['minZ'] = 32.8102684021, -- min height of the shop zone
+            ['maxZ'] = 32.810344696044, -- max height of the shop zone
+            ['size'] = 3.00 -- size of the vehicles zones
+        },
+        ['Job'] = 'none', -- Name of job or none
+        ['ShopLabel'] = 'Military Discount Helicopters', -- Blip name
+        ['showBlip'] = true, -- true or false
+        ['blipSprite'] = 326, -- Blip sprite
+        ['blipColor'] = 5, -- Blip color
+        ['Categories'] = {-- Categories available to browse
+            ['helicopters'] = 'Helicopters'
+        },
+        ['TestDriveTimeLimit'] = 3.0, -- Time in minutes until the vehicle gets deleted
+        ['Location'] = vector3(-2148.72, 3235.11, 32.81), -- Blip Location
+        ['ReturnLocation'] = vector3(-44.74, -1082.58, 26.68), -- Location to return vehicle, only enables if the vehicleshop has a job owned
+        ['VehicleSpawn'] = vector4(-2185.19, 3175.1, 32.81, 327.59), -- Spawn location when vehicle is bought
+        ['TestDriveSpawn'] = vector4(-2176.25, 3226.05, 32.81, 59.69), -- Spawn location for test drive
+        ['ShowroomVehicles'] = {
+            [1] = {
+                coords = vector4(-2151.65, 3261.67, 32.81, 241.36), -- where the vehicle will spawn on display
+                defaultVehicle = 'mh6', -- Default display vehicle
+                chosenVehicle = 'mh6', -- Same as default but is dynamically changed when swapping vehicles
+            },
+        },
+    },
     ['boats'] = {
         ['Type'] = 'free-use', -- no player interaction is required to purchase a vehicle
         ['Zone'] = {
