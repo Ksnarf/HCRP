@@ -5,22 +5,18 @@ Config.RemoveLockpickNormal = 0.5 -- Chance to remove lockpick on fail
 Config.RemoveLockpickAdvanced = 0.2 -- Chance to remove advanced lockpick on fail
 
 Config.CarjackingTime = 7500 -- How long it takes to carjack
-Config.DelayBetweenCarjackings = 60000 -- Time before you can carjack again
+Config.DelayBetweenCarjackings = 10000 -- Time before you can carjack again
 
 Config.TimeBetweenHotwires = 5000
 Config.minHotwireTime = 20000
 Config.maxHotwireTime = 40000
 
 Config.AlertCooldown = 10000 -- 10 seconds
-Config.PoliceAlertChance = 2.50 -- Chance of alerting police during the day
-Config.PoliceNightAlertChance = 1.25 -- Chance of alerting police at night (times:01-06)
+Config.PoliceAlertChance = 1.75 -- Chance of alerting police during the day
+Config.PoliceNightAlertChance = 1.50 -- Chance of alerting police at night (times:01-06)
 
 Config.ImmuneVehicles = { -- These vehicles cannot be jacked
-    'stockade',
-    'police',
-    'miniram3500',
-    'centurionlspd',
-    'fpiuw'
+    'stockade'
 }
 
 Config.NoLockVehicles = {}
