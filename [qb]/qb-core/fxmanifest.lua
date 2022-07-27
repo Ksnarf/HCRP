@@ -6,14 +6,15 @@ version '1.1.0'
 
 shared_scripts {
 	'config.lua',
-    'shared/locale.lua',
-	'locale/en.lua', -- replace with desired language
+  'shared/locale.lua',
+	'locale/en.lua',
 	'shared/main.lua',
 	'shared/items.lua',
 	'shared/jobs.lua',
 	'shared/vehicles.lua',
 	'shared/gangs.lua',
-	'shared/weapons.lua'
+	'shared/weapons.lua',
+	'shared/business.lua'
 }
 
 client_scripts {
