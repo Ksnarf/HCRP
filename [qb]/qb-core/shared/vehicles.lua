@@ -4420,6 +4420,15 @@ QBShared.Vehicles = {
 		['shop'] = 'air',
 	},
 	--Addons
+	['mh6'] = {
+		['name'] = '1988 McDonald Douglas MH6',
+		['brand'] = 'McDonald Dougas',
+		['model'] = 'mh6',
+		['price'] = 150000,
+		['category'] = 'helicopters',
+		['hash'] = `GetHashKey("mh6")`,
+		['shop'] = 'milheli',
+  },
 	['demon'] = {
 		['name'] = '2019 Dodge Demon',
 		['brand'] = 'Dodge',
