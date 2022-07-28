@@ -337,5 +337,17 @@ Garages = {
         vehicle = 'car'
         job = "ottomechanic"
     },
+    ["lamesapd"] = {
+        label = "La Mesa PD",
+        takeVehicle = vector3(841.00, -1365.41, 26.00),
+        spawnPoint = vector4(841.00, -1370.00, 26.00, 270.00),
+        putVehicle = vector3(822.24, -1370.00, 26.14),
+        showBlip = true,
+        blipName = "Police",
+        blipNumber = 357,
+        type = 'job',                --public, job, gang, depot
+        vehicle = 'car',              --car, air, sea
+        job = "police"
+    },
 }
 HouseGarages = {}
