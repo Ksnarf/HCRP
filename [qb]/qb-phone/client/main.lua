@@ -1,3768 +1,2416 @@
-local guiEnabled = false
-local hasOpened = false
-local lstMsgs = {}
-local lstContacts = {}
-local inPhone = false
-local radioChannel = math.random(1,999)
-local usedFingers = false
-local dead = false
-local onhold = false
-local YellowPageArray = {}
-local YellowPages = {}
-local PhoneBooth = GetEntityCoords(PlayerPedId())
-local AnonCall = true
-local phoneNotifications = true
-local insideDelivers = false
-local curhrs = 9
-local curmins = 2
-local allowpopups = true
-local vehicles = {}
-local isDead = false
-local isNotInCall, isDialing, isReceivingCall, isCallInProgress = 0, 1, 2, 3
-local callStatus = isNotInCall
+local QBCore = exports['qb-core']:GetCoreObject()
+local PlayerJob = {}
+local patt = "[?!@#]"
+local CallVolume = 0.2
+PhoneData = {
+    MetaData = {},
+    isOpen = false,
+    PlayerData = nil,
+    Contacts = {},
+    Tweets = {},
+    MentionedTweets = {},
+    Hashtags = {},
+    Chats = {},
+    Invoices = {},
+    CallData = {},
+    RecentCalls = {},
+    Garage = {},
+    Mails = {},
+    Adverts = {},
+    GarageVehicles = {},
+    AnimationData = {
+        lib = nil,
+        anim = nil,
+    },
+    SuggestedContacts = {},
+    CryptoTransactions = {},
+    Images = {},
+}
 
-RegisterNetEvent("np-jobmanager:playerBecameJob")
-AddEventHandler("np-jobmanager:playerBecameJob", function(job)
-    if job == "trucker" then
-        trucker = true
+-- Functions
+
+function string:split(delimiter)
+    local result = { }
+    local from  = 1
+    local delim_from, delim_to = string.find( self, delimiter, from  )
+    while delim_from do
+      table.insert( result, string.sub( self, from , delim_from-1 ) )
+      from  = delim_to + 1
+      delim_from, delim_to = string.find( self, delimiter, from  )
     end
-end)
-
-
-function SetCustomNuiFocus(hasKeyboard, hasMouse)
-  HasNuiFocus = hasKeyboard or hasMouse
-
-  SetNuiFocus(hasKeyboard, hasMouse)
-  SetNuiFocusKeepInput(HasNuiFocus)
-
-  TriggerEvent("np:voice:focus:set", HasNuiFocus, hasKeyboard, hasMouse)
+    table.insert( result, string.sub( self, from  ) )
+    return result
 end
 
-RegisterNUICallback('btnNotifyToggle', function(data, cb)
-    allowpopups = not allowpopups
-    if allowpopups then
-      TriggerEvent("DoLongHudText","Popups Enabled", 1)
+local function escape_str(s)
+	return s
+end
+
+local function GenerateTweetId()
+    local tweetId = "TWEET-"..math.random(11111111, 99999999)
+    return tweetId
+end
+
+local function IsNumberInContacts(num)
+    local retval = num
+    for _, v in pairs(PhoneData.Contacts) do
+        if num == v.number then
+            retval = v.name
+        end
+    end
+    return retval
+end
+
+local function CalculateTimeToDisplay()
+	hour = GetClockHours()
+    minute = GetClockMinutes()
+
+    local obj = {}
+
+	if minute <= 9 then
+		minute = "0" .. minute
+    end
+
+    obj.hour = hour
+    obj.minute = minute
+
+    return obj
+end
+
+local function GetClosestPlayer()
+    local closestPlayers = QBCore.Functions.GetPlayersFromCoords()
+    local closestDistance = -1
+    local closestPlayer = -1
+    local coords = GetEntityCoords(PlayerPedId())
+    for i=1, #closestPlayers, 1 do
+        if closestPlayers[i] ~= PlayerId() then
+            local pos = GetEntityCoords(GetPlayerPed(closestPlayers[i]))
+            local distance = #(pos - coords)
+
+            if closestDistance == -1 or closestDistance > distance then
+                closestPlayer = closestPlayers[i]
+                closestDistance = distance
+            end
+        end
+	end
+	return closestPlayer, closestDistance
+end
+
+local function GetKeyByDate(Number, Date)
+    local retval = nil
+    if PhoneData.Chats[Number] ~= nil then
+        if PhoneData.Chats[Number].messages ~= nil then
+            for key, chat in pairs(PhoneData.Chats[Number].messages) do
+                if chat.date == Date then
+                    retval = key
+                    break
+                end
+            end
+        end
+    end
+    return retval
+end
+
+local function GetKeyByNumber(Number)
+    local retval = nil
+    if PhoneData.Chats then
+        for k, v in pairs(PhoneData.Chats) do
+            if v.number == Number then
+                retval = k
+            end
+        end
+    end
+    return retval
+end
+
+local function ReorganizeChats(key)
+    local ReorganizedChats = {}
+    ReorganizedChats[1] = PhoneData.Chats[key]
+    for k, chat in pairs(PhoneData.Chats) do
+        if k ~= key then
+            ReorganizedChats[#ReorganizedChats+1] = chat
+        end
+    end
+    PhoneData.Chats = ReorganizedChats
+end
+
+local function findVehFromPlateAndLocate(plate)
+    local gameVehicles = QBCore.Functions.GetVehicles()
+    for i = 1, #gameVehicles do
+        local vehicle = gameVehicles[i]
+        if DoesEntityExist(vehicle) then
+            if QBCore.Functions.GetPlate(vehicle) == plate then
+                local vehCoords = GetEntityCoords(vehicle)
+                SetNewWaypoint(vehCoords.x, vehCoords.y)
+                return true
+            end
+        end
+    end
+end
+
+local function PublicPhone()
+    local PublicPhoneobject = {
+        -2103798695,1158960338,
+        1281992692,1511539537,
+        295857659,-78626473,
+        -1559354806
+    }
+        exports["qb-target"]:AddTargetModel(PublicPhoneobject, {
+            options = {
+                {
+                    type = "client",
+                    event = "stx-phone:client:publocphoneopen",
+                    icon = "fas fa-phone-alt",
+                    label = "Public Phone",
+                    job = false,
+                },
+            },
+            distance = 1.0
+        })
+end
+
+local function DisableDisplayControlActions()
+    DisableControlAction(0, 1, true)
+    DisableControlAction(0, 2, true)
+    DisableControlAction(0, 3, true)
+    DisableControlAction(0, 4, true)
+    DisableControlAction(0, 5, true)
+    DisableControlAction(0, 6, true)
+    DisableControlAction(0, 263, true)
+    DisableControlAction(0, 264, true)
+    DisableControlAction(0, 257, true)
+    DisableControlAction(0, 140, true)
+    DisableControlAction(0, 141, true)
+    DisableControlAction(0, 142, true)
+    DisableControlAction(0, 143, true)
+    DisableControlAction(0, 177, true)
+    DisableControlAction(0, 200, true)
+    DisableControlAction(0, 202, true)
+    DisableControlAction(0, 322, true)
+    DisableControlAction(0, 245, true)
+end
+
+local function LoadPhone()
+    Wait(100)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetPhoneData', function(pData)
+        PlayerJob = QBCore.Functions.GetPlayerData().job
+        PhoneData.PlayerData = QBCore.Functions.GetPlayerData()
+        local PhoneMeta = PhoneData.PlayerData.metadata["phone"]
+        PhoneData.MetaData = PhoneMeta
+
+        if pData.InstalledApps ~= nil and next(pData.InstalledApps) ~= nil then
+            for k, v in pairs(pData.InstalledApps) do
+                local AppData = Config.StoreApps[v.app]
+                Config.PhoneApplications[v.app] = {
+                    app = v.app,
+                    color = AppData.color,
+                    icon = AppData.icon,
+                    tooltipText = AppData.title,
+                    tooltipPos = "right",
+                    job = AppData.job,
+                    blockedjobs = AppData.blockedjobs,
+                    slot = AppData.slot,
+                    Alerts = 0,
+                }
+            end
+        end
+
+        if PhoneMeta.profilepicture == nil then
+            PhoneData.MetaData.profilepicture = "default"
+        else
+            PhoneData.MetaData.profilepicture = PhoneMeta.profilepicture
+        end
+
+        if pData.Applications ~= nil and next(pData.Applications) ~= nil then
+            for k, v in pairs(pData.Applications) do
+                Config.PhoneApplications[k].Alerts = v
+            end
+        end
+
+        if pData.MentionedTweets ~= nil and next(pData.MentionedTweets) ~= nil then
+            PhoneData.MentionedTweets = pData.MentionedTweets
+        end
+
+        if pData.PlayerContacts ~= nil and next(pData.PlayerContacts) ~= nil then
+            PhoneData.Contacts = pData.PlayerContacts
+        end
+
+        if pData.Chats ~= nil and next(pData.Chats) ~= nil then
+            local Chats = {}
+            for k, v in pairs(pData.Chats) do
+                Chats[v.number] = {
+                    name = IsNumberInContacts(v.number),
+                    number = v.number,
+                    messages = json.decode(v.messages)
+                }
+            end
+
+            PhoneData.Chats = Chats
+        end
+
+        if pData.Invoices ~= nil and next(pData.Invoices) ~= nil then
+            for _, invoice in pairs(pData.Invoices) do
+                invoice.name = IsNumberInContacts(invoice.number)
+            end
+            PhoneData.Invoices = pData.Invoices
+        end
+
+        if pData.Hashtags ~= nil and next(pData.Hashtags) ~= nil then
+            PhoneData.Hashtags = pData.Hashtags
+        end
+
+        if pData.Tweets ~= nil and next(pData.Tweets) ~= nil then
+            PhoneData.Tweets = pData.Tweets
+        end
+
+        if pData.Mails ~= nil and next(pData.Mails) ~= nil then
+            PhoneData.Mails = pData.Mails
+        end
+
+        if pData.Adverts ~= nil and next(pData.Adverts) ~= nil then
+            PhoneData.Adverts = pData.Adverts
+        end
+
+        if pData.CryptoTransactions ~= nil and next(pData.CryptoTransactions) ~= nil then
+            PhoneData.CryptoTransactions = pData.CryptoTransactions
+        end
+        if pData.Images ~= nil and next(pData.Images) ~= nil then
+            PhoneData.Images = pData.Images
+        end
+
+        SendNUIMessage({
+            action = "LoadPhoneData",
+            PhoneData = PhoneData,
+            PlayerData = PhoneData.PlayerData,
+            PlayerJob = PhoneData.PlayerData.job,
+            applications = Config.PhoneApplications,
+            PlayerId = GetPlayerServerId(PlayerId())
+        })
+    end)
+end
+
+local function OpenPhone()
+    QBCore.Functions.TriggerCallback('qb-phone:server:HasPhone', function(HasPhone)
+        if HasPhone then
+            PhoneData.PlayerData = QBCore.Functions.GetPlayerData()
+    	    SetNuiFocus(true, true)
+            SendNUIMessage({
+                action = "open",
+                Tweets = PhoneData.Tweets,
+                AppData = Config.PhoneApplications,
+                CallData = PhoneData.CallData,
+                PlayerData = PhoneData.PlayerData,
+            })
+            PhoneData.isOpen = true
+
+            CreateThread(function()
+                while PhoneData.isOpen do
+                    DisableDisplayControlActions()
+                    Wait(1)
+                end
+            end)
+
+            if not PhoneData.CallData.InCall then
+                DoPhoneAnimation('cellphone_text_in')
+            else
+                DoPhoneAnimation('cellphone_call_to_text')
+            end
+
+            SetTimeout(250, function()
+                newPhoneProp()
+            end)
+
+            QBCore.Functions.TriggerCallback('qb-phone:server:GetGarageVehicles', function(vehicles)
+                PhoneData.GarageVehicles = vehicles
+            end)
+        else
+            QBCore.Functions.Notify("You don't have a phone?", "error")
+        end
+    end)
+end
+
+local function GenerateCallId(caller, target)
+    local CallId = math.ceil(((tonumber(caller) + tonumber(target)) / 100 * 1))
+    return CallId
+end
+
+local function CallContact(CallData, AnonymousCall)
+    local RepeatCount = 0
+    PhoneData.CallData.CallType = "outgoing"
+    PhoneData.CallData.InCall = true
+    PhoneData.CallData.TargetData = CallData
+    PhoneData.CallData.AnsweredCall = false
+    PhoneData.CallData.CallId = GenerateCallId(PhoneData.PlayerData.charinfo.phone, CallData.number)
+
+    TriggerServerEvent('qb-phone:server:CallContact', PhoneData.CallData.TargetData, PhoneData.CallData.CallId, AnonymousCall)
+    TriggerServerEvent('qb-phone:server:SetCallState', true)
+
+    for i = 1, Config.CallRepeats + 1, 1 do
+        if not PhoneData.CallData.AnsweredCall then
+            if RepeatCount + 1 ~= Config.CallRepeats + 1 then
+                if PhoneData.CallData.InCall then
+                    RepeatCount = RepeatCount + 1
+                    TriggerServerEvent("InteractSound_SV:PlayOnSource", "demo", 0.1)
+                else
+                    break
+                end
+                Wait(Config.RepeatTimeout)
+            else
+                CancelCall()
+                break
+            end
+        else
+            break
+        end
+    end
+end
+
+local function CancelCall()
+    TriggerServerEvent('qb-phone:server:CancelCall', PhoneData.CallData)
+    if PhoneData.CallData.CallType == "ongoing" then
+        exports['pma-voice']:removePlayerFromCall(PhoneData.CallData.CallId)
+    end
+    PhoneData.CallData.CallType = nil
+    PhoneData.CallData.InCall = false
+    PhoneData.CallData.AnsweredCall = false
+    PhoneData.CallData.TargetData = {}
+    PhoneData.CallData.CallId = nil
+
+    if not PhoneData.isOpen then
+        StopAnimTask(PlayerPedId(), PhoneData.AnimationData.lib, PhoneData.AnimationData.anim, 2.5)
+        deletePhone()
+        PhoneData.AnimationData.lib = nil
+        PhoneData.AnimationData.anim = nil
     else
-      TriggerEvent("DoLongHudText","Popups Disabled", 2)
+        PhoneData.AnimationData.lib = nil
+        PhoneData.AnimationData.anim = nil
     end
-end)
 
-activeNumbersClient = {}
+    TriggerServerEvent('qb-phone:server:SetCallState', false)
 
-RegisterNetEvent('phone:reset')
-AddEventHandler('phone:reset', function(cidsent)
-  if guiEnabled then
-    closeGui2()
-  end
-  guiEnabled = false
-  hasOpened = false
-  lstMsgs = {}
-  lstContacts = {}
-  vehicles = {}
-  radioChannel = math.random(1,999)
-  dead = false
-  onhold = false
-  inPhone = false
-end)
+    if not PhoneData.isOpen then
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Phone",
+                text = "Call ended",
+                icon = "fas fa-phone",
+                color = "#e84118",
+            },
+        })
+    else
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Phone",
+                text = "Call ended",
+                icon = "fas fa-phone",
+                color = "#e84118",
+            },
+        })
 
-RegisterNetEvent('Yougotpaid')
-AddEventHandler('Yougotpaid', function(cidsent)
-    if tonumber(cid) == tonumber(cidsent) then
-      TriggerEvent("DoLongHudText","Life Invader Payslip Generated.", 1)
+        SendNUIMessage({
+            action = "SetupHomeCall",
+            CallData = PhoneData.CallData,
+        })
+
+        SendNUIMessage({
+            action = "CancelOutgoingCall",
+        })
     end
-end)
-           
-RegisterNetEvent('Payment:Successful')
-AddEventHandler('Payment:Successful', function()
-    SendNUIMessage({
-        openSection = "error",
-        textmessage = "Payment Processed.",
-    })     
-end)
-
-RegisterNetEvent('warrants:AddInfo')
-AddEventHandler('warrants:AddInfo', function(name, charges)
-
-    openGuiNow()
-
-    SendNUIMessage({
-      openSection = "enableoutstanding",
-    })
-    for i = 1, #charges do
-
-      SendNUIMessage({
-        openSection = "inputoutstanding",
-        textmessage = charges[i],
-      })
-    end
-    
-end)
-
-RegisterNetEvent("phone:activeNumbers")
-AddEventHandler("phone:activeNumbers", function(activePhoneNumbers)
-  activeNumbersClient = activePhoneNumbers
-  hasOpened = false
-end)
-
-
-
-RegisterNetEvent("gangTasks:updateClients")
-AddEventHandler("gangTasks:updateClients", function(newTasks)
-  activeTasks = newTasks
-end)
-
-TaskState = {
-  [1] = "Ready For Pickup",
-  [2] = "In Process",
-  [3] = "Successful",
-  [4] = "Failed",
-  [5] = "Delivered with Damaged Goods",
-}
-
-TaskTitle = {
-  [1] = "Ordering 'Take-Out'",
-  [2] = "Ordering 'Disposal Service'",
-  [3] = "Ordering 'Postal Delivery'",
-  [4] = "Ordering 'Hot Food Room Service'",
-}
-
-function findTaskIdFromBlockChain(blockchain)
-  local retnum = 1
-  for i = 1, #activeTasks do
-    if activeTasks[i]["BlockChain"] == blockchain then
-      retnum = i
-    end
-  end
-  return retnum
 end
 
--- real estate nui app responses
+local function AnswerCall()
+    if (PhoneData.CallData.CallType == "incoming" or PhoneData.CallData.CallType == "outgoing") and PhoneData.CallData.InCall and not PhoneData.CallData.AnsweredCall then
+        PhoneData.CallData.CallType = "ongoing"
+        PhoneData.CallData.AnsweredCall = true
+        PhoneData.CallData.CallTime = 0
 
-function loading()
-    SendNUIMessage({
-        openSection = "error",
-        textmessage = "Loading, please wait.",
-    })  
+        SendNUIMessage({ action = "AnswerCall", CallData = PhoneData.CallData})
+        SendNUIMessage({ action = "SetupHomeCall", CallData = PhoneData.CallData})
+
+        TriggerServerEvent('qb-phone:server:SetCallState', true)
+
+        if PhoneData.isOpen then
+            DoPhoneAnimation('cellphone_text_to_call')
+        else
+            DoPhoneAnimation('cellphone_call_listen_base')
+        end
+
+        CreateThread(function()
+            while true do
+                if PhoneData.CallData.AnsweredCall then
+                    PhoneData.CallData.CallTime = PhoneData.CallData.CallTime + 1
+                    SendNUIMessage({
+                        action = "UpdateCallTime",
+                        Time = PhoneData.CallData.CallTime,
+                        Name = PhoneData.CallData.TargetData.name,
+                    })
+                else
+                    break
+                end
+
+                Wait(1000)
+            end
+        end)
+
+        TriggerServerEvent('qb-phone:server:AnswerCall', PhoneData.CallData)
+        exports['pma-voice']:addPlayerToCall(PhoneData.CallData.CallId)
+    else
+        PhoneData.CallData.InCall = false
+        PhoneData.CallData.CallType = nil
+        PhoneData.CallData.AnsweredCall = false
+
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Phone",
+                text = "You don't have an incoming call...",
+                icon = "fas fa-phone",
+                color = "#e84118",
+            },
+        })
+    end
 end
 
-RegisterNetEvent("phone:setServerTime")
-AddEventHandler("phone:setServerTime", function(time)
-  SendNUIMessage({
-    openSection = "server-time",
-    serverTime = time
-  })
-end)
-
-RegisterNetEvent("timeheader")
-AddEventHandler("timeheader", function(hrs,mins)
-
-
-  if hrs < 10 then
-    hrs = "0"..hrs
-  end
-  if mins < 10 then
-    mins = "0"..mins
-  end
-  curhrs = hrs
-  curmins = mins
-
-  local timesent = curhrs .. ":" .. curmins
-  if guiEnabled then
-    SendNUIMessage({
-      openSection = "timeheader",
-      timestamp = timesent,
-    })   
-  end
-end)
-
-function doTimeUpdate()
-  local timesent = curhrs .. ":" .. curmins
-  if guiEnabled then
-    SendNUIMessage({
-      openSection = "timeheader",
-      timestamp = timesent,
-    })   
-  end
-end
-
-RegisterNUICallback('btnGiveKey', function(data, cb)
-  TriggerEvent("houses:GiveKey")
-end)
-RegisterNetEvent("returnPlayerKeys")
-AddEventHandler("returnPlayerKeys", function(ownedkeys,sharedkeys)
-  
-      if not guiEnabled then
-        return
-      end
-
-      SendNUIMessage({
-        openSection = "keys",
-        keys = {
-          sharedKeys = sharedkeys,
-          ownedKeys = ownedkeys
-        }
-      })
-end)
-
-function CellFrontCamActivate(activate)
+local function CellFrontCamActivate(activate)
 	return Citizen.InvokeNative(0x2491A93618B7D838, activate)
 end
 
-local selfieMode = false
-RegisterNUICallback('phone:selfie', function()
-  selfieMode = not selfieMode
-  if selfieMode then
-    closeGui()
-    DestroyMobilePhone()
-    CreateMobilePhone(4)
-    CellCamActivate(true, true)
-    CellFrontCamActivate(true)
-  else
-    closeGui()
-    CellCamActivate(false, false)
-    CellFrontCamActivate(false)
-    DestroyMobilePhone()
-    selfieMode = false
-  end
-end)
+-- Command
 
-RegisterNUICallback('trackTaskLocation', function(data, cb)
-    local taskID = findTaskIdFromBlockChain(data.TaskIdentifier)
-    TriggerEvent("DoLongHudText","Location Set", 1)
-
-    SetNewWaypoint(activeTasks[taskID]["Location"]["x"],activeTasks[taskID]["Location"]["y"])
-end)
-
-function GroupRank(groupid)
-  local rank = 0
-  local mypasses = exports["isPed"]:isPed("passes")
-  for i=1, #mypasses do
-    if mypasses[i]["pass_type"] == groupid then
-      rank = mypasses[i]["rank"]
-    end 
-  end
-  return rank
-end
-
-RegisterNUICallback('bankGroup', function(data)
-    local gangid = data.gangid
-    local cashamount = data.cashamount
-    TriggerServerEvent("server:gankGroup", gangid,cashamount)
-end)
-
-RegisterNUICallback('payGroup', function(data)
-    local gangid = data.gangid
-    local cid = data.cid
-    local cashamount = data.cashamount
-    TriggerServerEvent("server:givepayGroup", gangid,cashamount,cid)
-end)
-
-RegisterNUICallback('promoteGroup', function(data)
-    local gangid = data.gangid
-    local cid = data.cid
-    local newrank = data.newrank
-    SendNUIMessage({
-        openSection = "error",
-        textmessage = "Loading, please wait.",
-    })
-    TriggerServerEvent("server:givepass", gangid,newrank,cid)
-end)
-
-RegisterNUICallback('manageGroup', function(data)
-    local groupid = data.GroupID
-    
-    local rank = GroupRank(groupid)
-    if rank < 2 then
-      SendNUIMessage({
-        openSection = "error",
-        textmessage = "Permission Error",
-      })   
-      return
+RegisterCommand('phone', function()
+    PlayerData = QBCore.Functions.GetPlayerData()
+    if not PhoneData.isOpen and LocalPlayer.state.isLoggedIn then
+        if not PlayerData.metadata['ishandcuffed'] and not PlayerData.metadata['inlaststand'] and not PlayerData.metadata['isdead'] and not IsPauseMenuActive() then
+            OpenPhone()
+        else
+            QBCore.Functions.Notify("Action not available at the moment..", "error")
+        end
     end
+end)
 
+RegisterKeyMapping('phone', 'Open Phone', 'keyboard', 'M')
+
+-- NUI Callbacks
+
+RegisterNUICallback('CancelOutgoingCall', function()
+    CancelCall()
+end)
+
+RegisterNUICallback('DenyIncomingCall', function()
+    CancelCall()
+end)
+
+RegisterNUICallback('CancelOngoingCall', function()
+    CancelCall()
+end)
+
+RegisterNUICallback('AnswerCall', function()
+    AnswerCall()
+end)
+
+RegisterNUICallback('ClearRecentAlerts', function(data, cb)
+    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone", 0)
+    Config.PhoneApplications["phone"].Alerts = 0
+    SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+end)
+
+RegisterNUICallback('SetBackground', function(data)
+    local background = data.background
+    PhoneData.MetaData.background = background
+    TriggerServerEvent('qb-phone:server:SaveMetaData', PhoneData.MetaData)
+end)
+
+RegisterNUICallback('GetMissedCalls', function(data, cb)
+    cb(PhoneData.RecentCalls)
+end)
+
+RegisterNUICallback('GetSuggestedContacts', function(data, cb)
+    cb(PhoneData.SuggestedContacts)
+end)
+
+RegisterNUICallback('HasPhone', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:HasPhone', function(HasPhone)
+        cb(HasPhone)
+    end)
+end)
+
+RegisterNUICallback('SetupGarageVehicles', function(data, cb)
+    cb(PhoneData.GarageVehicles)
+end)
+
+RegisterNUICallback('RemoveMail', function(data, cb)
+    local MailId = data.mailId
+    TriggerServerEvent('qb-phone:server:RemoveMail', MailId)
+    cb('ok')
+end)
+
+RegisterNUICallback('Close', function()
+    if not PhoneData.CallData.InCall then
+        DoPhoneAnimation('cellphone_text_out')
+        SetTimeout(400, function()
+            StopAnimTask(PlayerPedId(), PhoneData.AnimationData.lib, PhoneData.AnimationData.anim, 2.5)
+            deletePhone()
+            PhoneData.AnimationData.lib = nil
+            PhoneData.AnimationData.anim = nil
+        end)
+    else
+        PhoneData.AnimationData.lib = nil
+        PhoneData.AnimationData.anim = nil
+        DoPhoneAnimation('cellphone_text_to_call')
+    end
+    SetTimeout(300, function()
+        SetNuiFocus(false, false)
+        PhoneData.isOpen = false
+    end)
+end)
+
+RegisterNUICallback('AcceptMailButton', function(data)
+    if data.buttonEvent ~= nil or  data.buttonData ~= nil then
+        TriggerEvent(data.buttonEvent, data.buttonData)
+    end
+    TriggerServerEvent('qb-phone:server:ClearButtonData', data.mailId)
+end)
+
+RegisterNUICallback('AddNewContact', function(data, cb)
+    PhoneData.Contacts[#PhoneData.Contacts+1] = {
+        name = data.ContactName,
+        number = data.ContactNumber,
+        iban = data.ContactIban
+    }
+    Wait(100)
+    cb(PhoneData.Contacts)
+    if PhoneData.Chats[data.ContactNumber] ~= nil and next(PhoneData.Chats[data.ContactNumber]) ~= nil then
+        PhoneData.Chats[data.ContactNumber].name = data.ContactName
+    end
+    TriggerServerEvent('qb-phone:server:AddNewContact', data.ContactName, data.ContactNumber, data.ContactIban)
+end)
+
+RegisterNUICallback('GetMails', function(data, cb)
+    cb(PhoneData.Mails)
+end)
+
+RegisterNUICallback('GetWhatsappChat', function(data, cb)
+    if PhoneData.Chats[data.phone] ~= nil then
+        cb(PhoneData.Chats[data.phone])
+    else
+        cb(false)
+    end
+end)
+
+RegisterNUICallback('GetProfilePicture', function(data, cb)
+    local number = data.number
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetPicture', function(picture)
+        cb(picture)
+    end, number)
+end)
+
+RegisterNUICallback('GetBankContacts', function(data, cb)
+    cb(PhoneData.Contacts)
+end)
+
+RegisterNUICallback('GetInvoices', function(data, cb)
+    if PhoneData.Invoices ~= nil and next(PhoneData.Invoices) ~= nil then
+        cb(PhoneData.Invoices)
+    else
+        cb(nil)
+    end
+end)
+
+RegisterNUICallback('SharedLocation', function(data)
+    local x = data.coords.x
+    local y = data.coords.y
+
+    SetNewWaypoint(x, y)
     SendNUIMessage({
-        openSection = "error",
-        textmessage = "Loading, please wait.",
-    })   
-
-    TriggerServerEvent("group:pullinformation",groupid,rank)
-
-end)
-
-RegisterNetEvent("phone:error")
-AddEventHandler("phone:error", function()
-      SendNUIMessage({
-        openSection = "error",
-        textmessage = "<b>Network Error</b> <br><br> Please contact support if this error persists, thank you for using Dreams Phone Services.",
-      })   
-end)
-
-RegisterNUICallback('manageGroup', function(data)
-  local groupid = data.GroupID
-  
-  local rank = GroupRank(groupid)
-  if rank < 2 then
-    SendNUIMessage({
-      openSection = "error",
-      textmessage = "Permission Error",
-    })   
-    return
-  end
-
-  SendNUIMessage({
-      openSection = "error",
-      textmessage = "Loading, please wait.",
-  })   
-
-  TriggerServerEvent("group:pullinformation",groupid,rank)
-
-end)
-
-RegisterNUICallback('btnProperty', function(data, cb)
-  loading()
-  local realEstateRank = GroupRank("real_estate")
-  if realEstateRank > 0 then
-    SendNUIMessage({
-        openSection = "RealEstate",
-        RERank = realEstateRank
-    })        
-  end
-end)
-
-RegisterNUICallback('btnProperty2', function(data, cb)
-  loading()
-  TriggerServerEvent("ReturnHouseKeys", exports['isPed']:isPed('cid'))
-end)
-
-RegisterNUICallback('btnPayMortgage', function(data, cb)
-  loading()
-  TriggerEvent("housing:attemptpay")
-end)
-
-RegisterNUICallback('retrieveHouseKeys', function(data, cb)
-  TriggerEvent("houses:retrieveHouseKeys")
-  cb('ok')
-end)
-
-RegisterNUICallback('btnFurniture', function(data, cb)
-  closeGui()
-  TriggerEvent("DoLongHudText", "Coming soon.", 2)
-  --TriggerEvent("openFurniture")
-end)
-
-RegisterNUICallback('btnPropertyModify', function(data, cb)
-TriggerEvent("housing:info:realtor","modify")
-end)
-
-RegisterNUICallback('removeHouseKey', function(data, cb)
-  TriggerEvent("houses:removeHouseKey", data.targetId)
-  cb('ok')
-end)
-
-
-RegisterNUICallback('removeSharedKey', function(data, cb)
-  local cid = exports["isPed"]:isPed("cid")
-  TriggerServerEvent("houses:removeSharedKey", data.house_id, cid)
-  cb('ok')
-end)
-
-RegisterNUICallback('btnPropertyReset', function(data, cb)
-TriggerEvent("housing:info:realtor","reset")
-end)
-
-RegisterNUICallback('btnPropertyClothing', function(data, cb)
-TriggerEvent("housing:info:realtor","setclothing")
-end)
-
-RegisterNUICallback('btnPropertyStorage', function(data, cb)
-TriggerEvent("housing:info:realtor","setstorage")
-end)
-
-RegisterNUICallback('btnPropertySetGarage', function(data, cb)
-TriggerEvent("housing:info:realtor","setgarage")
-end)
-
-RegisterNUICallback('btnPropertyWipeGarages', function(data, cb)
-TriggerEvent("housing:info:realtor","wipegarages")
-end)
-
-RegisterNUICallback('btnPropertySetBackdoorInside', function(data, cb)
-TriggerEvent("housing:info:realtor","backdoorinside")
-end)
-
-RegisterNUICallback('btnPropertySetBackdoorOutside', function(data, cb)
-TriggerEvent("housing:info:realtor","backdooroutside")
-end)
-
-RegisterNUICallback('btnPropertyUpdateHouse', function(data, cb)
-TriggerEvent("housing:info:realtor","update")
-end)
-
-RegisterNUICallback('btnRemoveSharedKey', function(data, cb)
-TriggerEvent("housing:info:realtor","update")
-end)
-
-RegisterNUICallback('btnPropertyOutstanding', function(data, cb)
-  TriggerEvent("housing:info:realtor","PropertyOutstanding")
-  end)
-
-RegisterNUICallback('btnPropertyUnlock', function(data, cb)
-  TriggerEvent("housing:info:realtor","unlock")
-end)
-
-RegisterNUICallback('btnPropertyUnlock2', function(data, cb)
-  TriggerEvent("housing:info:realtor","unlock2")
-end)
-
-RegisterNUICallback('btnPropertyHouseCreationPoint', function(data, cb)
-TriggerEvent("housing:info:realtor","creationpoint")
-end)
-RegisterNUICallback('btnPropertyStopHouse', function(data, cb)
-TriggerEvent("housing:info:realtor","stop")
-end)
-RegisterNUICallback('btnAttemptHouseSale', function(data, cb)
-TriggerEvent("housing:sendPurchaseAttempt",data.cid,data.price)
-end)
-RegisterNUICallback('btnTransferHouse', function(data, cb)
-TriggerEvent("housing:transferHouseAttempt", data.cid)
-end)
-RegisterNUICallback('btnEvictHouse', function(data, cb)
-TriggerEvent("housing:evictHouseAttempt")
-end)
-RegisterNUICallback('btnGiveKey', function(data, cb)
-  TriggerEvent("houses:GiveKey")
-end)
-RegisterNUICallback('btnFurniture', function(data, cb)
-  closeGui()
-  TriggerEvent("openFurniture")
-end)
-
-
--- real estate nui app responses end
-
-function GroupName(groupid)
-  local name = "Error Retrieving Name"
-  local mypasses = exports["isPed"]:isPed("passes")
-  for i=1, #mypasses do
-    if mypasses[i]["pass_type"] == groupid then
-      name = mypasses[i]["business_name"]
-    end 
-  end
-  return name
-end
-
-
-RegisterNetEvent("group:fullList")
-AddEventHandler("group:fullList", function(result,bank,groupid)
-
-    -- group-manage
-    local groupname = GroupName(groupid)
-    SendNUIMessage({
-      openSection = "groupManage",
-      groupData = {
-        groupName = groupname,
-        bank = bank,
-        groupId = groupid,
-        employees = result
-      }
+        action = "PhoneNotification",
+        PhoneNotify = {
+            title = "Messages",
+            text = "Location set!",
+            icon = "fas fa-comment",
+            color = "#25D366",
+            timeout = 1500,
+        },
     })
-
 end)
 
-local recentcalls = {}
-
-RegisterNUICallback('getCallHistory', function()
-  SendNUIMessage({
-    openSection = "callHistory",
-    callHistory = recentcalls
-  })
+RegisterNUICallback('PostAdvert', function(data)
+    TriggerServerEvent('qb-phone:server:AddAdvert', data.message, data.url)
 end)
 
+RegisterNUICallback("DeleteAdvert", function()
+    TriggerServerEvent("qb-phone:server:DeleteAdvert")
+end)
 
-RegisterNUICallback('btnTaskGroups', function()
+RegisterNUICallback('LoadAdverts', function()
+    SendNUIMessage({
+        action = "RefreshAdverts",
+        Adverts = PhoneData.Adverts
+    })
+end)
 
-  local mypasses = exports["isPed"]:isPed("passes")
+RegisterNUICallback('ClearAlerts', function(data, cb)
+    local chat = data.number
+    local ChatKey = GetKeyByNumber(chat)
 
-  local groupObject = {}
-  for i = 1, #mypasses do
-      local rankConverted = "No Association"
-      rank = mypasses[i]["rank"]
-      if rank == 1 then
-        rankConverted = "Associate"
-      elseif rank == 2 then
-        rankConverted = "Management"
-      elseif rank == 3 then
-        rankConverted = "Partner"
-      elseif rank == 4 then
-        rankConverted = "Part-Time Manager"
-      elseif rank == 5 then
-        rankConverted = "CEO"
-      end
-      if rank > 0 then
-        table.insert(groupObject, {
-          namesent = mypasses[i]["business_name"],
-          ranksent = rankConverted,
-          idsent = mypasses[i]["pass_type"]
+    if PhoneData.Chats[ChatKey].Unread ~= nil then
+        local newAlerts = (Config.PhoneApplications['whatsapp'].Alerts - PhoneData.Chats[ChatKey].Unread)
+        Config.PhoneApplications['whatsapp'].Alerts = newAlerts
+        TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp", newAlerts)
+
+        PhoneData.Chats[ChatKey].Unread = 0
+
+        SendNUIMessage({
+            action = "RefreshWhatsappAlerts",
+            Chats = PhoneData.Chats,
         })
-      end
-  end
-
-  SendNUIMessage({
-    openSection = "groups",
-    groups = groupObject
-  })
-end)
-
-
-
-
-
-
-RegisterNUICallback('btnTaskGang', function()
-  TriggerEvent("gangTasks:updated")
-end)
-
-
-
-local pcs = {
-  [1] = 1333557690,
-  [2] = -1524180747, 
-}
-
-
-function IsNearPC()
-  for i = 1, #pcs do
-    local objFound = GetClosestObjectOfType( GetEntityCoords(PlayerPedId()), 0.75, pcs[i], 0, 0, 0)
-
-    if DoesEntityExist(objFound) then
-      TaskTurnPedToFaceEntity(PlayerPedId(), objFound, 3.0)
-      return true
+        SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
     end
-  end
-
-  if #(GetEntityCoords(PlayerPedId()) - vector3(1272.27, -1711.91, 54.78)) < 1.0 then
-    SetEntityHeading(PlayerPedId(),14.0)
-    return true
-  end
-  if #(GetEntityCoords(PlayerPedId()) - vector3(1275.4, -1710.52, 54.78)) < 5.0 then
-    SetEntityHeading(PlayerPedId(),300.0)
-    return true
-  end
-
-
-  return false
-end
-
-RegisterNetEvent("open:deepweb")
-AddEventHandler("open:deepweb", function()
-  SetNuiFocus(false,false)
-  SetNuiFocus(true,true)
-  guiEnabled = true
-  SendNUIMessage({
-    openSection = "deepweb" 
-  })
 end)
 
-RegisterNetEvent("gangTasks:updated")
-AddEventHandler("gangTasks:updated", function()
-  local taskObject = {}
-  for i = 1, #activeTasks do
+RegisterNUICallback('PayInvoice', function(data, cb)
+    local sender = data.sender
+    local senderCitizenId = data.senderCitizenId
+    local society = data.society
+    local amount = data.amount
+    local invoiceId = data.invoiceId
 
-    if activeTasks[i]["Gang"] ~= 0 and gang ~= 0 and tonumber(activeTasks[i]["taskOwnerCid"]) ~= cid then
-      if gang == activeTasks[i]["Gang"] then
-        taskObject[#taskObject + 1 ] = {
-          name = TaskTitle[activeTasks[i]["TaskType"]],
-          assignedTo = activeTasks[i]["taskOwnerCid"],
-          status = TaskState[activeTasks[i]["TaskState"]],
-          identifier = activeTasks[i]["BlockChain"],
-          groupId = gang,
-          retrace = 0,
-        }
-      end
-    elseif activeTasks[i]["Gang"] == 0 and tonumber(activeTasks[i]["taskOwnerCid"]) ~= cid then
+    QBCore.Functions.TriggerCallback('qb-phone:server:PayInvoice', function(CanPay, Invoices)
+        if CanPay then PhoneData.Invoices = Invoices end
+        cb(CanPay)
+    end, society, amount, invoiceId, senderCitizenId)
+    TriggerServerEvent('qb-phone:server:BillingEmail', data, true)
+end)
 
-      for z = 1, #passes do
+RegisterNUICallback('DeclineInvoice', function(data, cb)
+    local sender = data.sender
+    local society = data.society
+    local amount = data.amount
+    local invoiceId = data.invoiceId
 
-        local passType = activeTasks[i]["Group"]
-        if passes[z].pass_type == passType and (passes[z].rank == 2 or passes[z].rank > 3) then
-          taskObject[#taskObject + 1 ] = {
-            name = activeTasks[i]["TaskNameGroup"],
-            assignedTo = activeTasks[i]["taskOwnerCid"],
-            status = TaskState[activeTasks[i]["TaskState"]],
-            identifier = activeTasks[i]["BlockChain"],
-            groupId = passType,
-            retrace = 0,
-          }
+    QBCore.Functions.TriggerCallback('qb-phone:server:DeclineInvoice', function(CanPay, Invoices)
+        PhoneData.Invoices = Invoices
+        cb('ok')
+    end, society, amount, invoiceId)
+    TriggerServerEvent('qb-phone:server:BillingEmail', data, false)
+end)
+
+RegisterNUICallback('EditContact', function(data, cb)
+    local NewName = data.CurrentContactName
+    local NewNumber = data.CurrentContactNumber
+    local NewIban = data.CurrentContactIban
+    local OldName = data.OldContactName
+    local OldNumber = data.OldContactNumber
+    local OldIban = data.OldContactIban
+
+    for k, v in pairs(PhoneData.Contacts) do
+        if v.name == OldName and v.number == OldNumber then
+            v.name = NewName
+            v.number = NewNumber
+            v.iban = NewIban
         end
+    end
+    if PhoneData.Chats[NewNumber] ~= nil and next(PhoneData.Chats[NewNumber]) ~= nil then
+        PhoneData.Chats[NewNumber].name = NewName
+    end
+    Wait(100)
+    cb(PhoneData.Contacts)
+    TriggerServerEvent('qb-phone:server:EditContact', NewName, NewNumber, NewIban, OldName, OldNumber, OldIban)
+end)
 
-      end
-
+RegisterNUICallback('GetHashtagMessages', function(data, cb)
+    if PhoneData.Hashtags[data.hashtag] ~= nil and next(PhoneData.Hashtags[data.hashtag]) ~= nil then
+        cb(PhoneData.Hashtags[data.hashtag])
     else
-      if tonumber(activeTasks[i]["taskOwnerCid"]) == cid then
-
-        local TaskName = ""
-        if activeTasks[i]["Gang"] == 0 then
-          TaskName = activeTasks[i]["TaskNameGroup"]
-        else
-          TaskName = TaskTitle[activeTasks[i]["TaskType"]]
-        end
-        taskObject[#taskObject + 1 ] = {
-          name = TaskName,
-          assignedTo = activeTasks[i]["taskOwnerCid"],
-          status = TaskState[activeTasks[i]["TaskState"]],
-          identifier = activeTasks[i]["BlockChain"],
-          groupId = gang,
-          retrace = 1
-        }
-      end
+        cb(nil)
     end
-  end
-
-  SendNUIMessage({
-    openSection = "addTasks",
-    tasks = taskObject
-  })
 end)
 
-RegisterNetEvent("purchasePhone")
-AddEventHandler("purchasePhone", function()
-  TriggerServerEvent("purchasePhone")
+RegisterNUICallback('GetTweets', function(data, cb)
+    cb(PhoneData.Tweets)
 end)
 
-RegisterNUICallback('btnMute', function()
-  if phoneNotifications then
-    TriggerEvent("DoLongHudText","Notifications Disabled.", 2)
-  else
-    TriggerEvent("DoLongHudText","Notifications Enabled.", 1)
-  end
-  phoneNotifications = not phoneNotifications
+RegisterNUICallback('UpdateProfilePicture', function(data)
+    local pf = data.profilepicture
+    PhoneData.MetaData.profilepicture = pf
+    TriggerServerEvent('qb-phone:server:SaveMetaData', PhoneData.MetaData)
 end)
 
-RegisterNetEvent("tryTweet")
-AddEventHandler("tryTweet", function(tweetinfo,message,user)
-  if hasPhone() then
-    TriggerServerEvent("AllowTweet",tweetinfo,message)
-  end
-end)
+RegisterNUICallback('PostNewTweet', function(data, cb)
+    local TweetMessage = {
+        firstName = PhoneData.PlayerData.charinfo.firstname,
+        lastName = PhoneData.PlayerData.charinfo.lastname,
+        citizenid = PhoneData.PlayerData.citizenid,
+        message = escape_str(data.Message),
+        time = data.Date,
+        tweetId = GenerateTweetId(),
+        picture = data.Picture,
+        url = data.url
+    }
 
-RegisterNUICallback('btnDecrypt', function()
-  TriggerEvent("secondaryjob:accepttask")
-end)
+    local TwitterMessage = data.Message
+    local MentionTag = TwitterMessage:split("@")
+    local Hashtag = TwitterMessage:split("#")
 
-
-
-RegisterNUICallback('btnGarage', function()
-  local LocalPlayer = exports["np-base"]:getModule("LocalPlayer")
-  local Player = LocalPlayer:getCurrentCharacter()
-  TriggerServerEvent("garages:CheckGarageForVeh", Player.id)
-end)
-
-RegisterNUICallback('btnHelp', function()
-  closeGui()
-  TriggerEvent("openWiki")
-end)
-
-RegisterNUICallback('carpaymentsowed', function()
-  TriggerEvent("car:carpaymentsowed")
-end)
-
-RegisterNUICallback('vehspawn', function(data)
-  findVehFromPlateAndSpawn(data.vehplate)
-end)
-
-RegisterNUICallback('vehtrack', function(data)
-  findVehFromPlateAndLocate(data.vehplate)
-end)
-
-RegisterNUICallback('vehiclePay', function(data)
-  TriggerServerEvent('car:dopayment', data.vehiclePlate)
-end)
-
-function findVehFromPlateAndLocate(plate)
-  for ind, value in pairs(vehicles) do
-    vehPlate = value.license_plate
-    if vehPlate == plate then
-      state = value.vehicle_state
-      coordlocation = value.coords
-      TriggerEvent("DoLongHudText","Your vehicle is marked on your GPS.",1)
-      SetNewWaypoint(coordlocation.x, coordlocation.y, coordlocation.z)
-    else
-      --SetNewWaypoint(coordlocation.x, coordlocation.y, coordlocation.z)
-    end
-  end
-end
-
-
-function Trim(value)
-	if value then
-		return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
-	else
-		return nil
-	end
-end
-
-
-local recentspawnrequest = false
-function findVehFromPlateAndSpawn(plate)
-
-  if IsPedInAnyVehicle(PlayerPedId(), false) then
-    return
-  end
-
-  for ind, value in pairs(vehicles) do
-
-    vehPlate = value.license_plate
-    if vehPlate == plate then
-      state = value.vehicle_state
-      coordlocation = value.coords
-
-      if #(vector3(coordlocation.x, coordlocation.y, coordlocation.z) - GetEntityCoords(PlayerPedId())) < 10.0 and state == "Out" then
-
-        local DoesVehExistInProximity = CheckExistenceOfVehWithPlate(vehPlate)
-
-        if not DoesVehExistInProximity and not recentspawnrequest then
-          recentspawnrequest = true
-          TriggerServerEvent("garages:phonespawn",vehPlate)
-          Wait(10000)
-          recentspawnrequest = false
-        else
-          print("Found vehicle already existing!")
-        end
-
-      end
-
-    end
-
-  end
-
-end
-
-RegisterNetEvent("phone:SpawnVehicle")
-AddEventHandler('phone:SpawnVehicle', function(vehicle, plate, customized, state, Fuel, coordlocation)
-  TriggerEvent("garages:SpawnVehicle", vehicle, plate, customized, state, Fuel, coordlocation)
-end)
-
-
-
-Citizen.CreateThread(function()
-  local invehicle = false
-  local plateupdate = "None"
-  local vehobj = 0
-  while true do
-      Wait(1000)
-      if not invehicle and IsPedInAnyVehicle(PlayerPedId(), false) then
-          local playerPed = PlayerPedId()
-          local veh = GetVehiclePedIsIn(playerPed, false)
-          if GetPedInVehicleSeat(veh, -1) == PlayerPedId() then
-              vehobj = veh
-              local checkplate = GetVehicleNumberPlateText(veh)
-              invehicle = true
-              plateupdate = checkplate
-              local coords = GetEntityCoords(vehobj)
-              coords = {coords["x"], coords["y"], coords["z"]}
-              TriggerServerEvent("vehicle:coords", plateupdate, coords)
-          end
-      end
-      if invehicle and not IsPedInAnyVehicle(PlayerPedId(), false) then
-          local coords = GetEntityCoords(vehobj)
-          coords = {coords["x"], coords["y"], coords["z"]}
-          TriggerServerEvent("vehicle:coords", plateupdate, coords)
-          invehicle = false
-          plateupdate = "None"
-          vehobj = 0
-      end
-  end
-end)
-
-
-function CheckExistenceOfVehWithPlate(platesent)
-    local playerped = PlayerPedId()
-    local playerCoords = GetEntityCoords(playerped)
-    local handle, scannedveh = FindFirstVehicle()
-    local success
-    local rped = nil
-    local distanceFrom
-    repeat
-        local pos = GetEntityCoords(scannedveh)
-        local distance = #(playerCoords - pos)
-          if distance < 50.0 then
-            local checkplate = GetVehicleNumberPlateText(scannedveh)
-            if checkplate == platesent then
-              return true
+    for i = 2, #Hashtag, 1 do
+        local Handle = Hashtag[i]:split(" ")[1]
+        if Handle ~= nil or Handle ~= "" then
+            local InvalidSymbol = string.match(Handle, patt)
+            if InvalidSymbol then
+                Handle = Handle:gsub("%"..InvalidSymbol, "")
             end
-          end
-        success, scannedveh = FindNextVehicle(handle)
-    until not success
-    EndFindVehicle(handle)
-    return false
-end
+            TriggerServerEvent('qb-phone:server:UpdateHashtags', Handle, TweetMessage)
+        end
+    end
 
-local currentVehicles = {}
+    for i = 2, #MentionTag, 1 do
+        local Handle = MentionTag[i]:split(" ")[1]
+        if Handle ~= nil or Handle ~= "" then
+            local Fullname = Handle:split("_")
+            local Firstname = Fullname[1]
+            table.remove(Fullname, 1)
+            local Lastname = table.concat(Fullname, " ")
 
-RegisterNetEvent("phone:Garage")
-AddEventHandler("phone:Garage", function(vehs)
-  vehicles = vehs
-  local showCarPayments = false
-  local rankCarshop = exports["isPed"]:GroupRank("car_shop")
-  local rankImport = exports["isPed"]:GroupRank("illegal_carshop")
-  local job = exports["isPed"]:isPed("myjob")
+            if (Firstname ~= nil and Firstname ~= "") and (Lastname ~= nil and Lastname ~= "") then
+                if Firstname ~= PhoneData.PlayerData.charinfo.firstname and Lastname ~= PhoneData.PlayerData.charinfo.lastname then
+                    TriggerServerEvent('qb-phone:server:MentionedPlayer', Firstname, Lastname, TweetMessage)
+                end
+            end
+        end
+    end
 
+    PhoneData.Tweets[#PhoneData.Tweets+1] = TweetMessage
+    Wait(100)
+    cb(PhoneData.Tweets)
 
-  if rankCarshop > 0 or rankImport > 0 or job == "judge" or job == "police" then
-    showCarPayments = true
-  end
+    TriggerServerEvent('qb-phone:server:UpdateTweets', PhoneData.Tweets, TweetMessage)
+end)
 
-  local parsedVehicleData = {}
-  for ind, value in pairs(vehs) do
-    enginePercent = value.engine_damage / 10
-    bodyPercent = value.body_damage / 10
-    vehName = value.name
-    vehPlate = value.license_plate
-    currentGarage = value.current_garage
-    state = value.vehicle_state
-    coordlocation = value.coords
-    allowspawnattempt = 0
-    --if #(vector3(coordlocation[1], coordlocation[2], coordlocation[3]) - GetEntityCoords(PlayerPedId())) < 20.0 and state == "Out" then
-      --allowspawnattempt = 1
-    --end
-  
-    table.insert(parsedVehicleData, {
-      name = vehName,
-      plate = vehPlate,
-      garage = currentGarage,
-      state = state,
-      enginePercent = enginePercent,
-      bodyPercent = bodyPercent,
-      payments = value.payments_left, -- total payments left
-      lastPayment = value.last_payment, -- Days left
-      amountDue = value.financed, -- amount due
-      canSpawn = 1
-    })
-  end
-  
-  SendNUIMessage({ openSection = "Garage", showCarPaymentsOwed = showCarPayments, vehicleData = parsedVehicleData})
+RegisterNUICallback('DeleteTweet',function(data)
+    TriggerServerEvent('qb-phone:server:DeleteTweet', data.id)
+end)
+
+RegisterNUICallback('GetMentionedTweets', function(data, cb)
+    cb(PhoneData.MentionedTweets)
+end)
+
+RegisterNUICallback('GetHashtags', function(data, cb)
+    if PhoneData.Hashtags ~= nil and next(PhoneData.Hashtags) ~= nil then
+        cb(PhoneData.Hashtags)
+    else
+        cb(nil)
+    end
+end)
+
+RegisterNUICallback('FetchSearchResults', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:FetchResult', function(result)
+        cb(result)
+    end, data.input)
+end)
+
+RegisterNUICallback('InstallApplication', function(data, cb)
+    local ApplicationData = Config.StoreApps[data.app]
+    local NewSlot = GetFirstAvailableSlot()
+    --  local NewSlot = 17
+
+    if not CanDownloadApps then
+        return
+    end
+
+    if NewSlot <= Config.MaxSlots then
+        TriggerServerEvent('qb-phone:server:InstallApplication', {
+            app = data.app,
+        })
+        cb({
+            app = data.app,
+            data = ApplicationData
+        })
+    else
+        cb(false)
+    end
+end)
+
+RegisterNUICallback('RemoveApplication', function(data, cb)
+    TriggerServerEvent('qb-phone:server:RemoveInstallation', data.app)
+end)
+
+RegisterNUICallback('GetTruckerData', function(data, cb)
+    local TruckerMeta = QBCore.Functions.GetPlayerData().metadata["jobrep"]["trucker"]
+    local TierData = exports['qb-trucker']:GetTier(TruckerMeta)
+    cb(TierData)
+end)
+
+RegisterNUICallback('GetGalleryData', function(data, cb)
+    local data = PhoneData.Images
+    cb(data)
+end)
+
+RegisterNUICallback('DeleteImage', function(image,cb)
+    TriggerServerEvent('qb-phone:server:RemoveImageFromGallery',image)
+    Wait(400)
+    TriggerServerEvent('qb-phone:server:getImageFromGallery')
+    cb(true)
 end)
 
 
-local pickuppoints = {
-  [1] =  { ['x'] = 923.94,['y'] = -3037.88,['z'] = 5.91,['h'] = 270.81, ['info'] = ' Shipping Container BMZU 822693' },
-  [2] =  { ['x'] = 938.02,['y'] = -3026.28,['z'] = 5.91,['h'] = 265.85, ['info'] = ' Shipping Container BMZU 822693' },
-  [3] =  { ['x'] = 1006.17,['y'] = -3028.94,['z'] = 5.91,['h'] = 269.31, ['info'] = ' Shipping Container BMZU 822693' },
-  [4] =  { ['x'] = 1020.42,['y'] = -3044.91,['z'] = 5.91,['h'] = 87.37, ['info'] = ' Shipping Container BMZU 822693' },
-  [5] =  { ['x'] = 1051.75,['y'] = -3045.09,['z'] = 5.91,['h'] = 268.37, ['info'] = ' Shipping Container BMZU 822693' },
-  [6] =  { ['x'] = 1134.92,['y'] = -2992.22,['z'] = 5.91,['h'] = 87.9, ['info'] = ' Shipping Container BMZU 822693' },
-  [7] =  { ['x'] = 1149.1,['y'] = -2976.06,['z'] = 5.91,['h'] = 93.23, ['info'] = ' Shipping Container BMZU 822693' },
-  [8] =  { ['x'] = 1121.58,['y'] = -3042.39,['z'] = 5.91,['h'] = 88.49, ['info'] = ' Shipping Container BMZU 822693' },
-  [9] =  { ['x'] = 830.58,['y'] = -3090.46,['z'] = 5.91,['h'] = 91.15, ['info'] = ' Shipping Container BMZU 822693' },
-  [10] =  { ['x'] = 830.81,['y'] = -3082.63,['z'] = 5.91,['h'] = 271.61, ['info'] = ' Shipping Container BMZU 822693' },
-  [11] =  { ['x'] = 909.91,['y'] = -2976.51,['z'] = 5.91,['h'] = 271.02, ['info'] = ' Shipping Container BMZU 822693' },
-}
+-- RegisterNUICallback('track-vehicle', function(data, cb)
+--     local veh = data.veh
+--     if findVehFromPlateAndLocate(veh.plate) then
+--         QBCore.Functions.Notify("Your vehicle has been marked", "success")
+--     else
+--         QBCore.Functions.Notify("This vehicle cannot be located", "error")
+--     end
+-- end)
 
+RegisterNUICallback('gps-vehicle-garage', function(data, cb)
+    local veh = data.veh
+    if veh.state == "In" then
+        QBCore.Functions.Notify('GPS set', "success")
+            local Garage = exports['qb-garages']:GetGarageNameLoc(veh.garage)
+            SetNewWaypoint(Garage.x, Garage.y)
+    else
+        QBCore.Functions.Notify('Your car has no garage', "success")
+    end
+end)
 
-function DrawText3Ds(x,y,z, text)
-    local onScreen,_x,_y=World3dToScreen2d(x,y,z)
-    local px,py,pz=table.unpack(GetGameplayCamCoords())
-    SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
-    SetTextCentre(1)
-    AddTextComponentString(text)
-    DrawText(_x,_y)
-    local factor = (string.len(text)) / 370
-    DrawRect(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
-end
-blip = 0
+RegisterNUICallback('DeleteContact', function(data, cb)
+    local Name = data.CurrentContactName
+    local Number = data.CurrentContactNumber
+    local Account = data.CurrentContactIban
 
-function CreateBlip(location)
-    DeleteBlip()
-    blip = AddBlipForCoord(location["x"],location["y"],location["z"])
-    SetBlipSprite(blip, 514)
-    SetBlipScale(blip, 1.0)
-    SetBlipAsShortRange(blip, false)
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString("Pick Up")
-    EndTextCommandSetBlipName(blip)
-end
-function DeleteBlip()
-  if DoesBlipExist(blip) then
-    RemoveBlip(blip)
-  end
-end
+    for k, v in pairs(PhoneData.Contacts) do
+        if v.name == Name and v.number == Number then
+            table.remove(PhoneData.Contacts, k)
+                SendNUIMessage({
+                    action = "PhoneNotification",
+                    PhoneNotify = {
+                        title = "Phone",
+                        text = "Contact deleted!",
+                        icon = "fa fa-phone-alt",
+                        color = "#04b543",
+                        timeout = 1500,
+                    },
+                })
+            break
+        end
+    end
+    Wait(100)
+    cb(PhoneData.Contacts)
+    if PhoneData.Chats[Number] ~= nil and next(PhoneData.Chats[Number]) ~= nil then
+        PhoneData.Chats[Number].name = Number
+    end
+    TriggerServerEvent('qb-phone:server:RemoveContact', Name, Number)
+end)
 
-function refreshmail()
-    lstnotifications = {}
-    for i = 1, #curNotifications do
+RegisterNUICallback('GetCryptoData', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-crypto:server:GetCryptoData', function(CryptoData)
+        cb(CryptoData)
+    end, data.crypto)
+end)
 
-        local message2 = {
-          id = tonumber(i),
-          name = curNotifications[tonumber(i)].name,
-          message = curNotifications[tonumber(i)].message
+RegisterNUICallback('BuyCrypto', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-crypto:server:BuyCrypto', function(CryptoData)
+        cb(CryptoData)
+    end, data)
+end)
+
+RegisterNUICallback('SellCrypto', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-crypto:server:SellCrypto', function(CryptoData)
+        cb(CryptoData)
+    end, data)
+end)
+
+RegisterNUICallback('TransferCrypto', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-crypto:server:TransferCrypto', function(CryptoData)
+        cb(CryptoData)
+    end, data)
+end)
+
+RegisterNUICallback('GetCryptoTransactions', function(data, cb)
+    local Data = {
+        CryptoTransactions = PhoneData.CryptoTransactions
+    }
+    cb(Data)
+end)
+
+RegisterNUICallback('GetAvailableRaces', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:GetRaces', function(Races)
+        cb(Races)
+    end)
+end)
+
+RegisterNUICallback('JoinRace', function(data)
+    TriggerServerEvent('qb-lapraces:server:JoinRace', data.RaceData)
+end)
+
+RegisterNUICallback('LeaveRace', function(data)
+    TriggerServerEvent('qb-lapraces:server:LeaveRace', data.RaceData)
+end)
+
+RegisterNUICallback('StartRace', function(data)
+    TriggerServerEvent('qb-lapraces:server:StartRace', data.RaceData.RaceId)
+end)
+
+RegisterNUICallback('SetAlertWaypoint', function(data)
+    local coords = data.alert.coords
+    QBCore.Functions.Notify('GPS set: '..data.alert.title)
+    SetNewWaypoint(coords.x, coords.y)
+end)
+
+RegisterNUICallback('RemoveSuggestion', function(data, cb)
+    local data = data.data
+    if PhoneData.SuggestedContacts ~= nil and next(PhoneData.SuggestedContacts) ~= nil then
+        for k, v in pairs(PhoneData.SuggestedContacts) do
+            if (data.name[1] == v.name[1] and data.name[2] == v.name[2]) and data.number == v.number and data.bank == v.bank then
+                table.remove(PhoneData.SuggestedContacts, k)
+            end
+        end
+    end
+end)
+
+RegisterNUICallback('FetchVehicleResults', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetVehicleSearchResults', function(result)
+        if result ~= nil then
+            for k, v in pairs(result) do
+                QBCore.Functions.TriggerCallback('police:IsPlateFlagged', function(flagged)
+                    result[k].isFlagged = flagged
+                end, result[k].plate)
+                Wait(50)
+            end
+        end
+        cb(result)
+    end, data.input)
+end)
+
+RegisterNUICallback('FetchVehicleScan', function(data, cb)
+    local vehicle = QBCore.Functions.GetClosestVehicle()
+    local plate = QBCore.Functions.GetPlate(vehicle)
+    local vehname = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)):lower()
+    QBCore.Functions.TriggerCallback('qb-phone:server:ScanPlate', function(result)
+        QBCore.Functions.TriggerCallback('police:IsPlateFlagged', function(flagged)
+            result.isFlagged = flagged
+	    if QBCore.Shared.Vehicles[vehname] ~= nil then
+                result.label = QBCore.Shared.Vehicles[vehname]['name']
+            else
+                result.label = 'Unknown brand..'
+            end
+            cb(result)
+        end, plate)
+    end, plate)
+end)
+
+RegisterNUICallback('GetRaces', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:GetListedRaces', function(Races)
+        cb(Races)
+    end)
+end)
+
+RegisterNUICallback('GetTrackData', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:GetTrackData', function(TrackData, CreatorData)
+        TrackData.CreatorData = CreatorData
+        cb(TrackData)
+    end, data.RaceId)
+end)
+
+RegisterNUICallback('SetupRace', function(data, cb)
+    TriggerServerEvent('qb-lapraces:server:SetupRace', data.RaceId, tonumber(data.AmountOfLaps))
+end)
+
+RegisterNUICallback('HasCreatedRace', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:HasCreatedRace', function(HasCreated)
+        cb(HasCreated)
+    end)
+end)
+
+RegisterNUICallback('IsInRace', function(data, cb)
+    local InRace = exports['qb-lapraces']:IsInRace()
+    cb(InRace)
+end)
+
+RegisterNUICallback('IsAuthorizedToCreateRaces', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:IsAuthorizedToCreateRaces', function(IsAuthorized, NameAvailable)
+        local data = {
+            IsAuthorized = IsAuthorized,
+            IsBusy = exports['qb-lapraces']:IsInEditor(),
+            IsNameAvailable = NameAvailable,
         }
-        lstnotifications[#lstnotifications+1]= message2
-    end
-    SendNUIMessage({openSection = "notifications", list = lstnotifications})
-end
-
-
-function rundropoff(boxcount,costs)
-  local success = true
-  local timer = 600000
-  TriggerEvent("chatMessage", "EMAIL ", 8, "Yo, here are the coords for the drop off, you have 10 minutes - leave $" .. costs .. " in cash there!")
-  refreshmail()
-  local location = pickuppoints[math.random(#pickuppoints)]
-  CreateBlip(location)
-  while timer > 0 do
-    Citizen.Wait(1)
-    local plycoords = GetEntityCoords(PlayerPedId())
-    local dstcheck = #(plycoords - vector3(location["x"],location["y"],location["z"])) 
-    if dstcheck < 5.0 then
-      DrawText3Ds(location["x"],location["y"],location["z"], "Press E to pickup the dropoff.")
-       if dstcheck < 3.0 and IsControlJustReleased(0,38) then
-          success = true
-          timer = 0
-       end
-    end
-    timer = timer - 1
-    if timer == 1 then
-      success = false
-    end
-  end
-  if success then
-    TriggerServerEvent("weed:phone:buybox",boxcount,costs)
-  end
-  DeleteBlip()
-end
-
-
--- turn this to false to re-enable weed purchases.
-local waiting = false
-RegisterNUICallback('btnBox1', function()
-  if waiting then
-    return
-  end
-  waiting = true
-  
-  Citizen.Wait(math.random(100000))
-  rundropoff(1,1500)
-  waiting = false
+        cb(data)
+    end, data.TrackName)
 end)
 
-RegisterNUICallback('btnBox2', function()
-  if waiting then
-    return
-  end
-  waiting = true
-  
-  Citizen.Wait(math.random(100000))
-  rundropoff(5,4500)
-  waiting = false
+RegisterNUICallback('StartTrackEditor', function(data, cb)
+    TriggerServerEvent('qb-lapraces:server:CreateLapRace', data.TrackName)
 end)
 
-RegisterNUICallback('btnBox3', function()
-  if waiting then
-    return
-  end
-  waiting = true
-  
-  Citizen.Wait(math.random(100000))
-  rundropoff(10,8500)
-  waiting = false
+RegisterNUICallback('GetRacingLeaderboards', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:GetRacingLeaderboards', function(Races)
+        cb(Races)
+    end)
 end)
 
-
-RegisterNUICallback('btnBox6', function()
-  closeGui()
-  TriggerEvent("hacking:attemptHackCrypto","weapon")
+RegisterNUICallback('RaceDistanceCheck', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:GetRacingData', function(RaceData)
+        local ped = PlayerPedId()
+        local coords = GetEntityCoords(ped)
+        local checkpointcoords = RaceData.Checkpoints[1].coords
+        local dist = #(coords - vector3(checkpointcoords.x, checkpointcoords.y, checkpointcoords.z))
+        if dist <= 115.0 then
+            if data.Joined then
+                TriggerEvent('qb-lapraces:client:WaitingDistanceCheck')
+            end
+            cb(true)
+        else
+            QBCore.Functions.Notify('You\'re too far away from the race. GPS set.', 'error', 5000)
+            SetNewWaypoint(checkpointcoords.x, checkpointcoords.y)
+            cb(false)
+        end
+    end, data.RaceId)
 end)
 
-RegisterNUICallback('btnBox5', function()
-  closeGui()
-  TriggerEvent("hacking:attemptHackCrypto","crack")
-end)
-
-RegisterNUICallback('btnBox4', function()
-  closeGui()
-  TriggerEvent("hacking:attemptHackCrypto","bigweapon")
-end)
-
-local weaponList = {
-  [1] = 324215364,
-  [2] = 736523883,
-  [3] = 4024951519,
-  [4] = 1627465347,
-}
-
-local weaponListSmall = {
-  [1] = 2017895192,
-  [2] = 584646201,
-  [3] = 3218215474,
-}
-
-local luckList = {
-  [1] =  "extended_ap",
-  [2] =  "extended_sns",
-  [3] =  "extended_micro",
-  [4] =  "rifleammo",
-  [5] =  "heavyammo",
-  [6] =  "lmgammo",
-}
-
-RegisterNetEvent("stocks:timedEvent")
-AddEventHandler("stocks:timedEvent", function(typeSent)
-  local success = true
-  local timer = 600000
-  TriggerEvent("chatMessage", "EMAIL ", 8, "Yo, here are the coords for the drop off, you have 10 minutes - I already zoinked your RedCoin")
-  refreshmail()
-  local location = pickuppoints[math.random(#pickuppoints)]
-  CreateBlip(location)
-  while timer > 0 do
-    Citizen.Wait(1)
-    local plycoords = GetEntityCoords(PlayerPedId())
-    local dstcheck = #(plycoords - vector3(location["x"],location["y"],location["z"])) 
-    if dstcheck < 5.0 then
-      DrawText3Ds(location["x"],location["y"],location["z"], "Press E to pickup the dropoff.")
-       if dstcheck < 3.0 and IsControlJustReleased(0,38) then
-          success = true
-          timer = 0
-       end
+RegisterNUICallback('IsBusyCheck', function(data, cb)
+    if data.check == "editor" then
+        cb(exports['qb-lapraces']:IsInEditor())
+    else
+        cb(exports['qb-lapraces']:IsInRace())
     end
-    timer = timer - 1
-    if timer == 1 then
-      success = false
-    end
-  end
-
-  if success then
-
-    if math.random(1000) == 69 then
-      TriggerEvent("player:receiveItem", "741814745", 1)
-    end
-
-    if math.random(10) == 1 then
-      TriggerEvent("player:receiveItem", ""..luckList[math.random(6)].."", 1)
-    end
-
-
-    if typeSent == "bigweapon" then
-      TriggerEvent("player:receiveItem", ""..weaponList[math.random(4)].."", 1)
-    end
-
-    if typeSent == "weapon" then
-      TriggerEvent("player:receiveItem", ""..weaponListSmall[math.random(3)].."", 1)
-    end
-
-  end
-
-  DeleteBlip()
- 
 end)
 
+RegisterNUICallback('CanRaceSetup', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-lapraces:server:CanRaceSetup', function(CanSetup)
+        cb(CanSetup)
+    end)
+end)
 
-function buyItem(typeSent)
-  local success = true
-  local timer = 600000
-  TriggerEvent("chatMessage", "EMAIL ", 8, "Yo, here are the coords for the drop off, you have 10 minutes - it will cost " .. costs .. " RedCoin")
-  refreshmail()
-  local location = pickuppoints[math.random(#pickuppoints)]
-  CreateBlip(location)
-  while timer > 0 do
-    Citizen.Wait(1)
-    local plycoords = GetEntityCoords(PlayerPedId())
-    local dstcheck = #(plycoords - vector3(location["x"],location["y"],location["z"])) 
-    if dstcheck < 5.0 then
-      DrawText3Ds(location["x"],location["y"],location["z"], "Press E to pickup the dropoff.")
-       if dstcheck < 3.0 and IsControlJustReleased(0,38) then
-          success = true
-          timer = 0
-       end
+RegisterNUICallback('GetPlayerHouses', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetPlayerHouses', function(Houses)
+        cb(Houses)
+    end)
+end)
+
+RegisterNUICallback('GetPlayerKeys', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetHouseKeys', function(Keys)
+        cb(Keys)
+    end)
+end)
+
+RegisterNUICallback('SetHouseLocation', function(data, cb)
+    SetNewWaypoint(data.HouseData.HouseData.coords.enter.x, data.HouseData.HouseData.coords.enter.y)
+    QBCore.Functions.Notify("GPS set to " .. data.HouseData.HouseData.adress .. "!", "success")
+end)
+
+RegisterNUICallback('RemoveKeyholder', function(data)
+    TriggerServerEvent('qb-houses:server:removeHouseKey', data.HouseData.name, {
+        citizenid = data.HolderData.citizenid,
+        firstname = data.HolderData.charinfo.firstname,
+        lastname = data.HolderData.charinfo.lastname,
+    })
+end)
+
+RegisterNUICallback('TransferCid', function(data, cb)
+    local TransferedCid = data.newBsn
+
+    QBCore.Functions.TriggerCallback('qb-phone:server:TransferCid', function(CanTransfer)
+        cb(CanTransfer)
+    end, TransferedCid, data.HouseData)
+end)
+
+RegisterNUICallback('FetchPlayerHouses', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:MeosGetPlayerHouses', function(result)
+        cb(result)
+    end, data.input)
+end)
+
+RegisterNUICallback('SetGPSLocation', function(data, cb)
+    local ped = PlayerPedId()
+
+    SetNewWaypoint(data.coords.x, data.coords.y)
+    QBCore.Functions.Notify('GPS set!', 'success')
+end)
+
+RegisterNUICallback('SetApartmentLocation', function(data, cb)
+    local ApartmentData = data.data.appartmentdata
+    local TypeData = Apartments.Locations[ApartmentData.type]
+
+    SetNewWaypoint(TypeData.coords.enter.x, TypeData.coords.enter.y)
+    QBCore.Functions.Notify('GPS set!', 'success')
+end)
+
+RegisterNUICallback('GetCurrentLawyers', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetCurrentLawyers', function(lawyers)
+        cb(lawyers)
+    end)
+end)
+
+RegisterNUICallback('SetupStoreApps', function(data, cb)
+    local PlayerData = QBCore.Functions.GetPlayerData()
+    local data = {
+        StoreApps = Config.StoreApps,
+        PhoneData = PlayerData.metadata["phonedata"]
+    }
+    cb(data)
+end)
+
+RegisterNUICallback('ClearMentions', function()
+    Config.PhoneApplications["twitter"].Alerts = 0
+    SendNUIMessage({
+        action = "RefreshAppAlerts",
+        AppData = Config.PhoneApplications
+    })
+    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "twitter", 0)
+    SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+end)
+
+RegisterNUICallback('ClearGeneralAlerts', function(data)
+    SetTimeout(400, function()
+        Config.PhoneApplications[data.app].Alerts = 0
+        SendNUIMessage({
+            action = "RefreshAppAlerts",
+            AppData = Config.PhoneApplications
+        })
+        TriggerServerEvent('qb-phone:server:SetPhoneAlerts', data.app, 0)
+        SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+    end)
+end)
+
+RegisterNUICallback('TransferMoney', function(data, cb)
+    data.amount = tonumber(data.amount)
+    if tonumber(PhoneData.PlayerData.money.bank) >= data.amount then
+        local amaountata = PhoneData.PlayerData.money.bank - data.amount
+        TriggerServerEvent('qb-phone:server:TransferMoney', data.iban, data.amount)
+        local cbdata = {
+            CanTransfer = true,
+            NewAmount = amaountata
+        }
+        cb(cbdata)
+    else
+        local cbdata = {
+            CanTransfer = false,
+            NewAmount = nil,
+        }
+        cb(cbdata)
     end
-    timer = timer - 1
-    if timer == 1 then
-      success = false
+end)
+
+RegisterNUICallback('CanTransferMoney', function(data, cb)
+    local amount = tonumber(data.amountOf)
+    local iban = data.sendTo
+    local PlayerData = QBCore.Functions.GetPlayerData()
+
+    if (PlayerData.money.bank - amount) >= 0 then
+        QBCore.Functions.TriggerCallback('qb-phone:server:CanTransferMoney', function(Transferd)
+            if Transferd then
+                cb({TransferedMoney = true, NewBalance = (PlayerData.money.bank - amount)})
+            else
+		SendNUIMessage({ action = "PhoneNotification", PhoneNotify = { timeout=3000, title = "Bank", text = "Account does not exist!", icon = "fas fa-university", color = "#ff0000", }, })
+                cb({TransferedMoney = false})
+            end
+        end, amount, iban)
+    else
+        cb({TransferedMoney = false})
     end
-  end
-  if success then
-    TriggerEvent("crypto:buybox",typeSent,costs)
-  end
-  DeleteBlip()
-end
-
-
-RegisterNUICallback('btnDelivery', function()
-  TriggerEvent("trucker:confirmation")
 end)
 
-RegisterNUICallback('btnPackages', function()
-  insideDelivers = true
-  TriggerEvent("Trucker:GetPackages")
+RegisterNUICallback('GetWhatsappChats', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetContactPictures', function(Chats)
+        cb(Chats)
+    end, PhoneData.Chats)
 end)
 
-RegisterNUICallback('btnTrucker', function()
-  TriggerEvent("Trucker:GetJobs")
+RegisterNUICallback('CallContact', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetCallState', function(CanCall, IsOnline, contactData)
+        local status = {
+            CanCall = CanCall,
+            IsOnline = IsOnline,
+            InCall = PhoneData.CallData.InCall,
+        }
+        cb(status)
+        if CanCall and not status.InCall and (data.ContactData.number ~= PhoneData.PlayerData.charinfo.phone) then
+            CallContact(data.ContactData, data.Anonymous)
+        end
+    end, data.ContactData)
 end)
 
-RegisterNUICallback('resetPackages', function()
-  insideDelivers = false
+RegisterNUICallback('SendMessage', function(data, cb)
+    local ChatMessage = data.ChatMessage
+    local ChatDate = data.ChatDate
+    local ChatNumber = data.ChatNumber
+    local ChatTime = data.ChatTime
+    local ChatType = data.ChatType
+    local Ped = PlayerPedId()
+    local Pos = GetEntityCoords(Ped)
+    local NumberKey = GetKeyByNumber(ChatNumber)
+    local ChatKey = GetKeyByDate(NumberKey, ChatDate)
+    if PhoneData.Chats[NumberKey] ~= nil then
+        if(PhoneData.Chats[NumberKey].messages == nil) then
+            PhoneData.Chats[NumberKey].messages = {}
+        end
+        if PhoneData.Chats[NumberKey].messages[ChatKey] ~= nil then
+            if ChatType == "message" then
+                PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                    message = ChatMessage,
+                    time = ChatTime,
+                    sender = PhoneData.PlayerData.citizenid,
+                    type = ChatType,
+                    data = {},
+                }
+            elseif ChatType == "location" then
+                PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                    message = "Shared Location",
+                    time = ChatTime,
+                    sender = PhoneData.PlayerData.citizenid,
+                    type = ChatType,
+                    data = {
+                        x = Pos.x,
+                        y = Pos.y,
+                    },
+                }
+            elseif ChatType == "picture" then
+                PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                    message = "Photo",
+                    time = ChatTime,
+                    sender = PhoneData.PlayerData.citizenid,
+                    type = ChatType,
+                    data = {
+                        url = data.url
+                    },
+                }
+            end
+            TriggerServerEvent('qb-phone:server:UpdateMessages', PhoneData.Chats[NumberKey].messages, ChatNumber, false)
+            NumberKey = GetKeyByNumber(ChatNumber)
+            ReorganizeChats(NumberKey)
+        else
+            PhoneData.Chats[NumberKey].messages[#PhoneData.Chats[NumberKey].messages+1] = {
+                date = ChatDate,
+                messages = {},
+            }
+            ChatKey = GetKeyByDate(NumberKey, ChatDate)
+            if ChatType == "message" then
+                PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                    message = ChatMessage,
+                    time = ChatTime,
+                    sender = PhoneData.PlayerData.citizenid,
+                    type = ChatType,
+                    data = {},
+                }
+            elseif ChatType == "location" then
+                PhoneData.Chats[NumberKey].messages[ChatDate].messages[#PhoneData.Chats[NumberKey].messages[ChatDate].messages+1] = {
+                    message = "Shared Location",
+                    time = ChatTime,
+                    sender = PhoneData.PlayerData.citizenid,
+                    type = ChatType,
+                    data = {
+                        x = Pos.x,
+                        y = Pos.y,
+                    },
+                }
+            elseif ChatType == "picture" then
+                PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                    message = "Photo",
+                    time = ChatTime,
+                    sender = PhoneData.PlayerData.citizenid,
+                    type = ChatType,
+                    data = {
+                        url = data.url
+                    },
+                }
+            end
+            TriggerServerEvent('qb-phone:server:UpdateMessages', PhoneData.Chats[NumberKey].messages, ChatNumber, true)
+            NumberKey = GetKeyByNumber(ChatNumber)
+            ReorganizeChats(NumberKey)
+        end
+    else
+        PhoneData.Chats[#PhoneData.Chats+1] = {
+            name = IsNumberInContacts(ChatNumber),
+            number = ChatNumber,
+            messages = {},
+        }
+        NumberKey = GetKeyByNumber(ChatNumber)
+        PhoneData.Chats[NumberKey].messages[#PhoneData.Chats[NumberKey].messages+1] = {
+            date = ChatDate,
+            messages = {},
+        }
+        ChatKey = GetKeyByDate(NumberKey, ChatDate)
+        if ChatType == "message" then
+            PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                message = ChatMessage,
+                time = ChatTime,
+                sender = PhoneData.PlayerData.citizenid,
+                type = ChatType,
+                data = {},
+            }
+        elseif ChatType == "location" then
+            PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                message = "Shared Location",
+                time = ChatTime,
+                sender = PhoneData.PlayerData.citizenid,
+                type = ChatType,
+                data = {
+                    x = Pos.x,
+                    y = Pos.y,
+                },
+            }
+        elseif ChatType == "picture" then
+            PhoneData.Chats[NumberKey].messages[ChatKey].messages[#PhoneData.Chats[NumberKey].messages[ChatKey].messages+1] = {
+                message = "Photo",
+                time = ChatTime,
+                sender = PhoneData.PlayerData.citizenid,
+                type = ChatType,
+                data = {
+                    url = data.url
+                },
+            }
+        end
+        TriggerServerEvent('qb-phone:server:UpdateMessages', PhoneData.Chats[NumberKey].messages, ChatNumber, true)
+        NumberKey = GetKeyByNumber(ChatNumber)
+        ReorganizeChats(NumberKey)
+    end
+
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetContactPicture', function(Chat)
+        SendNUIMessage({
+            action = "UpdateChat",
+            chatData = Chat,
+            chatNumber = ChatNumber,
+        })
+    end,  PhoneData.Chats[GetKeyByNumber(ChatNumber)])
 end)
 
+RegisterNUICallback("TakePhoto", function(data,cb)
+    SetNuiFocus(false, false)
+    CreateMobilePhone(1)
+    CellCamActivate(true, true)
+    takePhoto = true
+    while takePhoto do
+        if IsControlJustPressed(1, 27) then
+            frontCam = not frontCam
+            CellFrontCamActivate(frontCam)
+        elseif IsControlJustPressed(1, 177) then
+            DestroyMobilePhone()
+            CellCamActivate(false, false)
+            cb(json.encode({ url = nil }))
+            OpenPhone()
+            takePhoto = false
+            break
+        elseif IsControlJustPressed(1, 176) then
+            QBCore.Functions.TriggerCallback("qb-phone:server:GetWebhook",function(hook)
+                QBCore.Functions.Notify('Touching up photo...', 'primary')
+                exports['screenshot-basic']:requestScreenshotUpload(tostring(hook), "files[]", function(data)
+                    local image = json.decode(data)
+                    DestroyMobilePhone()
+                    CellCamActivate(false, false)
+                    TriggerServerEvent('qb-phone:server:addImageToGallery', image.attachments[1].proxy_url)
+                    Wait(400)
+                    TriggerServerEvent('qb-phone:server:getImageFromGallery')
+                    cb(json.encode(image.attachments[1].proxy_url))
+                    QBCore.Functions.Notify('Photo ssaved!', 'success')
+                    OpenPhone()
+                end)
+            end)
 
-RegisterNetEvent("phone:trucker")
-AddEventHandler("phone:trucker", function(jobList)
+            takePhoto = false
+        end
+          HideHudComponentThisFrame(7)
+          HideHudComponentThisFrame(8)
+          HideHudComponentThisFrame(9)
+          HideHudComponentThisFrame(6)
+          HideHudComponentThisFrame(19)
+          HideHudAndRadarThisFrame()
+          EnableAllControlActions(0)
+          Wait(0)
+    end
+end)
 
-  local deliveryObjects = {}
-  for i, v in pairs(jobList) do
-    local nameTag = ""
-    local itemTag
-    local currentStreetHash, intersectStreetHash = GetStreetNameAtCoord(v.pickup[1], v.pickup[2], v.pickup[3], currentStreetHash, intersectStreetHash)
-    local currentStreetName = GetStreetNameFromHashKey(currentStreetHash)
-    local intersectStreetName = GetStreetNameFromHashKey(intersectStreetHash)
+-- Handler Events
 
-    local currentStreetHash2, intersectStreetHash2 = GetStreetNameAtCoord(v.drop[1], v.drop[2], v.drop[3], currentStreetHash2, intersectStreetHash2)
-    local currentStreetName2 = GetStreetNameFromHashKey(currentStreetHash2)
-    local intersectStreetName2 = GetStreetNameFromHashKey(intersectStreetHash2)
-    if v.active == 0 then
-        table.insert(deliveryObjects, {
-          targetStreet = currentStreetName2,
-          jobId = v.id,
-          jobType = v.JobType
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    LoadPhone()
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
+    PhoneData = {
+        MetaData = {},
+        isOpen = false,
+        PlayerData = nil,
+        Contacts = {},
+        Tweets = {},
+        MentionedTweets = {},
+        Hashtags = {},
+        Chats = {},
+        Invoices = {},
+        CallData = {},
+        RecentCalls = {},
+        Garage = {},
+        Mails = {},
+        Adverts = {},
+        GarageVehicles = {},
+        AnimationData = {
+            lib = nil,
+            anim = nil,
+        },
+        SuggestedContacts = {},
+        CryptoTransactions = {},
+    }
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    SendNUIMessage({
+        action = "UpdateApplications",
+        JobData = JobInfo,
+        applications = Config.PhoneApplications
+    })
+
+    PlayerJob = JobInfo
+end)
+
+-- Events
+
+RegisterNetEvent('qb-phone:client:TransferMoney', function(amount, newmoney)
+    PhoneData.PlayerData.money.bank = newmoney
+    SendNUIMessage({ action = "PhoneNotification", PhoneNotify = { title = "Bank", text = "&#36;"..amount.." added to your account!", icon = "fas fa-university", color = "#8c7ae6", }, })
+    SendNUIMessage({ action = "UpdateBank", NewBalance = PhoneData.PlayerData.money.bank })
+end)
+
+RegisterNetEvent('qb-phone:client:UpdateTweets', function(src, Tweets, NewTweetData, delete)
+    PhoneData.Tweets = Tweets
+    local MyPlayerId = PhoneData.PlayerData.source
+    if not delete then 
+        if src ~= MyPlayerId then
+            SendNUIMessage({
+                action = "PhoneNotification",
+                PhoneNotify = {
+                    title = "New Tweet: (@"..NewTweetData.firstName.." "..NewTweetData.lastName..")",
+                    text = NewTweetData.message,
+                    icon = "fab fa-twitter",
+                    color = "#1DA1F2",
+                },
+            })
+            SendNUIMessage({
+                action = "UpdateTweets",
+                Tweets = PhoneData.Tweets
+            })
+        else
+            SendNUIMessage({
+                action = "PhoneNotification",
+                PhoneNotify = {
+                    title = "Twitter",
+                    text = "Tweet posted!",
+                    icon = "fab fa-twitter",
+                    color = "#1DA1F2",
+                    timeout = 1000,
+                },
+            })
+        end
+    else
+        if src == MyPlayerId then
+            SendNUIMessage({
+                action = "PhoneNotification",
+                PhoneNotify = {
+                    title = "Twitter",
+                    text = "Tweet deleted!",
+                    icon = "fab fa-twitter",
+                    color = "#1DA1F2",
+                    timeout = 1000,
+                },
+            })
+        end
+        SendNUIMessage({
+            action = "UpdateTweets",
+            Tweets = PhoneData.Tweets
         })
     end
-  end 
-  SendNUIMessage({
-    openSection = "deliveryJob",
-    deliveries = deliveryObjects
-  })
-    
 end)
 
-local requestHolder = 0
-
-RegisterNetEvent("phone:packages")
-AddEventHandler("phone:packages", function(packages)
-  while insideDelivers do
-    if requestHolder ~= 0 then
-      SendNUIMessage({
-        openSection = "packagesWith"
-      })
-    else
-      SendNUIMessage({
-        openSection = "packages"
-      })
-    end
-    
-    
-    for i, v in pairs(packages) do
-      if GetPlayerServerId(PlayerId()) == v.source then
-        local currentStreetHash2, intersectStreetHash2 = GetStreetNameAtCoord(v.drop[1], v.drop[2], v.drop[3], currentStreetHash2, intersectStreetHash2)
-        local currentStreetName2 = GetStreetNameFromHashKey(currentStreetHash2)
-        local intersectStreetName2 = GetStreetNameFromHashKey(intersectStreetHash2)
-
-        SendNUIMessage({openSection = "addPackages", street2 = currentStreetName2, jobId = v.id ,distance = getDriverDistance(v.driver , v.drop)})
-      end
-    end 
-    Wait(4000)
-  end
-end)
-
-
-RegisterNetEvent("phone:OwnerRequest")
-AddEventHandler("phone:OwnerRequest", function(holder)
-  requestHolder = holder
-end)
-
-RegisterNUICallback('btnRequest', function()
-  TriggerServerEvent("trucker:confirmRequest",requestHolder)
-  requestHolder = 0
-end)
-
-
-
-
-function getDriverDistance(driver , drop)
-  local dist = 0
-
-  local ped = GetPlayerPed(value)
-  if driver ~= 0 then
-    local current = #(vector3(drop[1],drop[2],drop[3]) - GetEntityCoords(ped))
-    if current < 15 then
-      dist = "Driver at store"
-    else
-      dist = current
-      dist = math.ceil(dist)
-    end
-    
-  else
-    dist = "Waiting for driver"
-  end
-
-  return dist
-end
-
-RegisterNUICallback('selectedJob', function(data, cb)
-    TriggerEvent("Trucker:SelectJob",data)
-end)
-
-gurgleList = {}
-RegisterNetEvent('websites:updateClient')
-AddEventHandler('websites:updateClient', function(passedList)
-  gurgleList = passedList
-
-  local gurgleObjects = {}
-
-  if not guiEnabled then
-    return
-  end
-
-  for i = 1, #gurgleList do
-    table.insert(gurgleObjects, {
-      webTitle = gurgleList[i]["Title"], 
-      webKeywords = gurgleList[i]["Keywords"], 
-      webDescription = gurgleList[i]["Description"] 
+RegisterNetEvent('qb-phone:client:RaceNotify', function(message)
+    SendNUIMessage({
+        action = "PhoneNotification",
+        PhoneNotify = {
+            title = "Racing",
+            text = message,
+            icon = "fas fa-flag-checkered",
+            color = "#353b48",
+            timeout = 3500,
+        },
     })
-  end
-
-  SendNUIMessage({ openSection = "gurgleEntries", gurgleData = gurgleObjects})
 end)
 
-function hasPhone()
-  return true
-end
-
-
-function DrawRadioChatter(x,y,z, text,opacity)
-    local onScreen,_x,_y=World3dToScreen2d(x,y,z)
-    local px,py,pz=table.unpack(GetGameplayCamCoords())
-    if opacity > 215 then
-      opacity = 215
-    end
-    SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, opacity)
-    SetTextEntry("STRING")
-    SetTextCentre(1)
-    AddTextComponentString(text)
-    DrawText(_x,_y)
-    local factor = (string.len(text)) / 370
-    DrawRect(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
-end
-local activeMessages = 0
-
-RegisterNetEvent('radiotalkcheck')
-AddEventHandler('radiotalkcheck', function(args,senderid)
-
-  if hasRadio() and radioChannel ~= 0 then
-    randomStatic(true)
-
-    local ped = GetPlayerPed( -1 )
-
-      if ( DoesEntityExist( ped ) and not IsEntityDead( ped )) then
-
-        loadAnimDict( "random@arrests" )
-
-        TaskPlayAnim(ped, "random@arrests", "generic_radio_chatter", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 )
-
-        SetCurrentPedWeapon(ped, `WEAPON_UNARMED`, true)
-      end
-
-
-    TriggerServerEvent("radiotalkconfirmed",args,senderid,radioChannel)
-    Citizen.Wait(2500)
-    ClearPedSecondaryTask(PlayerPedId())
-  end
-
+RegisterNetEvent('qb-phone:client:AddRecentCall', function(data, time, type)
+    PhoneData.RecentCalls[#PhoneData.RecentCalls+1] = {
+        name = IsNumberInContacts(data.number),
+        time = time,
+        type = type,
+        number = data.number,
+        anonymous = data.anonymous
+    }
+    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone")
+    Config.PhoneApplications["phone"].Alerts = Config.PhoneApplications["phone"].Alerts + 1
+    SendNUIMessage({
+        action = "RefreshAppAlerts",
+        AppData = Config.PhoneApplications
+    })
 end)
 
+RegisterNetEvent("qb-phone-new:client:BankNotify", function(text)
+    SendNUIMessage({
+        action = "PhoneNotification",
+        NotifyData = {
+            title = "Bank",
+            content = text,
+            icon = "fas fa-university",
+            timeout = 3500,
+            color = "#ff002f",
+        },
+    })
+end)
 
+RegisterNetEvent('qb-phone:client:NewMailNotify', function(MailData)
+    SendNUIMessage({
+        action = "PhoneNotification",
+        PhoneNotify = {
+            title = "Mail",
+            text = "New E-Mail from: "..MailData.sender,
+            icon = "fas fa-envelope",
+            color = "#ff002f",
+            timeout = 1500,
+        },
+    })
+    Config.PhoneApplications['mail'].Alerts = Config.PhoneApplications['mail'].Alerts + 1
+    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "mail")
+end)
 
+RegisterNetEvent('qb-phone:client:UpdateMails', function(NewMails)
+    SendNUIMessage({
+        action = "UpdateMails",
+        Mails = NewMails
+    })
+    PhoneData.Mails = NewMails
+end)
 
-function loadAnimDict( dict )
-    while ( not HasAnimDictLoaded( dict ) ) do
-        RequestAnimDict( dict )
-        Citizen.Wait( 5 )
+RegisterNetEvent('qb-phone:client:UpdateAdvertsDel', function(Adverts)
+    PhoneData.Adverts = Adverts
+    SendNUIMessage({
+        action = "RefreshAdverts",
+        Adverts = PhoneData.Adverts
+    })
+end)
+
+RegisterNetEvent('qb-phone:client:UpdateAdverts', function(Adverts, LastAd)
+    PhoneData.Adverts = Adverts
+    SendNUIMessage({
+        action = "PhoneNotification",
+        PhoneNotify = {
+            title = "Advertisement",
+            text = "New ad posted: "..LastAd,
+            icon = "fas fa-ad",
+            color = "#ff8f1a",
+            timeout = 2500,
+        },
+    })
+    SendNUIMessage({
+        action = "RefreshAdverts",
+        Adverts = PhoneData.Adverts
+    })
+end)
+
+RegisterNetEvent('qb-phone:client:BillingEmail', function(data, paid, name)
+    if paid then
+        TriggerServerEvent('qb-phone:server:sendNewMail', {
+            sender = 'Billing Department',
+            subject = 'Invoice Paid',
+            message = 'Invoice Has Been Paid From '..name..' In The Amount Of $'..data.amount,
+        })
+    else
+        TriggerServerEvent('qb-phone:server:sendNewMail', {
+            sender = 'Billing Department',
+            subject = 'Invoice Declined',
+            message = 'Invoice Has Been Declined From '..name..' In The Amount Of $'..data.amount,
+        })
     end
-end 
+end)
 
-function randomStatic(loud)
-  local vol = 0.05
-  if loud then
-    vol = 0.9
-  end
-  local pickS = math.random(4)
-  if pickS == 4 then
-    TriggerEvent("InteractSound_CL:PlayOnOne","radiostatic1",vol)
-  elseif pickS == 3 then
-    TriggerEvent("InteractSound_CL:PlayOnOne","radiostatic2",vol)
-  elseif pickS == 2 then
-    TriggerEvent("InteractSound_CL:PlayOnOne","radiostatic3",vol)
-  else
-    TriggerEvent("InteractSound_CL:PlayOnOne","radioclick",vol)
-  end
+RegisterNetEvent('qb-phone:client:CancelCall', function()
+    if PhoneData.CallData.CallType == "ongoing" then
+        SendNUIMessage({
+            action = "CancelOngoingCall"
+        })
+        exports['pma-voice']:removePlayerFromCall(PhoneData.CallData.CallId)
+    end
+    PhoneData.CallData.CallType = nil
+    PhoneData.CallData.InCall = false
+    PhoneData.CallData.AnsweredCall = false
+    PhoneData.CallData.TargetData = {}
 
-end
-
-RegisterNetEvent('radiotalk')
-AddEventHandler('radiotalk', function(args,senderid,channel)
-
-    local senderid = tonumber(senderid)
-
-    table.remove(args,1)
-    local radioMessage = ""
-    for i = 1, #args do
-        radioMessage = radioMessage .. " " .. args[i]
+    if not PhoneData.isOpen then
+        StopAnimTask(PlayerPedId(), PhoneData.AnimationData.lib, PhoneData.AnimationData.anim, 2.5)
+        deletePhone()
+        PhoneData.AnimationData.lib = nil
+        PhoneData.AnimationData.anim = nil
+    else
+        PhoneData.AnimationData.lib = nil
+        PhoneData.AnimationData.anim = nil
     end
 
-    if channel == radioChannel and hasRadio() and radioMessage ~= nil then
-      -- play radio click sound locally.
-      TriggerEvent('chatMessage', "RADIO #" .. channel, 3, radioMessage, 5000)
-      randomStatic(true)
+    TriggerServerEvent('qb-phone:server:SetCallState', false)
 
-      local radioMessage = ""
-      for i = 1, #args do
-        if math.random(50) > 25 then
-          radioMessage = radioMessage .. " " .. args[i]
+    if not PhoneData.isOpen then
+        SendNUIMessage({
+            action = "PhoneNotification",
+            NotifyData = {
+                title = "Phone",
+                content = "Call ended",
+                icon = "fas fa-phone",
+                timeout = 3500,
+                color = "#e84118",
+            },
+        })
+    else
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Phone",
+                text = "Call ended",
+                icon = "fas fa-phone",
+                color = "#e84118",
+            },
+        })
+
+        SendNUIMessage({
+            action = "SetupHomeCall",
+            CallData = PhoneData.CallData,
+        })
+
+        SendNUIMessage({
+            action = "CancelOutgoingCall",
+        })
+    end
+end)
+
+RegisterNUICallback('phone-silent-button', function(data,cb)
+    if CallVolume == tonumber("0.2") then
+        CallVolume = 0
+        QBCore.Functions.Notify("Silent Mode On", "success")
+        cb(true)
+    else
+        CallVolume = 0.2
+        QBCore.Functions.Notify("Silent Mode Off", "error")
+        cb(false)
+    end
+end)
+
+RegisterNetEvent('qb-phone:client:GetCalled', function(CallerNumber, CallId, AnonymousCall)
+    local RepeatCount = 0
+    local CallData = {
+        number = CallerNumber,
+        name = IsNumberInContacts(CallerNumber),
+        anonymous = AnonymousCall
+    }
+
+    if AnonymousCall then
+        CallData.name = "Anonymous"
+    end
+
+    PhoneData.CallData.CallType = "incoming"
+    PhoneData.CallData.InCall = true
+    PhoneData.CallData.AnsweredCall = false
+    PhoneData.CallData.TargetData = CallData
+    PhoneData.CallData.CallId = CallId
+
+    TriggerServerEvent('qb-phone:server:SetCallState', true)
+
+    SendNUIMessage({
+        action = "SetupHomeCall",
+        CallData = PhoneData.CallData,
+    })
+
+    for i = 1, Config.CallRepeats + 1, 1 do
+        if not PhoneData.CallData.AnsweredCall then
+            if RepeatCount + 1 ~= Config.CallRepeats + 1 then
+                if PhoneData.CallData.InCall then
+                    QBCore.Functions.TriggerCallback('qb-phone:server:HasPhone', function(HasPhone)
+                        if HasPhone then
+                            RepeatCount = RepeatCount + 1
+                            TriggerServerEvent("InteractSound_SV:PlayOnSource", "ringing", CallVolume)
+
+                            if not PhoneData.isOpen then
+                                SendNUIMessage({
+                                    action = "IncomingCallAlert",
+                                    CallData = PhoneData.CallData.TargetData,
+                                    Canceled = false,
+                                    AnonymousCall = AnonymousCall,
+                                })
+                            end
+                        end
+                    end)
+                else
+                    SendNUIMessage({
+                        action = "IncomingCallAlert",
+                        CallData = PhoneData.CallData.TargetData,
+                        Canceled = true,
+                        AnonymousCall = AnonymousCall,
+                    })
+                    TriggerServerEvent('qb-phone:server:AddRecentCall', "missed", CallData)
+                    break
+                end
+                Wait(Config.RepeatTimeout)
+            else
+                SendNUIMessage({
+                    action = "IncomingCallAlert",
+                    CallData = PhoneData.CallData.TargetData,
+                    Canceled = true,
+                    AnonymousCall = AnonymousCall,
+                })
+                TriggerServerEvent('qb-phone:server:AddRecentCall', "missed", CallData)
+                break
+            end
         else
-          radioMessage = radioMessage .. " **BZZZ** "
+            TriggerServerEvent('qb-phone:server:AddRecentCall', "missed", CallData)
+            break
         end
-      end
-      TriggerServerEvent("radiochatter:server",radioMessage)
     end
 end)
-RegisterNetEvent('radiochatter:client')
-AddEventHandler('radiochatter:client', function(radioMessage,senderid)
 
-    local senderid = tonumber(senderid) 
-    local location = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(senderid)))
-    local dst = #(GetEntityCoords(PlayerPedId()) - location)
-    activeMessages = activeMessages + 0.1
-    if dst < 5.0 then
-      -- play radio static sound locally.
-      local counter = 350
-      local msgZ = location["z"]+activeMessages
-      if PlayerPedId() ~= GetPlayerPed(GetPlayerFromServerId(senderid)) then
-        randomStatic(false)
-        while counter > 0 and dst < 5.0 do
-          location = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(senderid)))
-          dst = #(GetEntityCoords(PlayerPedId()) - location)
-          DrawRadioChatter(location["x"],location["y"],msgZ, "Radio Chatter: " .. radioMessage, counter)
-          counter = counter - 1
-          Citizen.Wait(1)
-        end
-      end
-    end
-    activeMessages = activeMessages - 0.1 
-end)
+RegisterNetEvent('qb-phone:client:UpdateMessages', function(ChatMessages, SenderNumber, New)
+    local NumberKey = GetKeyByNumber(SenderNumber)
 
+    if New then
+	    PhoneData.Chats[#PhoneData.Chats+1] = {
+            name = IsNumberInContacts(SenderNumber),
+            number = SenderNumber,
+            messages = {},
+        }
 
-RegisterNetEvent('radiochannel')
-AddEventHandler('radiochannel', function(chan)
-  local chan = tonumber(chan)
-  if hasRadio() and chan < 1000 and chan > -1 then
-    radioChannel = chan
-    TriggerEvent("InteractSound_CL:PlayOnOne","radioclick",0.4)
-    -- TriggerEvent('chatMessage', "RADIO CHANNEL " .. radioChannel, 3, "Active", 5000)
-  end
-end)
+        NumberKey = GetKeyByNumber(SenderNumber)
 
-RegisterNetEvent('canPing')
-AddEventHandler('canPing', function(target)
-  if hasPhone() and not isDead then
-    local crds = GetEntityCoords(PlayerPedId())
-    TriggerServerEvent("requestPing", target, crds["x"],crds["y"],crds["z"] )
-  else
-    TriggerEvent("DoLongHudText","You need a phone to use GPS!",2)
-  end
-end)
+        PhoneData.Chats[NumberKey] = {
+            name = IsNumberInContacts(SenderNumber),
+            number = SenderNumber,
+            messages = ChatMessages
+        }
 
-local pingcount = 0
-local currentblip = 0
-local currentping = { ["x"] = 0.0,["y"] = 0.0,["z"] = 0.0, ["src"] = 0 }
-RegisterNetEvent('allowedPing')
-AddEventHandler('allowedPing', function(x,y,z,src,name)
-  if pingcount > 0 then
-    TriggerEvent("DoLongHudText","Somebody sent you a GPS flag but you already have one in process!",2)
-    return
-  end
-  
-  if hasPhone() and not isDead then
-    pingcount = 5
-    currentping = { ["x"] = x,["y"] = y,["z"] = z, ["src"] = src }
-    while pingcount > 0 do
-      TriggerEvent("DoLongHudText",name .. " has given you a ping location, type /pingaccept to accept",1)
-      Citizen.Wait(5000)
-      pingcount = pingcount - 1
-    end
-  else
-    TriggerEvent("DoLongHudText","Somebody sent you a GPS flag but you have no phone!",2)
-  end
-  pingcount = 0
-  currentping = { ["x"] = 0.0,["y"] = 0.0,["z"] = 0.0, ["src"] = 0 }
-end)
-
-RegisterNetEvent('acceptPing')
-AddEventHandler('acceptPing', function()
-  if pingcount > 0 then
-    if DoesBlipExist(currentblip) then
-      RemoveBlip(currentblip)
-    end
-    currentblip = AddBlipForCoord(currentping["x"], currentping["y"], currentping["z"])
-    SetBlipSprite(currentblip, 280)
-    SetBlipAsShortRange(currentblip, false)
-    BeginTextCommandSetBlipName("STRING")
-    SetBlipColour(currentblip, 4)
-    SetBlipScale(currentblip, 1.2)
-    AddTextComponentString("Accepted GPS Marker")
-    EndTextCommandSetBlipName(currentblip)
-    TriggerEvent("DoLongHudText","Their GPS ping has been marked on the map", 1)
-    TriggerServerEvent("pingAccepted",currentping["src"])
-    pingcount = 0
-    Citizen.Wait(60000)
-    if DoesBlipExist(currentblip) then
-      RemoveBlip(currentblip)
-    end
-  end
-end)
-
-function isRealEstateAgent()
-  if GroupRank("real_estate") > 0 then
-    return true
-  else
-    return false
-  end
-end
-
-function hasDecrypt2()
-    if exports["np-inventory"]:hasEnoughOfItem("vpnxj",1,false) and not exports["isPed"]:isPed("disabled") then
-      return true
-    else
-      return false
-    end
-end
-
-function hasTrucker()
-    if exports["np-base"]:getModule("LocalPlayer"):getVar("job") == "trucker"  then
-      return true
-    else
-      return false
-    end
-end
-
-function hasDecrypt()
-    if exports["np-inventory"]:hasEnoughOfItem("decrypterenzo",1,false) or exports["np-inventory"]:hasEnoughOfItem("decryptersess",1,false) or exports["np-inventory"]:hasEnoughOfItem("decrypterfv2",1,false) and not exports["isPed"]:isPed("disabled") or exports["np-inventory"]:hasEnoughOfItem(80,1,false) and not exports["isPed"]:isPed("disabled") then
-      return true
-    else
-      return false
-    end
-end
-
-function hasDevice()
-    if exports["np-inventory"]:hasEnoughOfItem("mk2usbdevice",1,false) and not exports["isPed"]:isPed("disabled") then
-      return true
-    else
-      return false
-    end
-end
-
-function hasPhone()
-    if
-      (
-      (exports["np-inventory"]:hasEnoughOfItem("mobilephone",1,false) or 
-      exports["np-inventory"]:hasEnoughOfItem("stoleniphone",1,false) or 
-      exports["np-inventory"]:hasEnoughOfItem("stolens8",1,false) or
-      exports["np-inventory"]:hasEnoughOfItem("stolennokia",1,false) or
-      exports["np-inventory"]:hasEnoughOfItem("stolenpixel3",1,false) or
-      exports["np-inventory"]:hasEnoughOfItem("boomerphone",1,false))
-      and not exports["isPed"]:isPed("disabled") and not exports["isPed"]:isPed("handcuffed")
-      ) 
-    then
-      return true
-    else
-      return false
-    end
-end
-
-function hasRadio()
-    if exports["np-inventory"]:hasEnoughOfItem("radio",1,false) and not exports["isPed"]:isPed("disabled") then
-      return true
-    else
-      return false
-    end
-end
-
-local recentopen = false
-function openGuiNow()
- 
-  if hasPhone() then
-    
-    GiveWeaponToPed(PlayerPedId(), 0xA2719263, 0, 0, 1)
-    guiEnabled = true
-      SetNuiFocus(false,false)
-      SetNuiFocus(true,true)
-
-    local isREAgent = false
-    if isRealEstateAgent() then
-      isREAgent = true
-    end
-
-    local device = false
-    if hasDevice() then
-      device = true
-    end
-
-    local decrypt = false
-    if hasDecrypt() then
-      decrypt = true
-    end
-
-    local decrypt2 = false
-    if hasDecrypt2() then
-      decrypt2 = true
-    end
-
-    local trucker = true
-    if hasTrucker() then
-      trucker = true
-    end
-
-    SendNUIMessage({openPhone = true, hasDevice = device, hasDecrypt = decrypt, hasDecrypt2 = decrypt2,hasTrucker = trucker, isRealEstateAgent = isREAgent, playerId = GetPlayerServerId(PlayerId())})
-
-    TriggerEvent('phoneEnabled',true)
-    TriggerEvent('animation:sms',true)
-
-        --TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_MEDIC_TIME_OF_DEATH", 0, 1)
-        
-    -- If this is the first time we've opened the phone, load all contacts
-  
-    lstContacts = {}
-    TriggerServerEvent('phone:getContacts')
-    doTimeUpdate()
-  else
-    closeGui()
-    if not exports["isPed"]:isPed("disabled") then
-      TriggerEvent("DoLongHudText","You do not have a phone.",2)
-    else
-      TriggerEvent("DoLongHudText","You cannot use your phone right now.",2)
-    end
-  end
-  recentopen = false
-end
-
-
-function openGui()
-
-  if recentopen then
-    return
-  end
-  if hasPhone() then
-    GiveWeaponToPed(PlayerPedId(), 0xA2719263, 0, 0, 1)
-    guiEnabled = true
-      SetNuiFocus(false,false)
-      SetNuiFocus(true,true)
-
-    local isREAgent = false
-    if isRealEstateAgent() then
-      isREAgent = true
-    end
-
-    local device = false
-    if hasDevice() then
-      device = true
-    end
-
-    local decrypt = false
-    if hasDecrypt() then
-      decrypt = true
-    end
-
-    local decrypt2 = false
-    if hasDecrypt2() then
-      decrypt2 = true
-    end
-
-    local trucker = false
-    if hasTrucker() then
-      trucker = true
-    end
-
-    SendNUIMessage({openPhone = true, hasDevice = device, hasDecrypt = decrypt, hasDecrypt2 = decrypt2,hasTrucker = trucker, isRealEstateAgent = isREAgent, playerId = GetPlayerServerId(PlayerId())})
-
-    TriggerEvent('phoneEnabled',true)
-    TriggerEvent('animation:sms',true)
-
-        --TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_MEDIC_TIME_OF_DEATH", 0, 1)
-        
-    -- If this is the first time we've opened the phone, load all contacts
-    
-    lstContacts = {}
-    TriggerServerEvent('phone:getContacts')
-    doTimeUpdate()
-  else
-    closeGui()
-    if not exports["isPed"]:isPed("disabled") then
-      TriggerEvent("DoLongHudText","You do not have a phone.",2)
-    else
-      TriggerEvent("DoLongHudText","You cannot use your phone right now.",2)
-    end
-  end
-  Citizen.Wait(3000)
-  recentopen = false
-end
-
-RegisterNUICallback('btnPagerType', function(data, cb)
-  TriggerServerEvent("secondaryjob:ServerReturnDate")
-end)
-local jobnames = {
-  ["taxi"] = "Taxi Driver",
-  ["towtruck"] = "Tow Truck Driver",
-  ["trucker"] = "Delivery Driver",
-}
-
-RegisterNUICallback('newPostSubmit', function(data, cb)
-    TriggerServerEvent('phone:updatePhoneJob', data.advert)
-end)
-
-RegisterNUICallback('btnDecrypt', function()
-  TriggerEvent("secondaryjob:accepttask")
-end)
-
-
-function miTrabajo()
-    return exports['isPed']:isPed('job')
-end
-
-RegisterNUICallback('deleteYP', function()
-  TriggerServerEvent('phone:deleteYP')
-end)
-
-RegisterNetEvent("yellowPages:retrieveLawyersOnline")
-AddEventHandler("yellowPages:retrieveLawyersOnline", function()
-  local isFound = false
-  TriggerEvent('chatMessage', "", 2, "Searching for a lawyer...")
-  for i = 1, #YellowPageArray do
-    local job = string.lower(YellowPageArray[tonumber(i)].job)
-    if string.find(job, 'attorney') or string.find(job, 'lawyer') or string.find(job, 'public defender') then
-      isFound = true
-      TriggerEvent('chatMessage', "", 2, "⚖️ " .. YellowPageArray[i].name .. " ☎️ " .. YellowPageArray[i].phonenumber)
-    end
-  end
-  if not isFound then
-    TriggerEvent('chatMessage', "", 2, "There are no lawyers available right now. 😢")
-  end
-end)
-
-
-RegisterNUICallback('notificationsYP', function()
-  TriggerServerEvent('getYP')
-  Citizen.Wait(200)
-  TriggerEvent("YPUpdatePhone")
-end)
-
-
-RegisterNetEvent('YPUpdatePhone')
-AddEventHandler('YPUpdatePhone', function()
-
-  lstnotifications = {}
-
-  for i = 1, #YellowPageArray do
-      lstnotifications[#lstnotifications + 1] = {
-        id = tonumber(i),
-        name = YellowPageArray[tonumber(i)].name,
-        message = YellowPageArray[tonumber(i)].job,
-        phoneNumber = YellowPageArray[tonumber(i)].phonenumber
-      }
-  end
-  SendNUIMessage({openSection = "notificationsYP", list = lstnotifications})
-end)
-
--- Close Gui and disable NUI
-function closeGui()
-  TriggerEvent("closeInventoryGui")
-  SetNuiFocus(false,false)
-  SendNUIMessage({openPhone = false})
-  guiEnabled = false
-  TriggerEvent('animation:sms',false)
-  TriggerEvent('phoneEnabled',false)
-  recentopen = true
-  Citizen.Wait(3000)
-  recentopen = false
-  insideDelivers = false
-end
-
-function getCardinalDirectionFromHeading()
-  local heading = GetEntityHeading(PlayerPedId())
-  if heading >= 315 or heading < 45 then
-      return "North Bound"
-  elseif heading >= 45 and heading < 135 then
-      return "West Bound"
-  elseif heading >= 135 and heading < 225 then
-      return "South Bound"
-  elseif heading >= 225 and heading < 315 then
-      return "East Bound"
-  end
-end
-
-function closeGui2()
-  TriggerEvent("closeInventoryGui")
-  SetNuiFocus(false,false)
-  SendNUIMessage({openPhone = false})
-  guiEnabled = false
-  recentopen = true
-  Citizen.Wait(3000)
-  recentopen = false  
-end
-local mousenumbers = {
-  [1] = 1,
-  [2] = 2,
-  [3] = 3, 
-  [4] = 4, 
-  [5] = 5, 
-  [6] = 6, 
-  [7] = 12, 
-  [8] = 13, 
-  [9] = 66, 
-  [10] = 67, 
-  [11] = 95, 
-  [12] = 96,   
-  [13] = 97,   
-  [14] = 98,
-  [15] = 169,
-   [16] = 170,
-}
-
-local currentMap = {}
-local customMaps = {}
-local dst = 30.0
-local creatingMap = false
-local SetBlips = {}
-local particleList = {}
-local currentRaces = {}
-local JoinedRaces = {}
-local racing = false
-local racesStarted = 0
-local mylastid = "NA"
-
--- Disable controls while GUI open
-Citizen.CreateThread(function()
-  local focus = true
-  
-  while true do
-
-    if guiEnabled then
-      DisableControlAction(0, 1, guiEnabled) -- LookLeftRight
-      DisableControlAction(0, 2, guiEnabled) -- LookUpDown
-      DisableControlAction(0, 14, guiEnabled) -- INPUT_WEAPON_WHEEL_NEXT
-      DisableControlAction(0, 15, guiEnabled) -- INPUT_WEAPON_WHEEL_PREV
-      DisableControlAction(0, 16, guiEnabled) -- INPUT_SELECT_NEXT_WEAPON
-      DisableControlAction(0, 17, guiEnabled) -- INPUT_SELECT_PREV_WEAPON
-      DisableControlAction(0, 99, guiEnabled) -- INPUT_VEH_SELECT_NEXT_WEAPON
-      DisableControlAction(0, 100, guiEnabled) -- INPUT_VEH_SELECT_PREV_WEAPON
-      DisableControlAction(0, 115, guiEnabled) -- INPUT_VEH_FLY_SELECT_NEXT_WEAPON
-      DisableControlAction(0, 116, guiEnabled) -- INPUT_VEH_FLY_SELECT_PREV_WEAPON
-      DisableControlAction(0, 142, guiEnabled) -- MeleeAttackAlternate
-      DisableControlAction(0, 106, guiEnabled) -- VehicleMouseControlOverride
-      if IsDisabledControlJustReleased(0, 142) then -- MeleeAttackAlternate
-        SendNUIMessage({type = "click"})
-      end
-
-    else
-      mousemovement = 0
-    end
-
-    if selfieMode then
-        if IsControlJustPressed(0, 177) then
-          selfieMode = false
-          DestroyMobilePhone()
-          CellCamActivate(false, false)
-        end
-        HideHudComponentThisFrame(7)
-        HideHudComponentThisFrame(8)
-        HideHudComponentThisFrame(9)
-        HideHudComponentThisFrame(6)
-        HideHudComponentThisFrame(19)
-        HideHudAndRadarThisFrame()
-    else
-      selfieMode = false
-      DestroyMobilePhone()
-      CellCamActivate(false, false)
-    end
-
-    if creatingMap then
-
-      local plycoords = GetEntityCoords(GetPlayerPed(-1))
-
-      DrawMarker(27,plycoords.x,plycoords.y,plycoords.z,0,0,0,0,0,0,dst,dst,0.3001,255,255,255,255,0,0,0,0)
-      
-      if #currentMap == 0 then
-        DrawText3Ds(plycoords.x,plycoords.y,plycoords.z,"[E] to add start point, up/down for size, phone to save or cancel.")
-      else
-        DrawText3Ds(plycoords.x,plycoords.y,plycoords.z,"[E] to add check point, up/down for size, phone to save or cancel.")
-      end
-
-      if IsControlPressed(0,27) then
-        dst = dst + 1
-        if dst > 60.0 then
-          dst = 60.0
-        end
-      end
-
-      if IsControlPressed(0,173) then
-        dst = dst - 1
-        if dst < 4 then
-          dst = 3.0
-        end
-      end
-
-      if IsControlJustReleased(0,38) then
-        if (IsControlPressed(0,21)) then
-          PopLastCheckpoint()
+        if PhoneData.Chats[NumberKey].Unread ~= nil then
+            PhoneData.Chats[NumberKey].Unread = PhoneData.Chats[NumberKey].Unread + 1
         else
-          AddCheckPoint()
+            PhoneData.Chats[NumberKey].Unread = 1
+        end
+
+        if PhoneData.isOpen then
+            if SenderNumber ~= PhoneData.PlayerData.charinfo.phone then
+                SendNUIMessage({
+                    action = "PhoneNotification",
+                    PhoneNotify = {
+                        title = "Messages",
+                        text = "New message: "..IsNumberInContacts(SenderNumber),
+                        icon = "fas fa-comment",
+                        color = "#25D366",
+                        timeout = 1500,
+                    },
+                })
+            else
+                SendNUIMessage({
+                    action = "PhoneNotification",
+                    PhoneNotify = {
+                        title = "Messages",
+                        text = "Messaged yourself?",
+                        icon = "fas fa-comment",
+                        color = "#25D366",
+                        timeout = 4000,
+                    },
+                })
+            end
+
+            NumberKey = GetKeyByNumber(SenderNumber)
+            ReorganizeChats(NumberKey)
+
+            Wait(100)
+            QBCore.Functions.TriggerCallback('qb-phone:server:GetContactPictures', function(Chats)
+                SendNUIMessage({
+                    action = "UpdateChat",
+                    chatData = Chats[GetKeyByNumber(SenderNumber)],
+                    chatNumber = SenderNumber,
+                    Chats = Chats,
+                })
+            end,  PhoneData.Chats)
+        else
+	    SendNUIMessage({
+	        action = "PhoneNotification",
+	        PhoneNotify = {
+		    title = "Messages",
+		    text = "New message: "..IsNumberInContacts(SenderNumber),
+		    icon = "fas fa-comment",
+		    color = "#25D366",
+		    timeout = 3500,
+	        },
+	    })
+            Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
+            TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp")
+        end
+    else
+        PhoneData.Chats[NumberKey].messages = ChatMessages
+
+        if PhoneData.Chats[NumberKey].Unread ~= nil then
+            PhoneData.Chats[NumberKey].Unread = PhoneData.Chats[NumberKey].Unread + 1
+        else
+            PhoneData.Chats[NumberKey].Unread = 1
+        end
+
+        if PhoneData.isOpen then
+            if SenderNumber ~= PhoneData.PlayerData.charinfo.phone then
+                SendNUIMessage({
+                    action = "PhoneNotification",
+                    PhoneNotify = {
+                        title = "Messages",
+                        text = "New message: "..IsNumberInContacts(SenderNumber),
+                        icon = "fas fa-comment",
+                        color = "#25D366",
+                        timeout = 1500,
+                    },
+                })
+            else
+                SendNUIMessage({
+                    action = "PhoneNotification",
+                    PhoneNotify = {
+                        title = "Messages",
+                        text = "Messaged yourself?",
+                        icon = "fas fa-comment",
+                        color = "#25D366",
+                        timeout = 4000,
+                    },
+                })
+            end
+
+            NumberKey = GetKeyByNumber(SenderNumber)
+            ReorganizeChats(NumberKey)
+
+            Wait(100)
+            QBCore.Functions.TriggerCallback('qb-phone:server:GetContactPictures', function(Chats)
+                SendNUIMessage({
+                    action = "UpdateChat",
+                    chatData = Chats[GetKeyByNumber(SenderNumber)],
+                    chatNumber = SenderNumber,
+                    Chats = Chats,
+                })
+            end,  PhoneData.Chats)
+        else
+            SendNUIMessage({
+                action = "PhoneNotification",
+                PhoneNotify = {
+                    title = "Messages",
+                    text = "New message: "..IsNumberInContacts(SenderNumber),
+                    icon = "fas fa-comment",
+                    color = "#25D366",
+                    timeout = 3500,
+                },
+            })
+
+            NumberKey = GetKeyByNumber(SenderNumber)
+            ReorganizeChats(NumberKey)
+
+            Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
+            TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "whatsapp")
+        end
+    end
+end)
+
+RegisterNetEvent('qb-phone:client:RemoveBankMoney', function(amount)
+    if amount > 0 then
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Bank",
+                text = "$"..amount.." removed from your balance!",
+                icon = "fas fa-university",
+                color = "#ff002f",
+                timeout = 3500,
+            },
+        })
+    end
+end)
+
+RegisterNetEvent('qb-phone:RefreshPhone', function()
+    LoadPhone()
+    SetTimeout(250, function()
+        SendNUIMessage({
+            action = "RefreshAlerts",
+            AppData = Config.PhoneApplications,
+        })
+    end)
+end)
+
+RegisterNetEvent('qb-phone:client:AddTransaction', function(SenderData, TransactionData, Message, Title)
+    local Data = {
+        TransactionTitle = Title,
+        TransactionMessage = Message,
+    }
+    PhoneData.CryptoTransactions[#PhoneData.CryptoTransactions+1] = Data
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Crypto",
+                text = Message,
+                icon = "fab fa-bitcoin",
+                color = "#04b543",
+                timeout = 1500,
+            },
+        })
+    SendNUIMessage({
+        action = "UpdateTransactions",
+        CryptoTransactions = PhoneData.CryptoTransactions
+    })
+
+    TriggerServerEvent('qb-phone:server:AddTransaction', Data)
+end)
+
+RegisterNetEvent('qb-phone:client:AddNewSuggestion', function(SuggestionData)
+    PhoneData.SuggestedContacts[#PhoneData.SuggestedContacts+1] = SuggestionData
+    SendNUIMessage({
+        action = "PhoneNotification",
+        PhoneNotify = {
+            title = "Phone",
+            text = "New suggested contact!",
+            icon = "fa fa-phone-alt",
+            color = "#04b543",
+            timeout = 1500,
+        },
+    })
+    Config.PhoneApplications["phone"].Alerts = Config.PhoneApplications["phone"].Alerts + 1
+    TriggerServerEvent('qb-phone:server:SetPhoneAlerts', "phone", Config.PhoneApplications["phone"].Alerts)
+end)
+
+RegisterNetEvent('qb-phone:client:UpdateHashtags', function(Handle, msgData)
+    if PhoneData.Hashtags[Handle] ~= nil then
+        PhoneData.Hashtags[Handle].messages[#PhoneData.Hashtags[Handle].messages+1] = msgData
+    else
+        PhoneData.Hashtags[Handle] = {
+            hashtag = Handle,
+            messages = {}
+        }
+        PhoneData.Hashtags[Handle].messages[#PhoneData.Hashtags[Handle].messages+1] = msgData
+    end
+
+    SendNUIMessage({
+        action = "UpdateHashtags",
+        Hashtags = PhoneData.Hashtags,
+    })
+end)
+
+RegisterNetEvent('qb-phone:client:AnswerCall', function()
+    if (PhoneData.CallData.CallType == "incoming" or PhoneData.CallData.CallType == "outgoing") and PhoneData.CallData.InCall and not PhoneData.CallData.AnsweredCall then
+        PhoneData.CallData.CallType = "ongoing"
+        PhoneData.CallData.AnsweredCall = true
+        PhoneData.CallData.CallTime = 0
+
+        SendNUIMessage({ action = "AnswerCall", CallData = PhoneData.CallData})
+        SendNUIMessage({ action = "SetupHomeCall", CallData = PhoneData.CallData})
+
+        TriggerServerEvent('qb-phone:server:SetCallState', true)
+
+        if PhoneData.isOpen then
+            DoPhoneAnimation('cellphone_text_to_call')
+        else
+            DoPhoneAnimation('cellphone_call_listen_base')
+        end
+
+        CreateThread(function()
+            while true do
+                if PhoneData.CallData.AnsweredCall then
+                    PhoneData.CallData.CallTime = PhoneData.CallData.CallTime + 1
+                    SendNUIMessage({
+                        action = "UpdateCallTime",
+                        Time = PhoneData.CallData.CallTime,
+                        Name = PhoneData.CallData.TargetData.name,
+                    })
+                else
+                    break
+                end
+
+                Wait(1000)
+            end
+        end)
+        exports['pma-voice']:addPlayerToCall(PhoneData.CallData.CallId)
+    else
+        PhoneData.CallData.InCall = false
+        PhoneData.CallData.CallType = nil
+        PhoneData.CallData.AnsweredCall = false
+
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "Phone",
+                text = "You don't have an incoming call...",
+                icon = "fas fa-phone",
+                color = "#e84118",
+            },
+        })
+    end
+end)
+
+RegisterNetEvent('qb-phone:client:addPoliceAlert', function(alertData)
+    PlayerJob = QBCore.Functions.GetPlayerData().job
+    if PlayerJob.name == 'police' and PlayerJob.onduty then
+        SendNUIMessage({
+            action = "AddPoliceAlert",
+            alert = alertData,
+        })
+    end
+end)
+
+RegisterNetEvent('qb-phone:client:GiveContactDetails', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local PlayerId = GetPlayerServerId(player)
+        TriggerServerEvent('qb-phone:server:GiveContactDetails', PlayerId)
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
+    end
+end)
+
+RegisterNetEvent('qb-phone:client:UpdateLapraces', function()
+    SendNUIMessage({
+        action = "UpdateRacingApp",
+    })
+end)
+
+RegisterNetEvent('qb-phone:client:GetMentioned', function(TweetMessage, AppAlerts)
+    Config.PhoneApplications["twitter"].Alerts = AppAlerts
+    SendNUIMessage({ action = "PhoneNotification", PhoneNotify = { title = "New mention!", text = TweetMessage.message, icon = "fab fa-twitter", color = "#1DA1F2", }, })
+    local TweetMessage = {firstName = TweetMessage.firstName, lastName = TweetMessage.lastName, message = escape_str(TweetMessage.message), time = TweetMessage.time, picture = TweetMessage.picture}
+    PhoneData.MentionedTweets[#PhoneData.MentionedTweets+1] = TweetMessage
+    SendNUIMessage({ action = "RefreshAppAlerts", AppData = Config.PhoneApplications })
+    SendNUIMessage({ action = "UpdateMentionedTweets", Tweets = PhoneData.MentionedTweets })
+end)
+
+RegisterNetEvent('qb-phone:refreshImages', function(images)
+    PhoneData.Images = images
+end)
+
+
+-- Threads
+
+CreateThread(function()
+    Wait(500)
+    LoadPhone()
+    PublicPhone()
+end)
+
+CreateThread(function()
+    while true do
+        if PhoneData.isOpen then
+            SendNUIMessage({
+                action = "UpdateTime",
+                InGameTime = CalculateTimeToDisplay(),
+            })
         end
         Wait(1000)
-      end
-
     end
-    Citizen.Wait(1)
-  end
 end)
 
-function StartMapCreation()
-  currentMap = {}
-  dst = 30.0;
-  creatingMap = true
-end
-
-function CancelMap()
-  -- get distance here between checkpoints
-  creatingMap = false
-end
-
-function ClearBlips()
-  for i = 1, #SetBlips do
-    RemoveBlip(SetBlips[i])
-  end
-  SetBlips = {}
-end
-
-function AddCheckPoint()
-  loadCheckpointModels()
-  local plycoords = GetEntityCoords(GetPlayerPed(-1))
-  local ballsdick = dst/2
-  local fx,fy,fz = table.unpack(GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1),  ballsdick, 0.0, -0.25))
-
-  local fx2,fy2,fz2 = table.unpack(GetOffsetFromEntityInWorldCoords(GetPlayerPed(-1), 0.0 - ballsdick, 0.0, -0.25))
-  
-  addCheckpointMarker(vector3(fx,fy,fz), vector3(fx2,fy2,fz2))
-
-  local start = false
-
-  if #currentMap == 0 then
-    start = true
-  end
-
-  local checkcounter = #currentMap + 1
-  currentMap[checkcounter] = { 
-    ["flare1x"] = FUCKK(fx), ["flare1y"] = FUCKK(fy), ["flare1z"] = FUCKK(fz),
-    ["flare2x"] = FUCKK(fx2), ["flare2y"] = FUCKK(fy2), ["flare2z"] = FUCKK(fz2),
-    ["x"] = FUCKK(plycoords.x),  ["y"] = FUCKK(plycoords.y), ["z"] = FUCKK(plycoords.z-1.1), ["start"] = start, ["dist"] = ballsdick, 
-  }
-
-  local key = #SetBlips+1
-  SetBlips[key] = AddBlipForCoord(plycoords.x,plycoords.y,plycoords.z)
-  SetBlipAsFriendly(SetBlips[key], true)
-  SetBlipSprite(SetBlips[key], 1)
-  ShowNumberOnBlip(SetBlips[key], key)
-  BeginTextCommandSetBlipName("STRING");
-  AddTextComponentString(tostring("Checkpoint " .. key))
-  EndTextCommandSetBlipName(SetBlips[key])
-
-end
-
-local checkpointMarkers = {}
-local isModelsLoaded = false
-function loadCheckpointModels()
-  local models = {}
-  models[1] = "prop_offroad_tyres02"
-  models[2] = "prop_beachflag_01"
-  for i = 1, #models do
-    local checkpointModel = GetHashKey(models[i])
-    RequestModel(checkpointModel)
-    while not HasModelLoaded(checkpointModel) do
-      Citizen.Wait(1)
+CreateThread(function()
+    while true do
+        Wait(60000)
+        if LocalPlayer.state.isLoggedIn then
+            QBCore.Functions.TriggerCallback('qb-phone:server:GetPhoneData', function(pData)
+                if pData.PlayerContacts ~= nil and next(pData.PlayerContacts) ~= nil then
+                    PhoneData.Contacts = pData.PlayerContacts
+                end
+                SendNUIMessage({
+                    action = "RefreshContacts",
+                    Contacts = PhoneData.Contacts
+                })
+            end)
+        end
     end
-  end
-  isModelsLoaded = true
-end
-
-function addCheckpointMarker(leftMarker, rightMarker)
-  local model = #checkpointMarkers == 0 and 'prop_beachflag_01' or 'prop_offroad_tyres02'
-
-  local checkpointLeft = CreateObject(GetHashKey(model), leftMarker, false, false, false)
-  local checkpointRight = CreateObject(GetHashKey(model), rightMarker, false, false, false)
-  checkpointMarkers[#checkpointMarkers+1] = {
-    left = checkpointLeft,
-    right = checkpointRight
-  }
-  PlaceObjectOnGroundProperly(checkpointLeft)
-  SetEntityAsMissionEntity(checkpointLeft)
-  PlaceObjectOnGroundProperly(checkpointRight)
-  SetEntityAsMissionEntity(checkpointRight)
-end
-
-function LoadMapBlips(id, reverseTrack, laps)
-  local id = tostring(id)
-  ClearBlips()
-  loadCheckpointModels()
-  if(customMaps[id].checkpoints ~= nil) then
-    local checkpoints = customMaps[id].checkpoints
-    if reverseTrack then
-      local newCheckpoints = {}
-      local count = 1
-      for i=#checkpoints, 1, -1 do
-        newCheckpoints[count] = checkpoints[i]
-        count = count + 1
-      end
-      if laps ~= 0 then
-        table.insert(newCheckpoints, 1, checkpoints[1])
-        newCheckpoints[#newCheckpoints] = nil
-      end
-      checkpoints = newCheckpoints
-    end
-
-    for mId, map in pairs(checkpoints) do
-      local key = #SetBlips+1
-      SetBlips[key] = AddBlipForCoord(map["x"],map["y"],map["z"])
-      SetBlipAsFriendly(SetBlips[key], true)
-      SetBlipAsShortRange(SetBlips[key], true)
-      SetBlipSprite(SetBlips[key], 1)
-      ShowNumberOnBlip(SetBlips[key], key)
-      BeginTextCommandSetBlipName("STRING");
-      AddTextComponentString(tostring("Checkpoint " .. key))
-      EndTextCommandSetBlipName(SetBlips[key])
-
-      addCheckpointMarker(vector3(map["flare1x"], map["flare1y"], map["flare1z"]), vector3(map["flare2x"], map["flare2y"], map["flare2z"]))
-    end
-  end
-end
-
-function PopLastCheckpoint()
-  if #currentMap > 1 then
-    local lastCheckpoint = #currentMap
-    SetEntityAsNoLongerNeeded(checkpointMarkers[lastCheckpoint].left)
-    DeleteObject(checkpointMarkers[lastCheckpoint].left)
-    SetEntityAsNoLongerNeeded(checkpointMarkers[lastCheckpoint].right)
-    DeleteObject(checkpointMarkers[lastCheckpoint].right)
-    RemoveBlip(SetBlips[lastCheckpoint])
-    table.remove(checkpointMarkers)
-    table.remove(currentMap)
-    table.remove(SetBlips)
-  end
-end
-
-function ShowText(text)
-  TriggerEvent("DoLongHudText",text)
-end
-
-function StartEvent(map, laps, counter, reverseTrack, raceName, startTime,
-  mapCreator, mapDistance, mapDescription)
-
-local map = tostring(map)
-local laps = tonumber(laps)
-local counter = tonumber(counter)
-local mapCreator = tostring(mapCreator)
-local mapDistance = tonumber(mapDistance)
-local mapDescription = tostring(mapDescription)
-local reverseTrack = reverseTrack
-
-if map == 0 then
-ShowText("Pick a map or use the old racing system.")
-return
-end
-
-local mapCheckpoints = customMaps[map]["checkpoints"]
-local checkPointIndex = 1
-if reverseTrack and laps == 0 then checkPointIndex = #mapCheckpoints end
-
-local ped = GetPlayerPed(-1)
-local plyCoords = GetEntityCoords(ped)
-local dist = Vdist(mapCheckpoints[checkPointIndex]["x"],
-     mapCheckpoints[checkPointIndex]["y"],
-     mapCheckpoints[checkPointIndex]["z"], plyCoords.x,
-     plyCoords.y, plyCoords.z)
-
-if dist > 40.0 then
-ShowText("You are too far away!")
-EndRace()
-return
-end
-
-ShowText("Race Starting on " .. customMaps[map]["track_name"] .. " with " ..
-laps .. " laps in " .. counter .. " seconds!")
-racesStarted = racesStarted + 1
-local cid = exports["isPed"]:isPed("cid")
-local uniqueid = cid .. "-" .. racesStarted
-
-local s1, s2 = GetStreetNameAtCoord(mapCheckpoints[checkPointIndex].x,
-                      mapCheckpoints[checkPointIndex].y,
-                      mapCheckpoints[checkPointIndex].z)
-local street1 = GetStreetNameFromHashKey(s1)
-zone = tostring(GetNameOfZone(mapCheckpoints[checkPointIndex].x,
-                mapCheckpoints[checkPointIndex].y,
-                mapCheckpoints[checkPointIndex].z))
-local playerStreetsLocation = GetLabelText(zone)
-local dir = getCardinalDirectionFromHeading()
-local street1 = street1 .. ", " .. playerStreetsLocation
-local street2 = GetStreetNameFromHashKey(s2) .. " " .. dir
-TriggerServerEvent("racing-global-race", map, laps, counter, reverseTrack,
-     uniqueid, cid, raceName, startTime, mapCreator,
-     mapDistance, mapDescription, street1, street2)
-end
-
-function hudUpdate(pHudState, pHudData)
-  pHudState = pHudState or 'finished'
-  pHudData = pHudData or '{}'
-  SendNUIMessage({
-    openSection = "racing:hud:update",
-    hudState = pHudState,
-    hudData = pHudData
-  })
-end
-
-function RunRace(identifier)
-  local map = currentRaces[identifier].map
-  local laps = currentRaces[identifier].laps
-  local counter = currentRaces[identifier].counter
-  local sprint = false
-
-  if laps == 0 then
-      laps = 1
-      sprint = true
-  end
-  local myLap = 0
-
-  local checkpoints = #customMaps[map]["checkpoints"]
-  local mycheckpoint = 1
-  local ped = GetPlayerPed(-1)
-
-  SetBlipColour(SetBlips[1], 3)
-  SetBlipScale(SetBlips[1], 1.6)
-
-  TriggerEvent("DoLongHudText","Race Starts in 3",14)
-  PlaySound(-1, "3_2_1", "HUD_MINI_GAME_SOUNDSET", 0, 0, 1)
-  Citizen.Wait(1000)
-  TriggerEvent("DoLongHudText","Race Starts in 2",14)
-  PlaySound(-1, "3_2_1", "HUD_MINI_GAME_SOUNDSET", 0, 0, 1)
-  Citizen.Wait(1000)
-  TriggerEvent("DoLongHudText","Race Starts in 1",14)
-  PlaySound(-1, "3_2_1", "HUD_MINI_GAME_SOUNDSET", 0, 0, 1)
-  Citizen.Wait(1000)
-  PlaySound(-1, "3_2_1", "HUD_MINI_GAME_SOUNDSET", 0, 0, 1)
-  TriggerEvent("DoLongHudText","GO!",14)
-  hudUpdate("start",
-            {isSprint = sprint, maxLaps = laps, maxCheckpoints = checkpoints})
-  while myLap < laps + 1 and racing do
-      Wait(1)
-      local plyCoords = GetEntityCoords(ped)
-
-      if (Vdist(customMaps[map]["checkpoints"][mycheckpoint]["x"],
-                customMaps[map]["checkpoints"][mycheckpoint]["y"],
-                customMaps[map]["checkpoints"][mycheckpoint]["z"],
-                plyCoords.x, plyCoords.y, plyCoords.z)) <
-          customMaps[map]["checkpoints"][mycheckpoint]["dist"] then
-          SetBlipColour(SetBlips[mycheckpoint], 3)
-          SetBlipScale(SetBlips[mycheckpoint], 1.0)
-
-          -- PlaySound(-1, "CHECKPOINT_NORMAL", "HUD_MINI_GAME_SOUNDSET", 0, 0, 1)
-          mycheckpoint = mycheckpoint + 1
-
-          SetBlipColour(SetBlips[mycheckpoint], 2)
-          SetBlipScale(SetBlips[mycheckpoint], 1.6)
-          SetBlipAsShortRange(SetBlips[mycheckpoint - 1], true)
-          SetBlipAsShortRange(SetBlips[mycheckpoint], false)
-
-          if mycheckpoint > checkpoints then mycheckpoint = 1 end
-
-          SetNewWaypoint(customMaps[map]["checkpoints"][mycheckpoint]["x"],
-                         customMaps[map]["checkpoints"][mycheckpoint]["y"])
-
-          if not sprint and mycheckpoint == 1 then
-              SetBlipColour(SetBlips[1], 2)
-              SetBlipScale(SetBlips[1], 1.6)
-          end
-
-          if not sprint and mycheckpoint == 2 then
-              myLap = myLap + 1
-
-              -- Uncomment these lines to make the checkpoints re-draw on each lap
-              -- ClearBlips()
-              -- RemoveCheckpoints()
-              -- LoadMapBlips(map)
-              SetBlipColour(SetBlips[1], 3)
-              SetBlipScale(SetBlips[1], 1.0)
-              SetBlipColour(SetBlips[2], 2)
-              SetBlipScale(SetBlips[2], 1.6)
-          elseif sprint and mycheckpoint == 1 then
-              myLap = myLap + 2
-          end
-
-          hudUpdate("update",
-                    {curLap = myLap, curCheckpoint = (mycheckpoint - 1)})
-      end
-  end
-
-  hudUpdate("finished", {eventId = identifier})
-
-  PlaySound(-1, "3_2_1", "HUD_MINI_GAME_SOUNDSET", 0, 0, 1)
-  TriggerEvent("DoLongHudText","You have finished!",1)
-  Wait(10000)
-  racing = false
-  hudUpdate("clear")
-  ClearBlips()
-  RemoveCheckpoints()
-end
-
-function EndRace()
-  ClearBlips()
-  RemoveCheckpoints()
-end
-
-function RemoveCheckpoints()
-  for i = 1, #checkpointMarkers do
-      SetEntityAsNoLongerNeeded(checkpointMarkers[i].left)
-      DeleteObject(checkpointMarkers[i].left)
-      SetEntityAsNoLongerNeeded(checkpointMarkers[i].right)
-      DeleteObject(checkpointMarkers[i].right)
-      checkpointMarkers[i] = nil
-  end
-end
-
-function FUCKK(num)
-  local new = math.ceil(num*100)
-  new = new / 100
-  return new
-end
-
-function SaveMap(name,description)
-  -- get distance here between checkpoints
-
-  local distanceMap = 0.0
-  for i = 1, #currentMap do
-    if i == #currentMap then
-      distanceMap = Vdist(currentMap[i]["x"],currentMap[i]["y"],currentMap[i]["z"], currentMap[1]["x"],currentMap[1]["y"],currentMap[1]["z"]) + distanceMap
-    else
-      distanceMap = Vdist(currentMap[i]["x"],currentMap[i]["y"],currentMap[i]["z"], currentMap[i+1]["x"],currentMap[i+1]["y"],currentMap[i+1]["z"]) + distanceMap
-    end
-  end
-  distanceMap = math.ceil(distanceMap)
-
-  if #currentMap > 1 then
-    TriggerEvent("DoLongHudText","The map is being processed and should be available shortly.",2)
-    TriggerServerEvent("racing-save-map",currentMap,name,description,distanceMap)
-  else
-    TriggerEvent("DoLongHudText","Failed due to lack of checkpoints",2)
-  end
-  currentMap = {}
-  creatingMap = false
-end
-
-RegisterNUICallback('racing:events:list', function()
-  local rank = exports["isPed"]:GroupRank("ug_racing")
-  SendNUIMessage({
-    openSection = "racing:events:list",
-      races = currentRaces,
-      canMakeMap = (rank >= 4 and true or false)
-    });
-    TriggerServerEvent("racing-retreive-maps")
 end)
 
-RegisterNUICallback('racing:events:highscore', function()
-  TriggerServerEvent("racing-retreive-maps")
-  Wait(300)
-  local highScoreObject = {}
-  for k,v in pairs(customMaps) do
-    highScoreObject[k] = {
-      fastestLap = v.fastest_lap,
-      fastestName = v.fastest_name,
-      fastestSprint = v.fastest_sprint,
-      fastestSprintName = v.fastest_sprint_name,
-      map = v.track_name,
-      noOfRaces = v.races,
-      mapDistance = v.distance
+
+-- ping
+
+RegisterNUICallback('AcceptPingPlayer', function()
+    TriggerServerEvent('qb-pings:server:acceptping')
+    TriggerEvent("qb-phone:ping:client:UiUppers", false)
+end)
+
+RegisterNUICallback('rejectPingPlayer', function()
+    TriggerServerEvent('qb-pings:server:denyping')
+    TriggerEvent("qb-phone:ping:client:UiUppers", false)
+end)
+
+RegisterNUICallback('SendPingPlayer', function(data)
+    TriggerServerEvent('qb-pings:server:SendPing2', data.id)
+    
+end)
+
+local CurrentPings = {}
+
+RegisterNetEvent('qb-pings:client:DoPing', function(id)
+    local player = GetPlayerFromServerId(id)
+    local ped = GetPlayerPed(player)
+    local pos = GetEntityCoords(ped)
+    local coords = {
+        x = pos.x,
+        y = pos.y,
+        z = pos.z,
     }
-  end
-
-  SendNUIMessage({
-    openSection = "racing:events:highscore",
-    highScoreList = highScoreObject
-  });
+        TriggerServerEvent('qb-pings:server:SendPing', id, coords)
 end)
 
--- Callback when setting up new Event
-RegisterNUICallback('racing:event:setup', function()
-  TriggerServerEvent("racing-build-maps")
+RegisterNetEvent('qb-pings:client:AcceptPing', function(PingData, SenderData)
+    local ped = PlayerPedId()
+    local pos = GetEntityCoords(ped)
+
+        TriggerServerEvent('qb-pings:server:SendLocation', PingData, SenderData)
 end)
 
--- Fix
-RegisterNUICallback('racing:event:leave', function()
-  hudUpdate('clear')
-  ClearBlips()
-  RemoveCheckpoints()
-  racing = false
+RegisterNetEvent('qb-pings:client:SendLocation', function(PingData, SenderData)
+    QBCore.Functions.Notify('Their location has been blipped on your map', 'success')
+
+    CurrentPings[PingData.sender] = AddBlipForCoord(PingData.coords.x, PingData.coords.y, PingData.coords.z)
+    SetBlipSprite(CurrentPings[PingData.sender], 280)
+    SetBlipDisplay(CurrentPings[PingData.sender], 4)
+    SetBlipScale(CurrentPings[PingData.sender], 1.1)
+    SetBlipAsShortRange(CurrentPings[PingData.sender], false)
+    SetBlipColour(CurrentPings[PingData.sender], 0)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName("Friend")
+    EndTextCommandSetBlipName(CurrentPings[PingData.sender])
+
+    SetTimeout(5 * (60 * 1000), function()
+        QBCore.Functions.Notify('Ping '..PingData.sender..' has expired...', 'error')
+        RemoveBlip(CurrentPings[PingData.sender])
+        CurrentPings[PingData.sender] = nil
+        TriggerEvent("qb-phone:ping:client:UiUppers", false)
+    end)
 end)
 
--- Fix
-RegisterNUICallback('racing:event:join', function(data)
-  RemoveCheckpoints()
-  local id = data.identifier
-  local ped = GetPlayerPed(-1)
-  local IsPlayerDriver = GetPedInVehicleSeat(GetVehiclePedIsIn(GetPlayerPed(-1)), -1) == GetPlayerPed(-1)
-  local plyCoords = GetEntityCoords(ped)
-
-  if not IsPlayerDriver then
-      TriggerEvent("DoLongHudText","You must be the driver of the vehicle to join this race.",2)
-      return
-  end
-
-  local mapCheckpoints = customMaps[currentRaces[id]["map"]]["checkpoints"]
-  local checkPointIndex = 1
-  if currentRaces[id]["reverseTrack"] and currentRaces[id]["laps"] == 0 then
-      checkPointIndex = #mapCheckpoints
-  end
-
-  if Vdist(mapCheckpoints[checkPointIndex]["x"],
-           mapCheckpoints[checkPointIndex]["y"],
-           mapCheckpoints[checkPointIndex]["z"], plyCoords.x, plyCoords.y,
-           plyCoords.z) < 40 then
-      -- IF the race is OPEN and you are not in the race and youre not racing
-      if currentRaces[id]["open"] and not JoinedRaces[id] and not racing then
-          racing = true
-          JoinedRaces[id] = true
-          TriggerServerEvent("racing-join-race", id)
-          hudUpdate('starting')
-          ShowText("Joining Race!")
-          LoadMapBlips(currentRaces[id]["map"],
-                       currentRaces[id]["reverseTrack"],
-                       currentRaces[id]["laps"])
-      else
-          -- IF youre in this race and youre not racing
-          if (JoinedRaces[id] and not racing) then
-              racing = true
-              hudUpdate('starting')
-          else
-              ShowText("This race is closed or you are already in it!")
-          end
-      end
-  else
-      ShowText("You are too far away!")
-  end
-end)
-
--- Fix
-RegisterNUICallback('racing:event:start', function(data)
-  StartEvent(data.raceMap, data.raceLaps, data.raceCountdown,
-             data.reverseTrack, data.raceName, data.raceStartTime,
-             data.mapCreator, data.mapDistance, data.mapDescription)
-  Wait(500)
-  SendNUIMessage({openSection = "racing:events:list", races = currentRaces});
-end)
-
--- Fix this
-RegisterNUICallback('race:completed', function(data)
-  JoinedRaces[data.identifier] = nil
-  TriggerServerEvent("race:completed2",data.fastestlap, data.overall, data.sprint, data.identifier)
-  EndRace()
-end)
-
--- Racing:Map
-RegisterNUICallback('racing:map:create', function()
-  StartMapCreation()
-end)
-
-RegisterNUICallback('racing:map:load', function(data)
-  ClearBlips()
-  RemoveCheckpoints()
-  if(data.id ~= nil) then
-    LoadMapBlips(data.id)
-  end
-end)
-
-RegisterNUICallback('racing:map:delete', function(data)
-  ClearBlips()
-  RemoveCheckpoints()
-  if data.id ~= "0" then
-    TriggerServerEvent("racing-map-delete",customMaps[tonumber(data.id)]["dbid"])
-  end
-end)
-
-RegisterNUICallback('racing:map:removeBlips', function()
-  EndRace()
-end)
-
-RegisterNUICallback('racing:map:cancel', function()
-  EndRace()
-  CancelMap()
-end)
-
-RegisterNUICallback('racing:map:save', function(data)
-  EndRace()
-  SaveMap(data.name,data.desc)
-end)
-
-RegisterNetEvent('racing:data:set')
-AddEventHandler('racing:data:set', function(data)
-  print('racing:data:set', json.encode(data))
-  if(data.event == "map") then
-    if (data.eventId ~= -1) then
-      customMaps[data.eventId] = data.data
-    else
-      customMaps = data.data
-      if(data.subEvent == nil or data.subEvent ~= "noNUI") then
+RegisterNetEvent('qb-phone:ping:client:UiUppers', function(toggle)
+    if toggle then
         SendNUIMessage({
-          openSection = 'racing-start',
-          maps = customMaps
+            action = "acceptrejectBlock",
         })
-      end
-    end
-  elseif (data.event == "event") then
-    if (data.eventId ~= -1) then
-      currentRaces[data.eventId] = data.data
-      if JoinedRaces[data.eventId] and racing and data.subEvent == "close" then
-        RunRace(data.eventId)
-      end
-      SendNUIMessage({
-        openSection = "racing:event:update",
-        eventId = data.eventId,
-        raceData = currentRaces[data.eventId]
-      })
+        TriggerEvent("qb-hud:ping:client:ShowIcon", true)
     else
-      currentRaces = data.data
-      SendNUIMessage({
-        openSection = "racing:event:update",
-        raceData = currentRaces
-      })
-    end
-  end
-end)
-
-RegisterNetEvent('racing:clearFinishedRaces')
-AddEventHandler('racing:clearFinishedRaces', function(id)
-  if(JoinedRaces[id] ~= nil) then
-    JoinedRaces[id] = nil
-    ClearBlips()
-    RemoveCheckpoints()
-  end
-end)
-
--- Opens our phone
-RegisterNetEvent('phoneGui2')
-AddEventHandler('phoneGui2', function()
-  openGui()
-end)
-
--- NUI Callback Methods
-RegisterNUICallback('close', function(data, cb)
-  closeGui()
-  cb('ok')
-end)
-
-RegisterNetEvent('phone:close')
-AddEventHandler('phone:close', function(number, message)
-  closeGui()
-
-end)
-
--- SMS Callbacks
-RegisterNUICallback('messages', function(data, cb)
-  loading()
-  TriggerServerEvent('phone:getSMS', exports['isPed']:isPed('cid'))
-  cb('ok')
-end)
-
-RegisterNetEvent('phone:clientGetMessagesBetweenParties')
-AddEventHandler('phone:clientGetMessagesBetweenParties', function(messages, displayName, clientNumber)
-  SendNUIMessage({openSection = "messageRead", messages = messages, displayName = displayName, clientNumber = clientNumber})
-end)
-
---$.post...
-RegisterNUICallback('messageRead', function(data, cb)
-  TriggerServerEvent('phone:serverGetMessagesBetweenParties', data.sender, data.receiver, data.displayName)
-  cb('ok')
-end)
-
-RegisterNUICallback('messageDelete', function(data, cb)
-  TriggerServerEvent('phone:removeSMS', data.id, data.number)
-  cb('ok')
-end)
-
-RegisterNUICallback('newMessage', function(data, cb)
-  SendNUIMessage({openSection = "newMessage"})
-  cb('ok')
-end)
-
-
-
-
-
-RegisterNUICallback('messageReply', function(data, cb)
-  SendNUIMessage({openSection = "newMessageReply", number = data.number})
-  cb('ok')
-end)
-
-RegisterNUICallback('newMessageSubmit', function(data, cb)
-  if not isDead then
-    TriggerEvent('phone:sendSMS', tonumber(data.number), data.message)
-    cb('ok')
-  else
-    TriggerEvent("DoLongHudText","You can not do this while injured.",2)
-  end
-end)
-
-
-function testfunc()
-
-end
-RegisterNetEvent("TokoVoip:UpVolume");
-AddEventHandler("TokoVoip:UpVolume", setVolumeUp);
-
-RegisterNetEvent('refreshContacts')
-AddEventHandler('refreshContacts', function()
-  TriggerServerEvent('getContacts', exports['isPed']:isPed('cid'))
-  SendNUIMessage({openSection = "contacts"})
-end)
-
-RegisterNetEvent('refreshYP')
-AddEventHandler('refreshYP', function()
-  if guiEnabled then
-    TriggerServerEvent('getYP')
-    Citizen.Wait(250)
-    TriggerEvent('YPUpdatePhone')
-  end
-end)
-
-RegisterNetEvent('refreshSMS')
-AddEventHandler('refreshSMS', function()
-  TriggerServerEvent('phone:getSMS', exports['isPed']:isPed('cid'))
-  Citizen.Wait(250)
-  SendNUIMessage({openSection = "messages"})
-end)
-
--- Contact Callbacks
-RegisterNUICallback('contacts', function(data, cb)
-  TriggerServerEvent('phone:getSMSc')
-  SendNUIMessage({openSection = "contacts"})
-  cb('ok')
-end)
-
-RegisterNUICallback('newContact', function(data, cb)
-  SendNUIMessage({openSection = "newContact"})
-  cb('ok')
-end)
-
-RegisterNUICallback('newContactSubmit', function(data, cb)
-  TriggerEvent('phone:addContact', data.name, tonumber(data.number))
-  cb('ok')
-end)
-
-RegisterNUICallback('removeContact', function(data, cb)
-  TriggerServerEvent('phone:removeContact', data.name, data.number)
-  cb('ok')
-end)
-
-
-myID = 0
-mySourceID = 0
-
-mySourceHoldStatus = false
-TriggerEvent('phone:setCallState', isNotInCall)
-costCount = 1
-
-RegisterNetEvent('animation:phonecallstart')
-AddEventHandler('animation:phonecallstart', function()
-  TriggerEvent("destroyPropPhone")
-  TriggerEvent("incall",true)
-  local lPed = PlayerPedId()
-  RequestAnimDict("cellphone@")
-  while not HasAnimDictLoaded("cellphone@") do
-    Citizen.Wait(0)
-  end
-  local count = 0
-  costCount = 1
-  inPhone = false
-  Citizen.Wait(200)
-  ClearPedTasks(lPed)
-  
-  TriggerEvent("attachItemPhone","phone01")
-  TriggerEvent("DoLongHudText","[E] Toggles Call.", 6)
-
-
-  while callStatus ~= isNotInCall do
-
-    if isDead then
-      endCall()
-    end
-
-
-    if IsEntityPlayingAnim(lPed, "cellphone@", "cellphone_call_listen_base", 3) and not IsPedRagdoll(PlayerPedId()) then
-    else 
-
-
-
-      if IsPedRagdoll(PlayerPedId()) then
-        Citizen.Wait(1000)
-      end
-      TaskPlayAnim(lPed, "cellphone@", "cellphone_call_listen_base", 1.0, 1.0, -1, 49, 0, 0, 0, 0)
-    end
-    Citizen.Wait(1)
-    count = count + 1
-
-    if AnonCall then
-       local dPB = #(PhoneBooth - GetEntityCoords( PlayerPedId()))
-       if dPB > 2.0 then
-        TriggerEvent("DoLongHudText","Moved too far.", 2)
-        endCall()
-       end
-    end
-
-
-
-    if IsControlJustPressed(0, 38) then
-      TriggerEvent("phone:holdToggle")
-    end
-
-    if onhold then
-      if count == 800 then
-         count = 0
-         TriggerEvent("DoLongHudText","Call On Hold.", 1)
-      end
-    end
-
-      --check if not unarmed
-    local curw = GetSelectedPedWeapon(PlayerPedId())
-    noweapon = `WEAPON_UNARMED`
-    if noweapon ~= curw then
-      SetCurrentPedWeapon(PlayerPedId(), `WEAPON_UNARMED`, true)
-    end
-
-  end
-  ClearPedTasks(lPed)
-  TaskPlayAnim(lPed, "cellphone@", "cellphone_call_out", 2.0, 2.0, 800, 49, 0, 0, 0, 0)
-  Citizen.Wait(700)
-  TriggerEvent("destroyPropPhone")
-  TriggerEvent("incall",false)
-end)
-
-RegisterNetEvent('phone:makecall')
-AddEventHandler('phone:makecall', function(pnumber)
-
-  local pnumber = tonumber(pnumber)
-  AnonCall = false
-  if callStatus == isNotInCall and not isDead and hasPhone() then
-    local dialingName = getContactName(pnumber)
-    TriggerEvent('phone:setCallState', isDialing, dialingName)
-    TriggerEvent("animation:phonecallstart")
-    recentcalls[#recentcalls + 1] = { ["type"] = 2, ["number"] = pnumber, ["name"] = dialingName }
-    TriggerServerEvent('phone:callContact', exports['isPed']:isPed('cid'), pnumber, true)
-  else
-    TriggerEvent("It appears you are already in a call, injured or with out a phone, please type /hangup to reset your calls.", 2)
-  end
-end)
-
-
-
-local PayPhoneHex = {
-  [1] = 1158960338,
-  [2] = -78626473,
-  [3] = 1281992692,
-  [4] = -1058868155,
-  [5] = -429560270,
-  [6] = -2103798695,
-  [7] = 295857659,
-  [8] = -1559354806,
-}
-
-function checkForPayPhone()
-  for i = 1, #PayPhoneHex do
-    local objFound = GetClosestObjectOfType( GetEntityCoords(PlayerPedId()), 5.0, PayPhoneHex[i], 0, 0, 0)
-    if DoesEntityExist(objFound) then
-      return true
-    end
-  end
-  return false
-end
-
-RegisterNetEvent('phone:makepayphonecall')
-AddEventHandler('phone:makepayphonecall', function(pnumber) 
-
-    if not checkForPayPhone() then
-      TriggerEvent("DoLongHudText","You are not near a payphone.",2)
-      return
-    end
-    if checkForPayPhone() then
-      local LocalPlayer = exports['np-base']:getModule("LocalPlayer")
-      LocalPlayer:removeCash(exports['isPed']:isPed('cid'), 25)
-    end
-
-    PhoneBooth = GetEntityCoords( PlayerPedId() )
-    AnonCall = true
-
-    local pnumber = tonumber(pnumber)
-    if callStatus == isNotInCall and not isDead then
-      TriggerEvent('phone:setCallState', isDialing)
-      TriggerEvent("animation:phonecallstart")
-      TriggerEvent("InteractSound_CL:PlayOnOne","payphonestart",0.5)
-      TriggerServerEvent('phone:callContact', exports['isPed']:isPed('cid'), pnumber, false)
-    else
-      TriggerEvent("DoLongHudText","It appears you are already in a call, injured or with out a phone, please type /hangup to reset your calls.",2)
-    end
-
-end)
-
-RegisterCommand("payphone", function(source, args)
-  local src = source
-  local pnumber = args[1]
-  local LocalPlayer = exports['np-base']:getModule("LocalPlayer")
-  local Player = LocalPlayer:getCurrentCharacter()
-  if Player.cash >= 25 then
-      TriggerEvent('phone:makepayphonecall', pnumber)
-  else
-      TriggerEvent('DoLongHudText', 'You dont have $25 for the payphone', 2)
-  end
-end, false)
-
-
-
-
---[[ The following happens for regular calls too ]]
-
-RegisterNUICallback('callContact', function(data, cb)
-  closeGui()
-  AnonCall = false
-  Wait(1500)
-  if callStatus == isNotInCall and not isDead and hasPhone() then
-    TriggerEvent('phone:setCallState', isDialing, data.name == "" and data.number or data.name)
-    TriggerEvent("animation:phonecallstart")
-    TriggerServerEvent('phone:callContact', exports['isPed']:isPed('cid'), data.number, true)
-  else
-    TriggerEvent("DoLongHudText","It appears you are already in a call, injured or with out a phone, please type /hangup to reset your calls.",2)
-  end
-  cb('ok')
-end)
-
-debugn = false
-function t(trace)
-  print(trace)
-end
-
-RegisterNetEvent('phone:failedCall')
-AddEventHandler('phone:failedCall', function()
-    t("Failed Call")
-    endCall()
-end)
-
-
-RegisterNetEvent('phone:hangup')
-AddEventHandler('phone:hangup', function(AnonCall)
-    if AnonCall then
-      t("Call Anon Hangup")
-      endCall2()
-    else
-      t("Call Hangup")
-      endCall()
-    end
-end)
-
-local callid = 0
-
-RegisterNetEvent('phone:hangupcall')
-AddEventHandler('phone:hangupcall', function()
-    if AnonCall then
-      t("Call Anon Hangup 2")
-      endCall2()
-    else
-      t("Call Hangup 2")
-      endCall()
-    end
-end)
-
-RegisterNetEvent('phone:endCalloncommand')
-AddEventHandler('phone:endCalloncommand', function()
-  TriggerServerEvent('phone:EndCall', mySourceID, callid, true)
-end)
-
-RegisterNetEvent('phone:otherClientEndCall')
-AddEventHandler('phone:otherClientEndCall', function()
-    TriggerEvent("InteractSound_CL:PlayOnOne","demo",0.1)
-    TriggerEvent("DoLongHudText", "Your call was ended!", 2)
-    callid = 0
-    myID = 0
-    mySourceID = 0
-    mySourceHoldStatus = false
-    TriggerEvent('phone:setCallState', isNotInCall)
-    onhold = false
-end)
-
-RegisterNUICallback('btnAnswer', function()
-    closeGui()
-    TriggerEvent("phone:answercall")
-end)
-RegisterNUICallback('btnHangup', function()
-    closeGui()
-    TriggerEvent("phone:hangup")
-end)
-
-RegisterNetEvent('phone:answercall')
-AddEventHandler('phone:answercall', function()
-    if callStatus == isReceivingCall and not isDead then
-    answerCall()
-    TriggerEvent("animation:phonecallstart")
-    TriggerEvent("DoLongHudText","You have answered a call.", 1)
-    callTimer = 0
-  else
-    TriggerEvent("DoLongHudText","You are not being called, injured, or you took too long.", 2)
-  end
-end)
-
-RegisterNetEvent('phone:initiateCall')
-AddEventHandler('phone:initiateCall', function(srcID)
-    initiatingCall()
-    if not AnonCall then
-      TriggerEvent("InteractSound_CL:PlayOnOne","demo",0.1)
-    end
-end)
-
-RegisterNetEvent('phone:addToCall')
-AddEventHandler('phone:addToCall', function(voipchannel)
-  local playerName = GetPlayerName(PlayerId())
-  exports['np-voice']:addPlayerToCall(tonumber(voipchannel))
-end)
-
-RegisterNetEvent('phone:callFullyInitiated')
-AddEventHandler('phone:callFullyInitiated', function(srcID,sentSource)
- TriggerEvent("InteractSound_CL:PlayOnOne","demo",0.1)
-  myID = srcID
-  mySourceID = sentSource
-  TriggerEvent('phone:setCallState', isCallInProgress)
-  callTimer = 0
-
-  --NetworkSetVoiceChannel(srcID+1)
-  --NetworkSetTalkerProximity(0.0)
-  
-  TriggerEvent("phone:callactive")
-end)
-function drawTxt(x,y ,width,height,scale, text, r,g,b,a)
-    SetTextFont(4)
-    SetTextProportional(0)
-    SetTextScale(scale, scale)
-    SetTextColour(r, g, b, a)
-    SetTextDropShadow(0, 0, 0, 0,255)
-    SetTextEdge(2, 0, 0, 0, 255)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawText(x - width/2, y - height/2 + 0.005)
-end
-RegisterNetEvent('phone:callactive')
-AddEventHandler('phone:callactive', function()
-    Citizen.Wait(100)
-    local held1 = false
-    local held2 = false
-    while callStatus == isCallInProgress do
-      local phoneString = ""
-      Citizen.Wait(1)
-
-      if onhold then
-        phoneString = phoneString .. "They are on Hold | "
-        if not held1 then
-          TriggerEvent("DoLongHudText","You have put the caller on hold.",1)
-          held1 = true
-        end
-      else
-        phoneString = phoneString .. "Call Active | "
-        if held1 then
-          TriggerEvent("DoLongHudText","Your call is no longer on hold.",1)
-          held1 = false
-        end
-      end
-
-      if mySourceHoldStatus then
-        phoneString = phoneString .. "You are on hold"
-        if not held2 then
-          TriggerEvent("DoLongHudText", "You are on hold.", 2)
-          held2 = true
-        end
-      else
-        phoneString = phoneString .. "Caller Active"
-        if held2 then
-          TriggerEvent("DoLongHudText", "You are no longer on hold.", 1)
-          held2 = false
-        end
-      end
-      drawTxt(0.97, 1.46, 1.0,1.0,0.33, phoneString, 255, 255, 255, 255)  -- INT: kmh
-    end
-end)
-
-
-
-RegisterNetEvent('phone:id')
-AddEventHandler('phone:id', function(sentcallid)
-  callid = sentcallid
-end)
-
-RegisterNetEvent('phone:setCallState')
-AddEventHandler('phone:setCallState', function(pCallState, pCallInfo)
-  callStatus = pCallState
-  SendNUIMessage({
-    openSection = 'callState',
-    callState = pCallState,
-    callInfo = pCallInfo
-  })
-end)
-
-RegisterNetEvent('phone:receiveCall')
-AddEventHandler('phone:receiveCall', function(phoneNumber, srcID, calledNumber)
-  local callFrom = getContactName(calledNumber)
-  
-  recentcalls[#recentcalls + 1] = { ["type"] = 1, ["number"] = calledNumber, ["name"] = callFrom }
-
-  if callStatus == isNotInCall then
-    myID = 0
-    mySourceID = srcID
-    TriggerEvent('phone:setCallState', isReceivingCall, callFrom)
-
-    receivingCall(callFrom) -- Send contact name if exists, if not send number
-  else
-    TriggerEvent("DoLongHudText","You are receiving a call from " .. callFrom .. " but are currently already in one, sending busy response.",2)
-  end
-end)
-callTimer = 0
-function initiatingCall()
-  callTimer = 8
-  TriggerEvent("DoLongHudText","You are making a call, please hold.", 1)
-  while (callTimer > 0 and callStatus == isDialing) do
-    if AnonCall and callTimer < 7 then
-      TriggerEvent("InteractSound_CL:PlayOnOne","payphoneringing", 0.5)
-    elseif not AnonCall then
-      TriggerEvent("InteractSound_CL:PlayOnOne","cellcall",0.5)
-    end
-    
-    Citizen.Wait(2500)
-    callTimer = callTimer - 1
-  end
-  if callStatus == isDialing or callTimer == 0 then
-    endCall()
-  end
-end
-
-function receivingCall(callFrom)
-  callTimer = 8
-  while (callTimer > 0 and callStatus == isReceivingCall) do
-    if hasPhone() then
-      Citizen.Wait(1)
-      TriggerEvent("DoLongHudText","Call from: " .. callFrom .. " /answer | /hangup", 1)
-
-      if phoneNotifications then
-        TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 2.0, 'cellcall', 0.5)
-      end
-    end
-    Citizen.Wait(2500)
-    callTimer = callTimer - 1
-  end
-  if callStatus ~= isCallInProgress then
-    endCall()
-  end
-end
-
-function answerCall()
-
-  if mySourceID ~= 0 then
-
-    --NetworkSetVoiceChannel(mySourceID+1)
-    --NetworkSetTalkerProximity(0.0)
-
-    TriggerServerEvent("phone:StartCallConfirmed",mySourceID)
-    TriggerEvent('phone:setCallState', isCallInProgress)
-    TriggerEvent("phone:callactive")
-  end
-end
-
-RegisterNetEvent('phone:removefromToko')
-AddEventHandler('phone:removefromToko', function(playerRadioChannel)
-  exports['np-voice']:removePlayerFromCall()
-end)
-
-function endCall()
-  TriggerEvent("InteractSound_CL:PlayOnOne","demo",0.1)
-  if tonumber(mySourceID) ~= 0 then
-    TriggerServerEvent("phone:EndCall",mySourceID,callid)
-  end
-
-  if tonumber(myID) ~= 0 then
-    TriggerServerEvent("phone:EndCall",myID,callid)
-  end 
-
-  myID = 0
-  mySourceID = 0
-  TriggerEvent('phone:setCallState', isNotInCall)
-  onhold = false
-  mySourceHoldStatus = false
-  AnonCall = false
-  callid = 0
-  closeGui()
-end
-function endCall2()
-  TriggerEvent("InteractSound_CL:PlayOnOne","payphoneend",0.1)
-  if tonumber(mySourceID) ~= 0 then
-    TriggerServerEvent("phone:EndCall",mySourceID,callid)
-  end
-
-  if tonumber(myID) ~= 0 then
-    TriggerServerEvent("phone:EndCall",myID,callid)
-  end 
-
-  myID = 0
-  mySourceID = 0
-  TriggerEvent('phone:setCallState', isNotInCall)
-  onhold = false
-  mySourceHoldStatus = false
-  AnonCall = false
-  callid = 0
-  closeGui()
-  --[[ 
-  NetworkSetTalkerProximity(1.0)
-  Citizen.Wait(300)
-  NetworkClearVoiceChannel()
-  Citizen.Wait(300)
-  NetworkSetTalkerProximity(18.0)
-  ]]
-end
-
-
-RegisterNetEvent('phone:holdToggle')
-AddEventHandler('phone:holdToggle', function()
-  if myID == nil then
-    myID = 0
-  end
-  if myID ~= 0 then
-    if not onhold then
-      TriggerEvent("DoShortHudText", "Call on hold.",10)
-      onhold = true
-
-      --[[  
-      NetworkSetTalkerProximity(1.0)
-      Citizen.Wait(300)
-      NetworkClearVoiceChannel()
-      Citizen.Wait(300)
-      NetworkSetTalkerProximity(18.0)
-      ]]
-
-      TriggerServerEvent("OnHold:Server",mySourceID,true)
-    else
-      TriggerEvent("DoShortHudText", "No longer on hold.",10)
-      TriggerServerEvent("OnHold:Server",mySourceID,false)
-      onhold = false
-
-      --NetworkSetVoiceChannel(myID+1)
-      --NetworkSetTalkerProximity(0.0)
-    end
-  else
-
-    if mySourceID ~= 0 then
-      if not onhold then
-        TriggerEvent("DoShortHudText", "Call on hold.",10)
-        onhold = true
-
-        --[[ 
-        NetworkSetTalkerProximity(1.0)
-        Citizen.Wait(300)
-        NetworkClearVoiceChannel()
-        Citizen.Wait(300)
-        NetworkSetTalkerProximity(18.0)
-        ]]
-
-        TriggerServerEvent("OnHold:Server",mySourceID,true)
-      else
-        TriggerEvent("DoShortHudText", "No longer on hold.",10)
-        TriggerServerEvent("OnHold:Server",mySourceID,false)
-        onhold = false
-
-        --NetworkSetVoiceChannel(mySourceID+1)
-        --NetworkSetTalkerProximity(0.0)
-      end
-    end
-  end
-end)
-
-
-
-RegisterNetEvent('OnHold:Client')
-AddEventHandler('OnHold:Client', function(newHoldStatus,srcSent)
-    mySourceHoldStatus = newHoldStatus
-    if mySourceHoldStatus then
-        local playerId = GetPlayerFromServerId(srcSent)
-        MumbleSetVolumeOverride(playerId, -1.0)
-        TriggerEvent("DoLongHudText","You just got put on hold.", 1)
-    else
-        if not onhold then
-          local playerId = GetPlayerFromServerId(srcSent)
-          MumbleSetVolumeOverride(playerId, 1.0)
-        end
-        TriggerEvent("DoLongHudText","Your caller is back on the line.", 1)
-    end
-end)
-----------
-
-
-curNotifications = {}
-
-RegisterNetEvent('phone:addnotification')
-AddEventHandler('phone:addnotification', function(name,message)
-    if not guiEnabled then
-      SendNUIMessage({
-          openSection = "newemail"
-      }) 
-    end 
-    curNotifications[#curNotifications+1] = { ["name"] = name, ["message"] = message }
-end)
-
-RegisterNetEvent('YellowPageArray')
-AddEventHandler('YellowPageArray', function(pass)
-    local notdecoded = json.encode(pass)
-    YellowPages = notdecoded
-
-    YellowPageArray = pass
-end)
-
-local currentTwats = {}
-
-RegisterNetEvent('Client:UpdateTweets')
-AddEventHandler('Client:UpdateTweets', function(data)
-    
-    SendNUIMessage({openSection = "twatter", twats = data, myhandle = handle})
-
-end)
-
-local currentTwats = {}
-
-RegisterNetEvent('Client:UpdateTweet')
-AddEventHandler('Client:UpdateTweet', function(tweet)
-
-    local handle = exports["isPed"]:isPed("twitterhandle")
-    currentTwats[#currentTwats+1] = tweet 
-    
-    if not hasPhone() then
-      return
-    end
-
-
-    if currentTwats[#currentTwats]["handle"] == handle then
-      SendNUIMessage({openSection = "twatter", twats = currentTwats, myhandle = handle})
-    end
-
-    if string.find(currentTwats[#currentTwats]["message"],handle) then
-      --
-      if currentTwats[#currentTwats]["handle"] ~= handle then
-        SendNUIMessage({openSection = "newtweet"})
-      end
-
-
-      if phoneNotifications then
-        PlaySound(-1, "Event_Start_Text", "GTAO_FM_Events_Soundset", 0, 0, 1)
-        TriggerEvent("DoLongHudText","You were just mentioned in a tweet on your phone.",15)
-      end
-    end
-
-    if allowpopups and not guiEnabled then
-      SendNUIMessage({openSection = "notify", handle = currentTwats[#currentTwats]["handle"], message =currentTwats[#currentTwats]["message"]})
-    end
-
-end)
-
-
-function createGeneralAreaBlip(alertX, alertY, alertZ)
-  local genX = alertX + math.random(-50, 50)
-  local genY = alertY + math.random(-50, 50)
-  local alertBlip = AddBlipForRadius(genX,genY,alertZ,75.0) 
-  SetBlipColour(alertBlip,1)
-  SetBlipAlpha(alertBlip,80)
-  SetBlipSprite(alertBlip,9)
-  Wait(60000)
-  RemoveBlip(alertBlip)
-end
-
-RegisterNetEvent('phone:triggerHOAAlert')
-AddEventHandler('phone:triggerHOAAlert', function(pAlertLocation, pAlertX, pAlertY, pAlertZ)
-  local hoaRank = GroupRank("hoa")
-  if hoaRank > 0 then
-    SendNUIMessage({
-      openSection = "hoa-notification",
-      alertLocation = pAlertLocation
-    })
-    createGeneralAreaBlip(pAlertX, pAlertY, pAlertZ)
-  end
-end)
-
-local lastTime = 0;
-RegisterNetEvent('phone:triggerPager')
-AddEventHandler('phone:triggerPager', function()
-  local job = exports["isPed"]:isPed("myjob")
-  if job == "doctor" or job == "ems" then
-    local currentTime = GetGameTimer()
-    if lastTime == 0 or lastTime + (5 * 60 * 1000) < currentTime then
-      TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 3.0, 'pager', 0.4)
-      SendNUIMessage({
-        openSection = "newpager"
-      })
-      lastTime = currentTime
-    end
-  end
-end)
-
-
-local customGPSlocations = {
-  [1] = { ["x"] = 484.77066040039, ["y"] = -77.643089294434, ["z"] = 77.600166320801, ["info"] = "Garage A"},
-  [2] = { ["x"] = -331.96115112305, ["y"] = -781.52337646484, ["z"] = 33.964477539063,  ["info"] = "Garage B"},
-  [3] = { ["x"] = -451.37295532227, ["y"] = -794.06591796875, ["z"] = 30.543809890747, ["info"] = "Garage C"},
-  [4] = { ["x"] = 399.51190185547, ["y"] = -1346.2742919922, ["z"] = 31.121940612793, ["info"] = "Garage D"},
-  [5] = { ["x"] = 598.77319335938, ["y"] = 90.707237243652, ["z"] = 92.829048156738, ["info"] = "Garage E"},
-  [6] = { ["x"] = 641.53442382813, ["y"] = 205.42562866211, ["z"] = 97.186958312988, ["info"] = "Garage F"},
-  [7] = { ["x"] = 82.359413146973, ["y"] = 6418.9575195313, ["z"] = 31.479639053345, ["info"] = "Garage G"},
-  [8] = { ["x"] = -794.578125, ["y"] = -2020.8499755859, ["z"] = 8.9431390762329, ["info"] = "Garage H"},
-  [9] = { ["x"] = -669.15631103516, ["y"] = -2001.7552490234, ["z"] = 7.5395741462708, ["info"] = "Garage I"},
-  [10] = { ["x"] = -606.86322021484, ["y"] = -2236.7624511719, ["z"] = 6.0779848098755, ["info"] = "Garage J"},
-  [11] = { ["x"] = -166.60482788086, ["y"] = -2143.9333496094, ["z"] = 16.839847564697, ["info"] = "Garage K"},
-  [12] = { ["x"] = -38.922565460205, ["y"] = -2097.2663574219, ["z"] = 16.704851150513, ["info"] = "Garage L"},
-  [13] = { ["x"] = -70.179389953613, ["y"] = -2004.4139404297, ["z"] = 18.016941070557, ["info"] = "Garage M"},
-  [14] = { ["x"] = 549.47796630859, ["y"] = -55.197559356689, ["z"] = 71.069190979004, ["info"] = "Garage Impound Lot"},
-  [15] = { ["x"] = 364.27685546875, ["y"] = 297.84490966797, ["z"] = 103.49515533447, ["info"] = "Garage O"},
-  [16] = { ["x"] = -338.31619262695, ["y"] = 266.79782104492, ["z"] = 85.741966247559, ["info"] = "Garage P"},
-  [17] = { ["x"] = 273.66683959961, ["y"] = -343.83737182617, ["z"] = 44.919876098633, ["info"] = "Garage Q"},
-  [18] = { ["x"] = 66.215492248535, ["y"] = 13.700443267822, ["z"] = 69.047248840332, ["info"] = "Garage R"},
-  [19] = { ["x"] = 3.3330917358398, ["y"] = -1680.7877197266, ["z"] = 29.170293807983, ["info"] = "Garage Imports"},
-  [20] = { ["x"] = 286.67013549805, ["y"] = 79.613700866699, ["z"] = 94.362899780273, ["info"] = "Garage S"},
-  [21] = { ["x"] = 211.79, ["y"] = -808.38, ["z"] = 30.833, ["info"] = "Garage T"},
-  [22] = { ["x"] = 447.65, ["y"] = -1021.23, ["z"] = 28.45, ["info"] = "Garage Police Department"},
-  [23] = { ["x"] = -25.59, ["y"] = -720.86, ["z"] = 32.22, ["info"] = "Garage House"},
-}
-
-local loadedGPS = false
-
-RegisterNetEvent('openGPS')
-
-AddEventHandler('openGPS', function(mansions,houses,rented)
-
-  
-
-  SendNUIMessage({openSection = "GPS"})
-
-  if loadedGPS then
-
-    return
-
-  end
-
-  for i = 1, #customGPSlocations do
-
-    SendNUIMessage({openSection = "AddGPSLocation", info = customGPSlocations[i]["info"], house_id = i, house_type = 69})
-
-    Citizen.Wait(1)
-
-  end
-
-
-
-  loadedGPS = true
-
-end)
-
-
-
-RegisterNetEvent('GPSLocations')
-
-AddEventHandler('GPSLocations', function()
-
-	if GPSblip ~= nil then
-
-		RemoveBlip(GPSblip)
-
-		GPSblip = nil
-
-	end	
-
-	TriggerEvent("GPSActivated",false)
-
-	TriggerEvent("openGPS",robberycoordsMansions,robberycoords,rentedOffices)
-
-end)
-
-
-
-RegisterNUICallback('loadUserGPS', function(data)
-
-     TriggerEvent("GPS:SetRoute",data.house_id,data.house_type)
-
-end)
-
-
-
-RegisterNUICallback('btnCamera', function()
-
-  SetNuiFocus(true,true)
-
-end)
-
-
-
-local loadedGPS = false
-
-RegisterNetEvent('openGPS')
-
-AddEventHandler('openGPS', function(mansions,house,rented)
-
-  -- THIS IS FUCKING PEPEGA TOO.....
-
-
-
-
-
-  if loadedGPS then
-
-    SendNUIMessage({openSection = "GPS"})
-
-    return
-
-  end
-
-  local mapLocationsObject = {
-
-    custom = { info = customGPSlocations, houseType = 69 },
-
-    mansions = { info = mansions, houseType = 2 },
-
-    houses = { info = house, houseType = 1 },
-
-    rented = { info = rented, houseType = 3 }
-
-  }
-
-  SendNUIMessage({openSection = "GPS", locations = mapLocationsObject })
-
-  loadedGPS = true
-
-end)
-
-
-
-RegisterNUICallback('loadGPS', function()
-
-  TriggerEvent("GPSLocations")
-
-end)
-
-
-
-RegisterNUICallback('btnTwatter', function()
-  local handle = exports["isPed"]:isPed("twitterhandle")
-  SendNUIMessage({openSection = "twatter", twats = currentTwats, myhandle = handle})
-end)
-
-RegisterNUICallback('newTwatSubmit', function(data, cb)
-  local handle = exports["isPed"]:isPed("twitterhandle")
-  closeGui()
-  TriggerServerEvent('Tweet', handle, data.twat, data.time)   
-end)
-
-RegisterNUICallback('btnCamera', function()
-  SetNuiFocus(false,false)
-  SetNuiFocus(true,true)
-end)
-
-RegisterNUICallback('notifications', function()
-
-    lstnotifications = {}
-
-    for i = 1, #curNotifications do
-
-        local message2 = {
-          id = tonumber(i),
-          name = curNotifications[tonumber(i)].name,
-          message = curNotifications[tonumber(i)].message
-        }
-
-        lstnotifications[#lstnotifications+1]= message2
-    end
-
-    
-  SendNUIMessage({openSection = "notifications", list = lstnotifications})
-
-end)
-
-RegisterNetEvent('phone:loadSMSOther')
-AddEventHandler('phone:loadSMSOther', function(messages,mynumber)
-  openGui()
-  lstMsgs = {}
-  if (#messages ~= 0) then
-    for k,v in pairs(messages) do
-      if v ~= nil then
-        local msgDisplayName = ""
-        if v.receiver == mynumber then
-          msgDisplayName = getContactName(v.sender)
-        else
-          msgDisplayName = getContactName(v.receiver)
-        end
-        local message = {
-          id = tonumber(v.id),
-          msgDisplayName = msgDisplayName,
-          sender = tonumber(v.sender),
-          receiver = tonumber(v.receiver),
-          date = tonumber(v.date),
-          message = v.message
-        }
-        lstMsgs[#lstMsgs+1]= message
-      end
-    end
-  end
-  SendNUIMessage({openSection = "messagesOther", list = lstMsgs, clientNumber = mynumber})
-end)
-
-RegisterNUICallback('btnPagerToggle', function()
-  TriggerEvent("togglePager")
-end)
-
-RegisterNUICallback('accountInformation', function()
-  local responseObject = {
-    cid = exports["isPed"]:isPed("cid"),
-    cash = exports["isPed"]:isPed("mycash"),
-    bank = exports["isPed"]:isPed("mybank"),
-    job = exports["isPed"]:isPed("myjob"),
-    secondaryJob = exports["isPed"]:isPed("secondaryjob"),
-    licenses = "",
-    pagerStatus = exports["isPed"]:isPed("pagerstatus")
-  }
-  SendNUIMessage({openSection = "accountInformation", response = responseObject})
-end)
-
-
-RegisterNetEvent('phone:newSMS')
-AddEventHandler('phone:newSMS', function(id, number, message, mypn, date, recip)
-  lastnumber = number
-  if hasPhone() then
-    SendNUIMessage({
-        openSection = "newsms"
-    })
-      TriggerServerEvent('phone:getSMS', exports['isPed']:isPed('cid')) 
-    if phoneNotifications then
-      TriggerEvent("DoLongHudText", "You just received a new SMS.", 1)
-      PlaySound(-1, "Event_Start_Text", "GTAO_FM_Events_Soundset", 0, 0, 1)
-    end
-  end
-end)
-
--- SMS Events
-RegisterNetEvent('phone:loadSMS')
-AddEventHandler('phone:loadSMS', function(messages,mynumber)
-
-  lstMsgs = {}
-  if (#messages ~= 0) then
-    for k,v in pairs(messages) do
-      if v ~= nil then
-        local msgDisplayName = ""
-        if v.receiver == mynumber then
-          msgDisplayName = getContactName(v.sender)
-        else
-          msgDisplayName = getContactName(v.receiver)
-        end
-        local message = {
-          id = tonumber(v.id),
-          msgDisplayName = msgDisplayName,
-          sender = tonumber(v.sender),
-          receiver = tonumber(v.receiver),
-          date = v.date,
-          message = v.message
-        }
-        lstMsgs[#lstMsgs+1]= message
-      end
-    end
-  end
-  SendNUIMessage({openSection = "messages", list = lstMsgs, clientNumber = mynumber})
-end)
-
-RegisterNetEvent('phone:sendSMS')
-AddEventHandler('phone:sendSMS', function(number, message)
-  if(number ~= nil and message ~= nil) then
-    TriggerServerEvent('phone:sendSMS', exports['isPed']:isPed('cid'), number, message)
-    Citizen.Wait(1000)
-    TriggerServerEvent('phone:getSMSc', exports['isPed']:isPed('cid'))
-  else
-    phoneMsg("You must fill in a number and message!")
-  end
-end)
-
-local lastnumber = 0
-
-RegisterNetEvent('animation:sms')
-AddEventHandler('animation:sms', function(enable)
-  TriggerEvent("destroyPropPhone")
-  local lPed = PlayerPedId()
-  inPhone = enable
-
-  RequestAnimDict("cellphone@")
-  while not HasAnimDictLoaded("cellphone@") do
-    Citizen.Wait(0)
-  end
-
-  if not isInTrunk then
-    TaskPlayAnim(lPed, "cellphone@", "cellphone_text_in", 2.0, 3.0, -1, 49, 0, 0, 0, 0)
-  end
-  Citizen.Wait(300)
-  if inPhone then
-    TriggerEvent("attachItemPhone","phone01")
-    Citizen.Wait(150)
-    while inPhone do
-      if isDead then
-        closeGui()
-        inPhone = false
-      end
-      if not isInTrunk and not IsEntityPlayingAnim(lPed, "cellphone@", "cellphone_text_read_base", 3) and not IsEntityPlayingAnim(lPed, "cellphone@", "cellphone_swipe_screen", 3) then
-        TaskPlayAnim(lPed, "cellphone@", "cellphone_text_read_base", 2.0, 3.0, -1, 49, 0, 0, 0, 0)
-      end    
-      Citizen.Wait(1)
-    end
-    if not isInTrunk then
-      ClearPedTasks(PlayerPedId())
-    end
-  else
-    if not isInTrunk then
-      Citizen.Wait(100)
-      ClearPedTasks(PlayerPedId())
-      TaskPlayAnim(lPed, "cellphone@", "cellphone_text_out", 2.0, 1.0, 5.0, 49, 0, 0, 0, 0)
-      Citizen.Wait(400)
-      TriggerEvent("destroyPropPhone")
-      Citizen.Wait(400)
-      ClearPedTasks(PlayerPedId())
-    else
-      TriggerEvent("destroyPropPhone")
-    end
-  end
-end)
-
-
-RegisterNetEvent('phone:reply')
-AddEventHandler('phone:reply', function(message)
-  if lastnumber ~= 0 then
-    TriggerServerEvent('phone:sendSMS', exports['isPed']:isPed('cid'), lastnumber, message)
-    TriggerEvent("chatMessage", "You", 6, message)
-  else
-    phoneMsg("No user has recently SMS'd you.")
-  end
-end)
-
-
-
-function phoneMsg(inputText)
-  TriggerEvent("chatMessage", "Service ", 5, inputText)
-end
-
-
-RegisterNetEvent("house:returnKeys")
-AddEventHandler("house:returnKeys", function(pSharedKeys)
-  SendNUIMessage({
-    openSection = "manageKeys",
-    sharedKeys = pSharedKeys
-  })
-end)
-
-
-RegisterNetEvent('phone:deleteSMS')
-AddEventHandler('phone:deleteSMS', function(id)
-  table.remove( lstMsgs, tablefindKeyVal(lstMsgs, 'id', tonumber(id)))
-  phoneMsg("Message Removed!")
-end)
-
-function getContactName(number)
-  if (#lstContacts ~= 0) then
-    for k,v in pairs(lstContacts) do
-      if v ~= nil then
-        if (v.number ~= nil and tonumber(v.number) == tonumber(number)) then
-          return v.name
-        end
-      end
-    end
-  end
-
-  return number
-end
-
--- Contact Events
-RegisterNetEvent('phone:loadContacts')
-AddEventHandler('phone:loadContacts', function(contacts)
-
-  lstContacts = {}
-
-  if (#contacts ~= 0) then
-    for k,v in pairs(contacts) do
-      if v ~= nil then
-        local contact = {
-        }
-        if activeNumbersClient['active' .. tonumber(v.number)] then
-        
-          contact = {
-            name = v.name,
-            number = v.number,
-            activated = 1
-          }
-        else
-    
-          contact = {
-            name = v.name,
-            number = v.number,
-            activated = 0
-          }
-        end
-        lstContacts[#lstContacts+1]= contact
-
         SendNUIMessage({
-          newContact = true,
-          contact = contact,
+            action = "acceptrejectNone",
         })
-      end
+        TriggerEvent("qb-hud:ping:client:ShowIcon", false)
     end
-  else
-       SendNUIMessage({
-        emptyContacts = true
-      })
-  end
 end)
 
-RegisterNetEvent('phone:addContact')
-AddEventHandler('phone:addContact', function(name, number)
-  if(name ~= nil and number ~= nil) then
-    number = tonumber(number)
-    TriggerServerEvent('phone:addContact', name, number)
-  else
-     phoneMsg("You must fill in a name and number!")
-  end
-end)
 
-RegisterNetEvent('phone:newContact')
-AddEventHandler('phone:newContact', function(name, number)
-  local contact = {
-      name = name,
-      number = number
-  }
-  lstContacts[#lstContacts+1]= contact
-
-  SendNUIMessage({
-    newContact = true,
-    contact = contact,
-  })
-  phoneMsg("Contact Saved!")
-  TriggerServerEvent('phone:getContacts')
-end)
-
-RegisterNetEvent('phone:deleteContact')
-AddEventHandler('phone:deleteContact', function(name, number)
-
-  local contact = {
-      name = name,
-      number = number
-  }
-
-  table.remove( lstContacts, tablefind(lstContacts, contact))
-  
-  SendNUIMessage({
-    removeContact = true,
-    contact = contact,
-  })
-  
-end)
-
-RegisterNUICallback('removeContact', function(data, cb)
-  TriggerServerEvent('deleteContact', data.name, data.number)
-  cb('ok')
-end)
-
-function tablefind(tab,el)
-  for index, value in pairs(tab) do
-    if value == el then
-      return index
+RegisterNetEvent('qb-phone:client-annphonenumber', function(playerId, playerName, number)
+	local sourcePos = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(playerId)), false)
+    local pos = GetEntityCoords(PlayerPedId(), false)
+	local dist = #(pos - sourcePos)
+    if dist < 5.0 then
+		TriggerEvent('chat:addMessage', {
+			template = '<div class="chat-message" style="background-color: rgba(234, 135, 23, 0.50);">Number : <b>{0}</b></div>',
+			args = {" "..number}
+		})
+		
     end
-  end
-end
-
-function tablefindKeyVal(tab,key,val)
-  for index, value in pairs(tab) do
-    if value ~= nil  and value[key] ~= nil and value[key] == val then
-      return index
-    end
-  end
-end
+end)
 
 
-RegisterNetEvent('resetPhone')
-AddEventHandler('resetPhone', function()
-     SendNUIMessage({
-      emptyContacts = true
+RegisterNUICallback('CasinoAddBet', function(data)
+    TriggerServerEvent('qb-phone:server:CasinoAddBet', data)
+end)
+
+RegisterNetEvent('qb-phone:client:addbetForAll', function(data)
+    SendNUIMessage({
+        action = "BetAddToApp",
+        datas = data,
     })
-
 end)
 
-local weather = ""
-RegisterNetEvent("kWeatherSync")
-AddEventHandler("kWeatherSync", function(pWeather)
-  weather = pWeather
+RegisterNUICallback('BettingAddToTable', function(data)
+    TriggerServerEvent('qb-phone:server:BettingAddToTable', data)
 end)
 
-RegisterNUICallback('getWeather', function(data, cb)
-  SendNUIMessage({openSection = "weather", weather = weather})
-  cb("ok")
+RegisterNUICallback('CasinoDeleteTable', function(data)
+    TriggerServerEvent('qb-phone:server:DeleteAndClearTable')
 end)
 
-function MyPlayerId()
-  for i=0,256 do
-    if(NetworkIsPlayerActive(i) and GetPlayerPed(i) == PlayerPedId()) then return i end
-  end
-  return nil
+RegisterNUICallback('CheckHasBetTable', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:CheckHasBetTable', function(HasTable)
+        cb(HasTable)
+    end)
+end)
+
+RegisterNUICallback('casino_status', function(data)
+    TriggerServerEvent('qb-phone:server:casino_status')
+end)
+
+RegisterNUICallback('CheckHasBetStatus', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:CheckHasBetStatus', function(HasStatus)
+        cb(HasStatus)
+    end)
+end)
+
+RegisterNUICallback('WineridCasino', function(data)
+    TriggerServerEvent('qb-phone:server:WineridCasino', data)
+end)
+
+RegisterNUICallback('GetJobCentersJobs', function(data, cb)
+    cb(Config.JobCenter)
+end)
+
+RegisterNUICallback('CasinoPhoneJobCenter', function(data)
+    if data.action == 1 then
+        TriggerServerEvent('qb-phone:server:SetJobJobCenter', data)
+    elseif data.action == 2 then
+        SetNewWaypoint(data.x, data.y)
+        QBCore.Functions.Notify('GPS set', "success")
+    end
+end)
+
+RegisterNUICallback('employment_CreateJobGroup', function(data)
+    TriggerServerEvent('qb-phone:server:employment_CreateJobGroup', data)
+end)
+
+RegisterNetEvent('qb-phone:client:EveryoneGrupAddsForAll', function(data)
+    SendNUIMessage({
+        action = "GroupAddDIV",
+        datas = data,
+    })
+end)
+
+RegisterNUICallback('employment_DeleteGroup', function(data)
+    TriggerServerEvent('qb-phone:server:employment_DeleteGroup', data)
+end)
+
+RegisterNUICallback('GetGroupsApp', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetGroupsApp', function(HasGroups)
+        cb(HasGroups)
+    end)
+end)
+
+RegisterNUICallback('employment_JoinTheGroup', function(data)
+    TriggerServerEvent('qb-phone:server:employment_JoinTheGroup', data)
+end)
+
+RegisterNUICallback('employment_leave_grouped', function(data)
+    TriggerServerEvent('qb-phone:server:employment_leave_grouped', data)
+end)
+
+RegisterNUICallback('employment_CheckPlayerNames', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:employment_CheckPlayerNames', function(HasName)
+        cb(HasName)
+    end, data.id)
+end)
+
+RegisterNUICallback('SendBillForPlayer_debt', function(data)
+    TriggerServerEvent('qb-phone:server:SendBillForPlayer_debt', data)
+end)
+
+RegisterNUICallback('GetHasBills_debt', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetHasBills_debt', function(Has)
+        cb(Has)
+    end)
+end)
+
+RegisterNUICallback('debit_AcceptBillForPay', function(data)
+    TriggerServerEvent('qb-phone:server:debit_AcceptBillForPay', data)
+end)
+
+RegisterNetEvent('qb-phone:RefreshPhoneForDebt', function()
+    SendNUIMessage({
+        action = "DebtRefresh",
+    })
+end)
+
+RegisterNUICallback('wenmo_givemoney_toID', function(data)
+    TriggerServerEvent('qb-phone:server:wenmo_givemoney_toID', data)
+end)
+
+RegisterNetEvent('hud:client:OnMoneyChange', function(type, amount, isMinus, reason)
+    if type == "bank" then
+        if isMinus then
+            SendNUIMessage({
+                action = "ChangeMoney_Wenmo",
+                Color = "#f5a15b",
+                Amount = "-$"..amount,
+                Reason = reason,
+            })
+        else
+            SendNUIMessage({
+                action = "ChangeMoney_Wenmo",
+                Color = "#8ee074",
+                Amount = "+$"..amount,
+                Reason = reason,
+            })
+        end
+    end
+end)
+
+RegisterNUICallback('documents_Save_Note_As', function(data)
+    TriggerServerEvent('qb-phone:server:documents_Save_Note_As', data)
+end)
+
+RegisterNUICallback('GetNote_for_Documents_app', function(data, cb)
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetNote_for_Documents_app', function(Has)
+        cb(Has)
+    end)
+end)
+
+RegisterNetEvent('qb-phone:RefReshNotes_Free_Documents', function()
+    SendNUIMessage({
+        action = "DocumentRefresh",
+    })
+end)
+
+
+RegisterNUICallback('Send_lsbn_ToChat', function(data)
+    TriggerServerEvent('qb-phone:server:Send_lsbn_ToChat', data)
+end)
+
+RegisterNetEvent('qb-phone:LSBN-reafy-for-add', function(data, toggle, text)
+    if toggle then
+        SendNUIMessage({
+            action = "PhoneNotification",
+            PhoneNotify = {
+                title = "LSBN",
+                text = text,
+                icon = "fas fa-bullhorn",
+                color = "#d8e212",
+                timeout = 1000,
+            },
+        })
+    end
+
+    SendNUIMessage({
+        action = "AddNews",
+        data = data,
+    })
+end)
+
+RegisterNUICallback('GetLSBNchats', function(data)
+    TriggerServerEvent('qb-phone:server:GetLSBNchats', data)
+end)
+
+
+
+
+
+
+
+RegisterNetEvent('stx-phone:client:publocphoneopen',function()
+    SetNuiFocus(true, true)
+    SendNUIMessage({type = 'publicphoneopen'})
+end)
+
+RegisterNUICallback('publicphoneclose', function()
+    SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('openHelp', function()  
+    TriggerEvent('')
+end)
+
+local function GetGroupCSNs(Data)
+    local gData = {}
+    QBCore.Functions.TriggerCallback('qb-phone:server:GetGroupCSNs', function(HasGroup)
+        gData = HasGroup
+    end, Data)
+    Wait(100)
+    return gData
 end
 
-function Voip(intPlayer, boolSend)
-end
-
-DRP = DRP or {}
-DRP.DataControls = DRP.DataControls or {}
-
-function DRP.DataControls.getBindTable()
-
-	local i = 1
-	local controlTable = {}
-	for k,v in pairs(DRP.Controls.Current) do
-		controlTable[i] = {k,v}
-		i = i+1
-	end
-
-    return controlTable
-end
-DRP.SettingsData = DRP.SettingsData or {}
-DRP.Settings = DRP.Settings or {}
-
-DRP.Settings.Current = {}
--- Current bind name and keys
-DRP.Settings.Default = {
-  ["tokovoip"] = {
-    ["stereoAudio"] = true,
-    ["localClickOn"] = true,
-    ["localClickOff"] = true,
-    ["remoteClickOn"] = true,
-    ["remoteClickOff"] = true,
-    ["mainVolume"] = 6.0,
-    ["clickVolume"] = 10.0,
-    ["radioVolume"] = 5.0,
-  },
-  ["hud"] = {
-
-  }
-
-}
-DRP.Controls = DRP.Controls or {}
-DRP.Controls.Current = {}
--- Current bind name and keys
-DRP.Controls.Default = {
-  ["tokoptt"] = "caps",
-  ["loudSpeaker"] = "-",
-  ["distanceChange"] = "g",
-  ["tokoToggle"] = "leftctrl",
-  ["handheld"] = "leftshift+p",
-  ["carStereo"] = "leftalt+p",
-  ["switchRadioEmergency"] = "9",
-  ["actionBar"] = "tab",
-  ["generalUse"] = "e",
-  ["generalPhone"] = "p",
-  ["generalInventory"] = "k",
-  ["generalChat"] = "t",
-  ["generalEscapeMenu"] = "esc",
-  ["generalUseSecondary"] = "enter",
-  ["generalUseSecondaryWorld"] = "f",
-  ["generalUseThird"] = "g",
-  ["generalTackle"] = "leftalt",
-  ["generalMenu"] = "f1",
-  ["generalProp"] = "7",
-  ["generalScoreboard"] = "u",
-  ["movementCrouch"] = "x",
-  ["movementCrawl"] = "z",
-  ["vehicleCruise"] = "x",
-  ["vehicleSearch"] = "g",
-  ["vehicleHotwire"] = "h",
-  ["vehicleBelt"] = "b",
-  ["vehicleDoors"] = "l",
-  ["vehicleSlights"] = "q",
-  ["vehicleSsound"] = "leftalt",
-  ["vehicleSnavigate"] = "r",
-  ["newsTools"] = "h",
-  ["newsNormal"] = "e",
-  ["newsMovie"] = "m",
-  ["housingMain"] = "h",
-  ["housingSecondary"] = "g",
-  ["heliCam"] = "e",
-  ["helivision"] = "inputaim",
-  ["helirappel"] = "x",
-  ["helispotlight"] = "g",
-  ["helilockon"] = "space",
-}
-
-function DRP.SettingsData.getSettingsTable()
-  return DRP.Settings.Current
-end
-
-RegisterNUICallback('settings', function()
-  local controls = DRP.DataControls.getBindTable()
-  local settings = DRP.SettingsData.getSettingsTable()
-  SendNUIMessage({openSection = "settings", currentControls = controls, currentSettings = settings})
-end)
-
-
-RegisterNUICallback('settingsResetToko', function()
-  TriggerEvent("np-base:cl:player_reset","tokovoip")
-end)
-
-RegisterNUICallback('settingsResetControls', function()
-  TriggerEvent("np-base:cl:player_control",nil)
-end)
-
-RegisterNetEvent('sendMessagePhoneN')
-AddEventHandler('sendMessagePhoneN', function(phonenumberlol)
-  TriggerServerEvent('message:tome', phonenumberlol)
-
-  local closestPlayer, closestDistance = GetClosestPlayer()
-	if closestPlayer ~= -1 and closestDistance <= 5.0 then
-    TriggerServerEvent('message:inDistanceZone', GetPlayerServerId(closestPlayer), phonenumberlol)
-  else    
-  end
-end)
-
-
-function GetClosestPlayer()
-	local players = GetPlayers()
-	local closestDistance = -1
-	local closestPlayer = -1
-	local closestPed = -1
-	local ply = PlayerPedId()
-	local plyCoords = GetEntityCoords(ply, 0)
-	if not IsPedInAnyVehicle(PlayerPedId(), false) then
-
-		for index,value in ipairs(players) do
-			local target = GetPlayerPed(value)
-			if(target ~= ply) then
-				local targetCoords = GetEntityCoords(GetPlayerPed(value), 0)
-				local distance = #(vector3(targetCoords["x"], targetCoords["y"], targetCoords["z"]) - vector3(plyCoords["x"], plyCoords["y"], plyCoords["z"]))
-				if(closestDistance == -1 or closestDistance > distance) then
-					closestPlayer = value
-					closestPed = target
-					closestDistance = distance
-				end
-			end
-		end
-		return closestPlayer, closestDistance, closestPed
-	end
-end
+exports('GetGroupCSNs', GetGroupCSNs)
