@@ -18,7 +18,7 @@ const CameraApp = new Vue({
             var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
             var formatTime = "00:" + time
 
-            this.camerasOpen = true;
+            this.camerasOpen = false;
             this.ipLabel = "145.101.0."+cameraId;
             if (connected) {
                 $("#blockscreen").css("display", "none");
@@ -39,7 +39,7 @@ const CameraApp = new Vue({
                 $("#connectedlabel").removeClass("connect");
                 $("#connectedlabel").addClass("disconnect");
             }
-            
+
         },
 
         CloseCameras() {
