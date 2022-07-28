@@ -275,47 +275,6 @@
       <sirenSettings value="0" />
     </Item>
     <Item>
-      <!-- 6STR Declasse Yosemite -->
-      <modelName>yosemite6str</modelName>
-      <colors>
-        <Item>
-          <indices content="char_array">
-            35
-            119
-            131
-            112
-            2
-            27
-            67
-          </indices>
-          <liveries>
-            <Item value="false" />
-            <Item value="false" />
-            <Item value="false" />
-            <Item value="false" />
-            <Item value="false" />
-            <Item value="false" />
-            <Item value="false" />
-            <Item value="false" />
-          </liveries>
-        </Item>
-      </colors>
-      <kits>
-        <Item>508_yosemite6str_modkit</Item>
-      </kits>
-      <windowsWithExposedEdges />
-      <plateProbabilities>
-        <Probabilities>
-          <Item>
-            <Name>Standard White</Name>
-            <Value value="100" />
-          </Item>
-        </Probabilities>
-      </plateProbabilities>
-      <lightSettings value="2" />
-      <sirenSettings value="0" />
-    </Item>
-    <Item>
       <!-- 6STR Annis ZR380 -->
       <modelName>zr3806str</modelName>
       <colors>

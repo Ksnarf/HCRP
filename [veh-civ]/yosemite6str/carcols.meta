@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleModelInfoVarGlobal>
+  <Kits>
+    <Item>
+      <kitName>508_yosemite6str_modkit</kitName>
+      <id value="508" />
+      <kitType>MKT_SPECIAL</kitType>
+      <visibleMods>
+        <Item>
+          <modelName>yosemite6str_boost1</modelName>
+          <modShopLabel>6STR_NITRO1</modShopLabel>
+          <linkedModels />
+          <turnOffBones />
+          <type>VMT_ENGINEBAY2</type>
+          <bone>chassis</bone>
+          <collisionBone>chassis</collisionBone>
+          <cameraPos>VMCP_DEFAULT</cameraPos>
+          <audioApply value="1.000000" />
+          <weight value="20" />
+          <turnOffExtra value="false" />
+          <disableBonnetCamera value="false" />
+          <allowBonnetSlide value="true" />
+        </Item>
+      <Item>
+        <modelName>yosemite6str_boost2</modelName>
+        <modShopLabel>6STR_NITRO2</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_ENGINEBAY2</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_boost3</modelName>
+        <modShopLabel>6STR_NITRO3</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_ENGINEBAY2</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_bumf1</modelName>
+        <modShopLabel>YOS6STR_BUMF1</modShopLabel>
+        <linkedModels />
+        <turnOffBones>
+          <Item>misc_e</Item>
+        </turnOffBones>
+        <type>VMT_BUMPER_F</type>
+        <bone>bumper_f</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_bumf1</modelName>
+        <modShopLabel>YOS6STR_BUMF2</modShopLabel>
+        <linkedModels>
+          <Item>yosemite6str_bumf2</Item>
+        </linkedModels>
+        <turnOffBones>
+          <Item>misc_e</Item>
+        </turnOffBones>
+        <type>VMT_BUMPER_F</type>
+        <bone>bumper_f</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_grill1</modelName>
+        <modShopLabel>YOS6STR_GRILL1</modShopLabel>
+        <linkedModels />
+        <turnOffBones>
+          <Item>misc_h</Item>
+        </turnOffBones>
+        <type>VMT_GRILL</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_grill2</modelName>
+        <modShopLabel>YOS6STR_GRILL2</modShopLabel>
+        <linkedModels />
+        <turnOffBones>
+          <Item>misc_h</Item>
+        </turnOffBones>
+        <type>VMT_GRILL</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_turbo</modelName>
+        <modShopLabel>YOS6STR_EXH1</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_EXHAUST</type>
+        <bone>engineblock</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="false" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_skirt1</modelName>
+        <modShopLabel>YOS6STR_SKIRT</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SKIRT</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wag_a</modelName>
+        <modShopLabel>YOS6STR_CAP1</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_2</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wag_b</modelName>
+        <modShopLabel>YOS6STR_CAP2</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_2</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wag_c</modelName>
+        <modShopLabel>YOS6STR_CAP3</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_2</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wing_a</modelName>
+        <modShopLabel>YOSE_WING2</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>boot</bone>
+        <collisionBone>boot</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wing_b</modelName>
+        <modShopLabel>YOSE_WING3</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>boot</bone>
+        <collisionBone>boot</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wing_c</modelName>
+        <modShopLabel>YOSE_WING7</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>boot</bone>
+        <collisionBone>boot</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wing_d</modelName>
+        <modShopLabel>YOSE_WING8</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_5</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wing_e</modelName>
+        <modShopLabel>YOSE_WING9</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_5</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_wing_f</modelName>
+        <modShopLabel>YOSE_WING10</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_5</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_livery1</modelName>
+        <modShopLabel>YOS6STR_LIV1</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_LIVERY_MOD</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_livery2</modelName>
+        <modShopLabel>YOS6STR_LIV2</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_LIVERY_MOD</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <!-- CHROME MODS -->
+      <Item>
+        <modelName>yosemite6str_mirror_dside</modelName>
+        <modShopLabel>YOS6STR_MIRROR</modShopLabel>
+        <linkedModels>
+          <Item>yosemite6str_mirror_pside</Item>
+        </linkedModels>
+        <turnOffBones>
+          <Item>misc_i</Item>
+          <Item>misc_j</Item>
+        </turnOffBones>
+        <type>VMT_WING_L</type>
+        <bone>door_dside_f</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <!-- CARBON MODS -->
+      <Item>
+        <modelName>yosemite6str_wing_g</modelName>
+        <modShopLabel>YOS6STR_WING1</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>boot</bone>
+        <collisionBone>mod_col_5</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <!-- TITANIUM MODS -->
+      <Item>
+        <modelName>yosemite6str_turbo</modelName>
+        <modShopLabel>YOS6STR_EXH2</modShopLabel>
+        <linkedModels>
+          <Item>yosemite6str_exh1</Item>
+        </linkedModels>
+        <turnOffBones />
+        <type>VMT_EXHAUST</type>
+        <bone>engineblock</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="false" />
+      </Item>
+      <!-- GOLD MODS -->
+      <Item>
+        <modelName>yosemite6str_wing_h</modelName>
+        <modShopLabel>YOS6STR_WING2</modShopLabel>
+        <linkedModels />
+        <turnOffBones />
+        <type>VMT_SPOILER</type>
+        <bone>chassis</bone>
+        <collisionBone>mod_col_5</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+      <!-- NITROUS MODS -->
+      <Item>
+        <modelName>yosemite6str_null_b</modelName>
+        <modShopLabel>YOS6STR_STRIP</modShopLabel>
+        <linkedModels />
+        <turnOffBones>
+          <Item>misc_f</Item>
+          <Item>misc_g</Item>
+          <Item>misc_d</Item>
+          <Item>bonnet</Item>
+          <Item>boot</Item>
+          <Item>wing_lf</Item>
+          <Item>wing_rf</Item>
+          <Item>bumper_f</Item>
+          <Item>door_dside_f</Item>
+          <Item>door_pside_f</Item>
+          <Item>misc_e</Item>
+          <Item>misc_i</Item>
+          <Item>misc_j</Item>
+          <Item>misc_a</Item>
+          <Item>misc_b</Item>
+          <Item>window_lf</Item>
+          <Item>window_rf</Item>
+        </turnOffBones>
+        <type>VMT_ROOF</type>
+        <bone>chassis</bone>
+        <collisionBone>chassis</collisionBone>
+        <cameraPos>VMCP_DEFAULT</cameraPos>
+        <audioApply value="1.000000" />
+        <weight value="20" />
+        <turnOffExtra value="false" />
+        <disableBonnetCamera value="false" />
+        <allowBonnetSlide value="true" />
+      </Item>
+    </visibleMods>
+    <linkMods>
+      <Item>
+        <modelName>yosemite6str_bumf2</modelName>
+        <bone>bumper_f</bone>
+        <turnOffExtra value="false" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_mirror_pside</modelName>
+        <bone>door_pside_f</bone>
+        <turnOffExtra value="false" />
+      </Item>
+      <Item>
+        <modelName>yosemite6str_exh1</modelName>
+        <bone>engineblock</bone>
+        <turnOffExtra value="false" />
+      </Item>
+    </linkMods>
+    </CVehicleModelInfoVarGlobal>

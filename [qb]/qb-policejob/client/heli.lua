@@ -29,6 +29,12 @@ local function IsPlayerInPolmav()
 	return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
 end
 
+local function IsPlayerInMH6()
+	local lPed = PlayerPedId()
+	local vehicle = GetVehiclePedIsIn(lPed)
+	return IsVehicleModel(vehicle, GetHashKey(Config.FATHelicopter))
+end
+
 local function IsHeliHighEnough(heli)
 	return GetEntityHeightAboveGround(heli) > 1.5
 end
