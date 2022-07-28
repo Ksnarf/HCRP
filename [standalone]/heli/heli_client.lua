@@ -5,7 +5,7 @@
 local fov_max = 80.0
 local fov_min = 10.0 -- max zoom level (smaller fov is more zoom)
 local zoomspeed = 5.0 -- camera zoom speed
-local speed_lr = 3.0 -- speed by which the camera pans left-right 
+local speed_lr = 3.0 -- speed by which the camera pans left-right
 local speed_ud = 3.0 -- speed by which the camera pans up-down
 local toggle_helicam = 38 -- control id of the button by which to toggle the helicam mode. Default: INPUT_CONTEXT (E)
 local toggle_vision = 25 -- control id to toggle vision mode. Default: INPUT_AIM (Right mouse btn)
@@ -15,7 +15,7 @@ local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. 
 local rappeling = false
 -- Script starts here
 local helicam = false
-local polmav_hash = `maverick2`
+local polmav_hash = `polmav`
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
 local rappelingB = false
@@ -70,9 +70,9 @@ function anim(dict,anim,key)
 	if anim == "rappel_jump_b" then
 		rappelJumpSound()
 	end
-	
+
 	curAnim = anim
-    loadAnimDict( dict ) 
+    loadAnimDict( dict )
     TaskPlayAnim( PlayerPedId(), dict, anim, 1.0, 1.0, -1, key, 0, 0, 0, 0 )
 end
 
@@ -119,7 +119,7 @@ AddEventHandler('rappelBuilding', function()
 		rappelingB = false
 	else
 		local curRope = AddRope(helizCoords,0.0,0.0,0.0,GetEntityHeightAboveGround(heliz),4,GetEntityHeightAboveGround(heliz),4.0,0.0,false,false,false,5.0,false,0)
---			
+--
 		helizCoords = GetEntityCoords(heliz)
 
 		SetEntityVisible(heliz,false, 1)
@@ -138,14 +138,14 @@ AddEventHandler('rappelBuilding', function()
 
 			if IsControlPressed(1,32) and GetEntityHeightAboveGround(PlayerPedId()) > 1.0 then
 				movecoords = GetOffsetFromEntityInWorldCoords(heliz2, 0.0, 0.0, -0.025)
-				SetEntityCoords(heliz2,movecoords)		
+				SetEntityCoords(heliz2,movecoords)
 				rappelSound()
 				if not armed then
 					anim("mp_fib_grab","rappel_walk",47)
 				end
 			elseif IsControlPressed(1,8) and curCoords.z < startCoords.z then
 				movecoords = GetOffsetFromEntityInWorldCoords(heliz2, 0.0, 0.0, 0.025)
-				SetEntityCoords(heliz2,movecoords)				
+				SetEntityCoords(heliz2,movecoords)
 				rappelSound()
 				if not armed then
 					anim("mp_fib_grab","rappel_walk",47)
@@ -166,8 +166,8 @@ AddEventHandler('rappelBuilding', function()
 			end
 
 
-			AttachEntityToEntityPhysically(PlayerPedId(),heliz2, 1, 28422, 0.0, 0.0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, GetEntityHeading(PlayerPedId()) + GetGameplayCamRelativeHeading(), 0.0, false, true, true, 1, true) 	
-			
+			AttachEntityToEntityPhysically(PlayerPedId(),heliz2, 1, 28422, 0.0, 0.0, 0.0, 0.0, 0.4, 0.0, 0.0, 0.0, GetEntityHeading(PlayerPedId()) + GetGameplayCamRelativeHeading(), 0.0, false, true, true, 1, true)
+
 			if IsPedRagdoll(PlayerPedId()) then
 				DetachEntity(PlayerPedId())
 				rappelingB = false
@@ -176,7 +176,7 @@ AddEventHandler('rappelBuilding', function()
 	    end
 	    DeleteEntity(heliz2)
 	    DeleteEntity(heliz)
-	    DetachEntity(PlayerPedId())  
+	    DetachEntity(PlayerPedId())
 	    curCoords = GetEntityCoords(PlayerPedId())
 	    zcheck = startCoords.z - curCoords.z
 	    curAnim = "none"
@@ -185,10 +185,10 @@ AddEventHandler('rappelBuilding', function()
 	    	anim("mp_fib_grab","enter_window",47)
 	    else
 	    	anim("mp_fib_grab","enter_window",47)
-	    end 
-	    Citizen.Wait(1100) 
+	    end
+	    Citizen.Wait(1100)
 	    rappelJumpSound()
-	 
+
 	    ClearPedTasks(PlayerPedId())
     end
     DeleteEntity(heliz2)
@@ -213,7 +213,7 @@ AddEventHandler('rappelHeli', function(heli)
 
 	while rappeling do
         Citizen.Wait(1)
- 
+
     	if GetEntityHeightAboveGround(PlayerPedId()) < 3.0 then
     		ClearPedTasksImmediately(PlayerPedId())
     	--	FreezeEntityPosition(PlayerPedId(),false)
@@ -294,7 +294,7 @@ end)
 
 
 
-local copVehicleList = { 
+local copVehicleList = {
 	[1] = { ["model"] = "pol1", ["height"] = 0.2, ["forward"] = 0.0 }, -- cvpi
 	[2] = { ["model"] = "pol2", ["height"] = 0.2, ["forward"] = 0.0 }, -- cvpi
 	[3] = { ["model"] = "pol3", ["height"] = 0.0, ["forward"] = 0.0 }, -- taurus
@@ -342,14 +342,14 @@ Citizen.CreateThread(function()
 
 			local lPed = PlayerPedId()
 			local heli = GetVehiclePedIsIn(lPed)
-		
+
 
 			if IsControlJustReleased(0, toggle_helicam) and GetPedInVehicleSeat(heli, -1) ~= lPed then -- Toggle Helicam
 				PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 				helicam = not helicam
 			end
-				
-			if IsHeliHighEnough(heli) and isSwat() then	
+
+			if IsHeliHighEnough(heli) and isSwat() then
 				if IsControlJustReleased(0, toggle_rappel) and GetPedInVehicleSeat(heli, -1) ~= lPed then -- Initiate rappel
 					Citizen.Trace("try to rappel")
 					PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
@@ -357,13 +357,13 @@ Citizen.CreateThread(function()
 	        		TaskRappelFromHeli(PlayerPedId(), 0)
 				end
 			end
-			
+
 			if IsControlJustReleased(0, toggle_spotlight) and GetPedInVehicleSeat(heli, -1) == lPed then
 				spotlight_state = not spotlight_state
 				TriggerServerEvent("heli:spotlight", spotlight_state)
 				PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 			end
-			
+
 		else
 			local inveh = IsPedInVehicle(PlayerPedId(),currentVehicle,false)
 			if isSwat() and not inveh then
@@ -529,7 +529,7 @@ function HandleZoom(cam)
 		fov = math.max(fov - zoomspeed, fov_min)
 	end
 	if IsControlJustPressed(0,242) then
-		fov = math.min(fov + zoomspeed, fov_max) -- ScrollDown		
+		fov = math.min(fov + zoomspeed, fov_max) -- ScrollDown
 	end
 	local current_fov = GetCamFov(cam)
 	if math.abs(fov-current_fov) < 0.1 then -- the difference is too small, just set the value directly to avoid unneeded updates to FOV of order 10^-5
