@@ -4,7 +4,6 @@
   <residentAnims />
   <InitDatas>
     <Item>
-      <!-- 6STR Declasse Yosemite -->
       <modelName>yosemite6str</modelName>
       <txdName>yosemite6str</txdName>
       <handlingId>YOSEMITE6STR</handlingId>
@@ -119,8 +118,7 @@
       <numSeatsOverride value="2" />
     </Item>
   <txdRelationships>
-
-<Item>
+    <Item>
       <parent>vehicles_dom_interior</parent>
       <child>yosemite6str</child>
     </Item>
