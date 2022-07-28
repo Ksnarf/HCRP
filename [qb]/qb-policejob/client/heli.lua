@@ -8,10 +8,10 @@ local toggle_vision = 25 -- control id to toggle vision mode. Default: INPUT_AIM
 local toggle_rappel = 154 -- control id to rappel out of the heli. Default: INPUT_DUCK (X)
 local toggle_spotlight = 74 -- control id to toggle the front spotlight Default: INPUT_VEH_HEADLIGHT (H)
 local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. Default is INPUT_SPRINT (spacebar)
+local spotlight_state = false
 
 -- Script starts here
 local helicam = false
-local polmav_hash = `polmav`
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
 
@@ -23,11 +23,10 @@ local vehicle_detected = nil
 local locked_on_vehicle = nil
 
 -- Functions
-
 local function IsPlayerInPolmav()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
-	return IsVehicleModel(vehicle, polmav_hash)
+	return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
 end
 
 local function IsHeliHighEnough(heli)
@@ -68,8 +67,8 @@ local function CheckInputRotation(cam, zoomvalue)
 	local rightAxisY = GetDisabledControlNormal(0, 221)
 	local rotation = GetCamRot(cam, 2)
 	if rightAxisX ~= 0.0 or rightAxisY ~= 0.0 then
-		new_z = rotation.z + rightAxisX*-1.0*(speed_ud)*(zoomvalue+0.1)
-		new_x = math.max(math.min(20.0, rotation.x + rightAxisY*-1.0*(speed_lr)*(zoomvalue+0.1)), -89.5) -- Clamping at top (cant see top of heli) and at bottom (doesn't glitch out in -90deg)
+		local new_z = rotation.z + rightAxisX*-1.0*(speed_ud)*(zoomvalue+0.1)
+		local new_x = math.max(math.min(20.0, rotation.x + rightAxisY*-1.0*(speed_lr)*(zoomvalue+0.1)), -89.5) -- Clamping at top (cant see top of heli) and at bottom (doesn't glitch out in -90deg)
 		SetCamRot(cam, new_x, 0.0, new_z, 2)
 	end
 end
@@ -129,14 +128,12 @@ local function RenderVehicleInfo(vehicle)
 end
 
 -- Events
-
 RegisterNetEvent('heli:spotlight', function(serverID, state)
 	local heli = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverID)), false)
 	SetVehicleSearchlight(heli, state, false)
 end)
 
 -- Threads
-
 CreateThread(function()
 	while true do
 		Wait(0)
