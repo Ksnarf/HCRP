@@ -4,10 +4,10 @@
   <residentAnims />
   <InitDatas>
   	<Item>
-      <modelName>gmc</modelName>
-      <txdName>gmc</txdName>
-      <handlingId>FIRETRUK</handlingId>
-      <gameName>GMC</gameName>
+      <modelName>lsfdbrush</modelName>
+      <txdName>lsfdbrush</txdName>
+      <handlingId>lsfdbrush</handlingId>
+      <gameName>lsfdbrush</gameName>
       <vehicleMakeName />
       <expressionDictName>null</expressionDictName>
       <expressionName>null</expressionName>
@@ -65,9 +65,9 @@
       <lodDistances content="float_array">
         1500.000000
         3000.000000
-        7000.000000	
-        14000.000000	
-        50000.000000	
+        7000.000000
+        14000.000000
+        50000.000000
         50000.000000
       </lodDistances>
       <minSeatHeight value="0.984" />
@@ -124,6 +124,6 @@
       </firstPersonDrivebyData>
     </Item>
     </InitDatas>
-  <txdRelationships>    
+  <txdRelationships>
   </txdRelationships>
 </CVehicleModelInfo__InitDataList>

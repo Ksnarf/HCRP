@@ -3,14 +3,14 @@
 <CVehicleModelInfoVariation>
   <variationData>
   	<Item>
-      <modelName>gmc</modelName>
+      <modelName>lsfdbrush</modelName>
       <colors>
         <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
-            156 
+            134
+            134
+            0
+            156
           </indices>
           <liveries>
             <Item value="true" />
@@ -25,10 +25,10 @@
         </Item>
     <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
-            156 
+            134
+            134
+            0
+            156
           </indices>
           <liveries>
             <Item value="false" />
@@ -43,10 +43,10 @@
   </Item>
     <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
-            156 
+            134
+            134
+            0
+            156
           </indices>
           <liveries>
             <Item value="false" />
@@ -61,10 +61,10 @@
   </Item>
     <Item>
           <indices content="char_array">
-            134 
-            134 
-            0 
-            156 
+            134
+            134
+            0
+            156
           </indices>
           <liveries>
             <Item value="false" />
@@ -93,6 +93,6 @@
       <lightSettings value="1" />
       <sirenSettings value="832" />
     </Item>
-	
+
   </variationData>
 </CVehicleModelInfoVariation>
