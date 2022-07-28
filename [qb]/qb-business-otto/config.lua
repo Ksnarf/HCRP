@@ -67,10 +67,21 @@ Config.AuthorizedIds = {
   }
 
   Config.Locations = {
+    ["duty"] = {
+      [1] = vector3(841.72, -824.35, 26.33), --on/off duty location in locker room
+    },
+    ["mechgarage"] = {
+      [1] =
+    },
+    
+
+
+    ["duty"] =
+    ["mechgarage"] = vector4(844.55, -814.97, 26.33, 13.24), -- garage for mechanic staff
+    ["mechlocker"] = vector4(836.33, -814.8, 26.35, 271.78) -- locker for mechanic items
+    [
     ["exit"] = vector3(-339.04, -135.53, 39),
-    ["duty"] = vector3(841.72, -824.35, 26.33),
     ["stash"] = vector3(-319.49, -131.9, 38.98),
-    ["vehicle"] = vector4(844.55, -814.97, 26.33, 13.24),
   }
 
   Config.MinimalMetersForDamage = { -- Minimum distance player needs to drive in order to vehicle to get damaged
