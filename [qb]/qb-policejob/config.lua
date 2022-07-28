@@ -37,11 +37,12 @@ Config.Locations = {
        [1] = vector3(849.65, -1311.72, 28.24) -- La Mesa PD Evidence Room
    },
    ["stations"] = {
-       [1] = {label = "Police Station", coords = vector4(831.54, -1290.03, 28.24, 91.18),
+       [1] = {label = "Police Station", coords = vector4(831.54, -1290.03, 28.24, 91.18},
        [2] = {label = "Prison", coords = vector4(1845.903, 2585.873, 45.672, 272.249)},
        [3] = {label = "Police Station Paleto", coords = vector4(-451.55, 6014.25, 31.716, 223.81)},
    },
 }
+
 
 Config.ArmoryWhitelist = {} -- Citizen ID Based Armory Whitelist (With Export for Other Scripts)
 
