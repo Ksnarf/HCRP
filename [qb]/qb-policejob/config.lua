@@ -9,41 +9,35 @@ Config.Objects = {
 
 Config.Locations = {
    ["duty"] = {
-       [1] = vector3(442.78, -981.95, 30.69), --MRPD
-       [2] = vector3(-449.811, 6012.909, 31.815),
+       [1] = vector3(836.87, -1288.49, 28.24), -- La Mesa PD duty desk
    },
    ["vehicle"] = {
-       [1] = vector4(455.66, -979.63, 25.7, 356.56),  --MRPD underground
-       [2] = vector4(471.13, -1024.05, 28.17, 274.5),
-       [3] = vector4(-455.39, 6002.02, 31.34, 87.93),
+       [1] = vector3(845.86, -1365.3, 26.14) -- La Mesa PD
    },
    ["stash"] = {
-       [1] = vector3(453.075, -980.124, 30.889),
+       [1] = vector3(845.37, -1286.58, 28.24) -- La Mesa PD
    },
    ["impound"] = {
-       [1] = vector4(426.17, -975.99, 25.7, 90.75), --MRPD underground
-       [2] = vector4(-436.14, 5982.63, 31.34, 136.0),
+       [1] = vector3(870.61, -1350.11, 26.31) -- La Mesa PD
+
    },
    ["helicopter"] = {
-       [1] = vector4(449.168, -981.325, 43.691, 87.234),
-       [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
+       [1] = vector4(837.66, -1406.15, 26.13, 93.09) -- La Mesa PD Helicopter
    },
    ["armory"] = {
-       [1] = vector3(462.23, -981.12, 30.68),
+       [1] = vector3(836.44, -1286.44, 28.24) -- La Mesa PD Main room Armory
    },
    ["trash"] = {
-       [1] = vector3(439.0907, -976.746, 30.776),
+       [1] = vector3(830.11, -1314.15, 26.15) -- La Mesa PD Outside Trash
    },
    ["fingerprint"] = {
-       [1] = vector3(460.9667, -989.180, 24.92),
+       [1] = vector3(853.65, -1292.84, 28.24) -- La Mesa PD Archives Room
    },
    ["evidence"] = {
-       [1] = vector3(442.1722, -996.067, 30.689),
-       [2] = vector3(451.7031, -973.232, 30.689),
-       [3] = vector3(455.1456, -985.462, 30.689),
+       [1] = vector3(849.65, -1311.72, 28.24) -- La Mesa PD Evidence Room
    },
    ["stations"] = {
-       [1] = {label = "Police Station", coords = vector4(428.23, -984.28, 29.76, 3.5)},
+       [1] = {label = "Police Station", coords = vector4(831.54, -1290.03, 28.24, 91.18),
        [2] = {label = "Prison", coords = vector4(1845.903, 2585.873, 45.672, 272.249)},
        [3] = {label = "Police Station Paleto", coords = vector4(-451.55, 6014.25, 31.716, 223.81)},
    },
@@ -53,8 +47,8 @@ Config.ArmoryWhitelist = {} -- Citizen ID Based Armory Whitelist (With Export fo
 
 
 Config.Helicopter = {
-    "POLMAV", -- Model of the Helicopter for Helicopter Spawner
-    "MH6"
+    [1] = "POLMAV"
+    [2] = "MH6"
   }
 
 Config.SecurityCameras = {
