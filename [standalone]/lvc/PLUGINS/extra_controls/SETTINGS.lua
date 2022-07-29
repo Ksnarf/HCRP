@@ -1,14 +1,14 @@
 --------------------EXTRA INTEGRATION SETTINGS---------------------
-ec_masterswitch = true
+ec_masterswitch = false
 --	Determines if extra_integration plugin can be activated.
-allow_custom_controls = true
+allow_custom_controls = false
 --	Enabled/Disables menu which allows for custom controls to be set.
 --[[ Documentation / Wiki: https://github.com/TrevorBarns/luxart-vehicle-control/wiki/Extra-Controls ]]
 
 	EXTRA_CONTROLS = {
-		['DEFAULT'] = { 
+		['DEFAULT'] = {
 					--  	{ '<name>', Extras = {<extras table>}, Combo = <default combo>, Key = <default key>, (opt.) Audio = < button soundFX> }
-		},	
+		},
 	}
 
 CONTROLS = {
