@@ -1,3 +1,4 @@
+local QBCore = exports['qb-core']:GetCoreObject()
 local ToggleKey
 
 QBCore.CreateThread(function()
@@ -6,7 +7,7 @@ QBCore.CreateThread(function()
 		= SetControlNormal, math.min, math.abs, GetEntitySpeedVector, IsControlJustPressed
 
 	local VehicleEligible, CruiseControlSpeed, LastVehicle
-	
+
 	local Player = Info.Player
 	local Vehicle = Player.Vehicle
 
@@ -39,6 +40,6 @@ end)
 
 return{
 	init	=	function()
-					ToggleKey = tonumber(configFileRead("VehicleCruiseControl.ini").ToggleKey or 73)
+					ToggleKey = tonumber(configFileRead("VehicleCruiseControl.ini").ToggleKey or 29)
 				end
 }
