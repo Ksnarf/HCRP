@@ -324,30 +324,5 @@ Garages = {
         type = 'depot',                --public, job, gang, depot
         vehicle = 'sea'                 --car, air, sea
     },
-    -- Addons
-    ["ottomechgarage"] = {
-        label = "Otto's Auto Repair Staff Garage",
-        takeVehicle = vector3(832.43, -823.27, 26.35),
-        spawnPoint = vector3(845.3, -814.01, 26.32),
-        putVehicle = vector3(845.05, -821.81, 26.33),
-        showBlip = false,
-        blipname = "Otto Staff Garage"
-        blipnumber = 0,
-        type = 'job'
-        vehicle = 'car'
-        job = "ottomechanic"
-    },
-    ["lamesapd"] = {
-        label = "La Mesa PD",
-        takeVehicle = vector3(841.00, -1365.41, 26.00),
-        spawnPoint = vector4(841.00, -1370.00, 26.00, 270.00),
-        putVehicle = vector3(822.24, -1370.00, 26.14),
-        showBlip = true,
-        blipName = "Police",
-        blipNumber = 357,
-        type = 'job',                --public, job, gang, depot
-        vehicle = 'car',              --car, air, sea
-        job = "police"
-    },
 }
 HouseGarages = {}
