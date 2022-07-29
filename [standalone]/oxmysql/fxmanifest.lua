@@ -27,7 +27,7 @@ provide 'ghmattimysql'
 convar_category 'OxMySQL' {
 	'Configuration',
 	{
-		{ 'Connection string', 'mysql_connection_string', 'CV_STRING', 'mysql://user:password@localhost/database' },
+		{ 'Connection string', 'mysql_connection_string', 'CV_STRING', 'mysql://zap778405-2:Z5RltE4kSHzEj8xF@mysql-mariadb-27-104-lax.zap-hosting.com/zap778405-2' },
 		{ 'Debug', 'mysql_debug', 'CV_BOOL', 'false' }
 	}
 }
