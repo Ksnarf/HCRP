@@ -47,6 +47,13 @@ Config.CarItems = {
     info = {},
     type = "item",
     slot = 1,
+  },
+  [2] = = {
+    name = "jerry_can",
+    amount = 1,
+    info = {},
+    type = "item",
+    slot = 2,
   }
 }
 
@@ -54,7 +61,7 @@ Config.Items = {
   label = "PI Cabinet"
   slots = 8
   items = {
-  [6] = { -- binoculars
+  [1] = { -- binoculars
       name = "binoculars",
       price = 100,
       amount = 25,
@@ -62,7 +69,48 @@ Config.Items = {
       type = "item",
       slot = 1,
   },
-
+  [2] = { -- lockpick
+      name = "lockpick",
+      price = 15,
+      amount = 50,
+      info = {},
+      type = "item",
+      slot = 2,
+  },
+  [3] = { -- lockpick
+      name = "lockpick",
+      price = 15,
+      amount = 50,
+      info = {},
+      type = "item",
+      slot = 3,
+  },
+  [4] = { -- handcuffs
+      name = "handcuffs",
+      price = 250,
+      amount = 50,
+      info = {},
+      type = "item",
+      slot = 4,
+  },
+  [5] = {
+      name = "weapon_snspistol_mk2",
+      price = 0,
+      amount = 1,
+      info = {
+          serie = "",
+      },
+      type = "weapon",
+      slot = 5,
+  },
+  [6] = { -- pistol_ammo
+      name = "pistol_ammo",
+      price = 5,
+      amount = 500,
+      info = {},
+      type = "item",
+      slot = 6,
+  },
 
 
 
